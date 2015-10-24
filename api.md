@@ -236,13 +236,134 @@ Inverse of `role#grant_to`.
 
 ### Create a new variable [PUT]
 
+This is a 'secret' in Conjur and can be any value.
+
+A variable can be created with or without an initial value.
+If you don't give the variable an `id` one will be randomly generated.
+
+The body is a JSON object containing:
+
+```
+id          - Name of the variable, optional
+ownerid     - Owner of the variable
+mime_type   - Media type of the variable
+kind        - Purpose of the variable, optional
+value       - Value of the variable, optional
+```
+
++ Request
+
+    ```
+    {
+        "id": "dev/mongo/password",
+        "ownerid": "demo:group:developers",
+        "kind": "password",
+        "mime_type": "text/plain",
+        "value": "p89b12ep12puib"
+    }
+    ```
+
++ Response 201 (application/json)
+
+    ```
+    {
+        "id": "dev/mongo/password",
+        "userid": "demo",
+        "mime_type": "text/plain",
+        "kind": "password",
+        "ownerid": "demo:group:developers",
+        "resource_identifier": "demo:variable:dev/mongo/password",
+        "version_count": 1
+    }
+    ```
+
++ Response 403
+
+    ```
+    # Invalid permissions
+    ```
+
++ Response 409
+
+    ```
+    # Variable with that name already exists
+    ```
 
 ## Value [/api/variables/{id}/value?version={version}]
 
 ### Retrieve the value of a variable [GET]
 
+By default this returns the latest version of a variable, but you can retrieve any earlier version as well.
 
-## Values Add [/api/variables/{id}/values?value={value}]
+Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
+
++ Parameters
+    + id: dev/mongo/password (string) - Name of the variable
+    + version (string, optional) - Version of the variable to retrieve
+
++ Response 200 (text/plain)
+
+    ```
+    p89b12ep12puib
+    ```
+
++ Response 403
+
+    ```
+    # Invalid permissions
+    ```
+
++ Response 404
+
+    ```
+    # Variable not found
+    ```
+
+## Values Add [/api/variables/{id}/values]
 
 ### Add a value to a variable [POST]
+
+Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
+
+The body is a JSON object containing:
+
+```
+value       - Value of the variable
+```
+
++ Parameters
+    + id: dev/mongo/password (string) - Name of the variable
+
+
++ Request
+
+    ```
+    {
+        "value": "np89daed89p"
+    }
+    ```
+
++ Response 201 (text/plain)
+
+    ```
+    Value added
+    ```
+
++ Response 403
+
+    ```
+    # Invalid permissions
+    ```
+
++ Response 404
+
+    ```
+    # Variable not found
+    ```
+
++ Response 422
+
+    ```
+    # Value malformed or missing
+    ```
 
