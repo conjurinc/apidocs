@@ -24,6 +24,16 @@ TODO description
 
 :[resource.check](resource.check.md)
 
+## Group User
+
+A `user` in Conjur represents an identity for a human.
+
+:[user.show](user.show.md)
+
+:[user.create](user.create.md)
+
+:[user.update_password](user.update_password.md)
+
 ## Group Variable
 
 A `variable` is a 'secret' in Conjur and can be any value.

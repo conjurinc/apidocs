@@ -360,6 +360,167 @@ The request is allowed, but the privilege is not held by the role.
 + Response 404
 The role is not allowed to check permissions on this resource.
 
+## Group User
+
+A `user` in Conjur represents an identity for a human.
+
+## Show [GET /api/users/{login}]
+
+Retrieve a user's record.
+
+The response for this method is similar to that from create,
+but it **does not contain the user's API key**.
+
+The login parameter must be url encoded.
+
+**Permission Required**
+
+`read` permission on the user's resource.
+
+---
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|The response body contains the user's record|
+|403|You don't have permission to view the record|
+|404|No user exists with the given login name|
+
++ Parameters
+    + login: alice (string) - The user's login
+
++ Response 200 (application/json)
+
+    ```
+    {
+      "login":"alice",
+      "userid":"admin",
+      "ownerid":"ci:group:developers",
+      "uidnumber":1234567,
+      "roleid":"ci:user:alice",
+      "resource_identifier":"ci:user:alice"
+    }
+    ```
+
+## Create [POST /api/users]
+
+Create a Conjur user.
+
+The response when creating a user contains the user's API key.
+This is to support passwordless users.
+When other methods (show, for example) return the user as a JSON document,
+the API key is **not** included.
+
+When a user is created, the user is owned by itself as default,
+and this is not generally what you want.
+You can use the `ownerid` parameter to give ownership of the role
+to a particular group when it is created.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Request Body**
+
+|Field|Description|Required|Type|Example|
+|-----|-----------|----|--------|-------|
+|login|Username for the new user|yes|`String`|"alice"|
+|password|Password for the new user|no|`String`|"9p8nfsdafbp"|
+|ownerid|Fully qualified ID of a Conjur role that will own the new user|no|`String`|"demo:group:security_admin"|
+|uidnumber|A UID number for the new user, primarily for use with LDAP |no|`Number`|123456|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|201|User created successfully|
+|403|Permission denied|
+|409|A user with this login already exists|
+|500|The group specified by `ownerid` doesn't exist, or some other server error occured.|
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+    + Body
+
+      ```
+      {
+          "login":"alice",
+          "password":"9p8nfsdafbp",
+          "ownerid":"demo:group:security_admin",
+          "uidnumber":123456
+      }
+      ```
+
++ Response 201 (application/json)
+    ```
+    {
+        "login":"alice",
+        "userid":"admin",
+        "ownerid":"demo:group:security_admin",
+        "uidnumber":123456,
+        "roleid":"demo:user:alice",
+        "resource_identifier":"demo:user:alice",
+        "api_key":"3c6vwnk3mdtks82k7f23sapp93t6p1nagcergrnqw91b12sxc21zkywy"
+    }
+    ```
+
+## Update Password [PUT /api/users/]
+
+Change a user's password.
+
+In order to change a user's password, you must be able to prove that you
+are the user. You can do so by giving an `Authorization` header with
+either a Conjur authentication token or HTTP Basic Auth containing
+the user's login and old password.
+Note that the user whose password is to be updated is determined by
+the value of the `Authorization` header.
+
+This operation will also replace the user's API key with a securely
+generated random value. You can fetch the new API key using the
+Conjur CLI's `authn login` method.
+
+---
+
+**Header**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur authentication token or Http Basic Auth|"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="|
+
+**Request Body**
+
+The new password, in the example "n82p9819pb12d12dsa".
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The password has been updated|
+|401|Invalid or missing Authorization header|
+
++ Request
+    + Headers
+
+        ```
+        Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+        ```
+    + Body
+
+        ```
+        n82p9819pb12d12dsa
+        ```
+
++ Response 204
+
 ## Group Variable
 
 A `variable` is a 'secret' in Conjur and can be any value.
