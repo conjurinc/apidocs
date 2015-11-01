@@ -18,7 +18,15 @@ TODO description
 
 :[role.revoke_from](role.revoke_from.md)
 
+## Group Resource
+
+:[resource.list](resource.list.md)
+
+:[resource.check](resource.check.md)
+
 ## Group Variable
+
+A `variable` is a 'secret' in Conjur and can be any value.
 
 :[variable.create](variable.create.md)
 

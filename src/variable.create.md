@@ -2,8 +2,6 @@
 
 ### Create a new variable [PUT]
 
-This is a 'secret' in Conjur and can be any value.
-
 A variable can be created with or without an initial value.
 If you don't give the variable an `id` one will be randomly generated.
 
