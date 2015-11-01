@@ -1,4 +1,4 @@
-## Grant to / Revoke from [/api/authz/{account}/roles/{role_a}/{role_id}?members&member={role_b}]
+## Grant to / Revoke from [/api/authz/{account}/roles/{role_a}/?members&member={role_b}]
 
 ### Grant a role to another role [PUT]
 
@@ -10,6 +10,23 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
 
 **Permission Required**: Admin option on the role
 
+---
+
+:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
+
+**Request Body**
+
+|Field|Description|Required|Type|Example|
+|-----|-----------|----|--------|-------|
+|admin_option|Allow grantee admin rights|no|`Boolean`|true|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Role granted|
+|403|Permission denied|
+|404|Role does not exist|
 
 + Parameters
     + account: demo (string) - organization account name
@@ -17,10 +34,13 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
     + role_b: group:v1/ops (string) - ID of the role we're granting membership to
 
 + Request
+    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-    ```
-    {admin_option: true}
-    ```
+    + Body
+
+        ```
+        {admin_option: true}
+        ```
 
 + Response 200 (text/plain)
 
@@ -28,14 +48,3 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
     Role granted
     ```
 
-+ Response 403
-
-    ```
-    # Invalid permissions
-    ```
-
-+ Response 404
-
-    ```
-    # Role does not exist
-    ```

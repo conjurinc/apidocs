@@ -2,7 +2,10 @@ FORMAT: 1A
 
 # Conjur API
 
-TODO description
+Welcome to the Conjur API documentation.
+
+Any manipulation of resources in Conjur can be done through this RESTful API.
+Most API calls require authentication.
 
 ## Group Authentication
 
@@ -119,6 +122,10 @@ conjur authn authenticate -H
 
 ## Group Role
 
+A `role` is an actor in the system, in the classical sense of role-based access control. Roles are the entities which receive permission grants.
+
+[Read more](https://developer.conjur.net/reference/services/authorization/role/)
+
 ## Get members [/api/authz/{account}/roles/{role_kind}/{role_id}?members]
 
 ### Lists the roles that have been the recipient of a role grant [GET]
@@ -133,11 +140,25 @@ Only roles which have been explicitly granted the role in question are listed.
 
 **Permission Required**: Admin option on the role
 
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
 
 + Parameters
     + account: demo (string) - organization account name
     + role_kind: group (string) - kind of the role, for example 'group' or 'layer'
     + role_id: v1/ops (string) - ID of the role
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
 
 + Response 200 (application/json)
 
@@ -158,7 +179,7 @@ Only roles which have been explicitly granted the role in question are listed.
     ]
     ```
 
-## Grant to / Revoke from [/api/authz/{account}/roles/{role_a}/{role_id}?members&member={role_b}]
+## Grant to / Revoke from [/api/authz/{account}/roles/{role_a}/?members&member={role_b}]
 
 ### Grant a role to another role [PUT]
 
@@ -170,6 +191,27 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
 
 **Permission Required**: Admin option on the role
 
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Request Body**
+
+|Field|Description|Required|Type|Example|
+|-----|-----------|----|--------|-------|
+|admin_option|Allow grantee admin rights|no|`Boolean`|true|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Role granted|
+|403|Permission denied|
+|404|Role does not exist|
 
 + Parameters
     + account: demo (string) - organization account name
@@ -177,10 +219,17 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
     + role_b: group:v1/ops (string) - ID of the role we're granting membership to
 
 + Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
 
-    ```
-    {admin_option: true}
-    ```
+    + Body
+
+        ```
+        {admin_option: true}
+        ```
 
 + Response 200 (text/plain)
 
@@ -188,17 +237,6 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
     Role granted
     ```
 
-+ Response 403
-
-    ```
-    # Invalid permissions
-    ```
-
-+ Response 404
-
-    ```
-    # Role does not exist
-    ```
 
 ### Revoke a granted role [DELETE]
 
@@ -206,11 +244,33 @@ Inverse of `role#grant_to`.
 
 **Permission Required**: Admin option on the role
 
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Role revoked|
+|403|Permission denied|
+|404|Role does not exist|
 
 + Parameters
     + account: demo (string) - organization account name
     + role_a: layer/webhosts (string) - ID of the owner role
     + role_b: group:v1/ops (string) - ID of the role we're granting membership to
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
 
 + Response 200 (text/plain)
 
@@ -218,19 +278,11 @@ Inverse of `role#grant_to`.
     Role revoked
     ```
 
-+ Response 403
-
-    ```
-    # Invalid permissions
-    ```
-
-+ Response 404
-
-    ```
-    # Role does not exist
-    ```
-
 ## Group Resource
+
+A `resource` is a record on which permissions are defined. They are partitioned by "kind", such as "group", "host", "file", "environment", "variable", etc.
+
+[Read more](https://developer.conjur.net/reference/services/authorization/resource/)
 
 ## List [/api/authz/{account}/resources/{kind}{?search,limit,offset}]
 
@@ -248,12 +300,33 @@ This command includes features such as:
 The result only includes resources on which the current role has some privilege.
 In other words, resources on which you have no privilege are invisible to you.
 
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of visible resources|
+
 + Parameters
     + account: demo (string) - organization account name
     + kind: host (string) - kind of the resource, for example 'variable' or 'host'
-    + search: ec2 (string) - search string
-    + limit: 5 (number) - limits the number of response records
-    + offset: 0 (number) - offset into the first response record
+    + search: ec2 (string, optional) - search string
+    + limit (number, optional) - limits the number of response records
+    + offset (number, optional) - offset into the first response record
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
 
 + Response 200 (application/json)
 
@@ -296,7 +369,7 @@ Note that in the examples, we are checking if a role can fry bacon.
 Conjur defines resource and role types for common use cases, but you
 are free to use your own custom types.
 
-### Check own permissions [GET /api/authz/{account}/resources/{resource_kind}/{resource_id}/?check{&priviledge}]
+### Check your own permissions [GET /api/authz/{account}/resources/{resource_kind}/{resource_id}/?check{&priviledge}]
 
 In this example, we are checking if we have `fry` privilege on the resource `food:bacon`.
 
@@ -312,20 +385,37 @@ You must either:
 
 You are not allowed to check permissions of arbitrary roles or resources.
 
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The privilege is held; you are allowed to proceed with the transaction.|
+|403|The request is allowed, but the privilege is not held by you.|
+|409|You are not allowed to check permissions on this resource.|
+
 + Parameters
     + account: demo (string) - organization account name
     + resource_kind: food (string) - kind of the resource, for example 'variable' or 'host'
     + resource_id: bacon (string) - ID of the resource you're checking
     + privilege: fry (string) - name of the desired privilege, for example 'execute' or 'update'
 
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
 + Response 204
-The privilege is held; the role is allowed to proceed with the transaction.
 
-+ Response 403
-The request is allowed, but the privilege is not held by the role.
-
-+ Response 404
-The role is not allowed to check permissions on this resource.
 
 ### Check another role's permissions [GET /api/authz/{account}/roles/{role_kind}/{role_id}/?check{&privilege,resource_id}]
 
@@ -344,6 +434,23 @@ You must either:
 
 You are not allowed to check permissions of arbitrary roles or resources.
 
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The privilege is held; the role is allowed to proceed with the transaction.|
+|403|The request is allowed, but the privilege is not held by the role.|
+|409|The role is not allowed to check permissions on this resource.|
+
+
 + Parameters
     + account: demo (string) - organization account name
     + role_kind: user (string) - kind of the role, for example 'user' or 'host'. If the role is not specified, the currently authenticated role is used.
@@ -351,18 +458,18 @@ You are not allowed to check permissions of arbitrary roles or resources.
     + resource_id: food:bacon (string) - the kind and ID of the resource, joined by a colon
     + privilege: fry (string) - name of the desired privilege, for example 'execute' or 'update'
 
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
 + Response 204
-The privilege is held; the role is allowed to proceed with the transaction.
-
-+ Response 403
-The request is allowed, but the privilege is not held by the role.
-
-+ Response 404
-The role is not allowed to check permissions on this resource.
 
 ## Group User
 
-A `user` in Conjur represents an identity for a human.
+A `user` represents an identity for a human.
 
 ## Show [GET /api/users/{login}]
 
@@ -379,6 +486,12 @@ The login parameter must be url encoded.
 
 ---
 
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
 **Response**
 
 |Code|Description|
@@ -389,6 +502,13 @@ The login parameter must be url encoded.
 
 + Parameters
     + login: alice (string) - The user's login
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
 
 + Response 200 (application/json)
 
@@ -523,36 +643,59 @@ The new password, in the example "n82p9819pb12d12dsa".
 
 ## Group Variable
 
-A `variable` is a 'secret' in Conjur and can be any value.
+A `variable` is a 'secret' and can be any value.
 
 ## Create [/api/variables]
 
 ### Create a new variable [PUT]
 
 A variable can be created with or without an initial value.
-If you don't give the variable an `id` one will be randomly generated.
+If you don't give the variable an ID, one will be randomly generated.
 
-The body is a JSON object containing:
+---
 
-```
-id          - Name of the variable, optional
-ownerid     - Owner of the variable
-mime_type   - Media type of the variable
-kind        - Purpose of the variable, optional
-value       - Value of the variable, optional
-```
+**Headers**
 
-+ Request
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
 
-    ```
-    {
-        "id": "dev/mongo/password",
-        "ownerid": "demo:group:developers",
-        "kind": "password",
-        "mime_type": "text/plain",
-        "value": "p89b12ep12puib"
-    }
-    ```
+**Request Body**
+
+|Field|Description|Required|Type|Example|
+|-----|-----------|----|--------|-------|
+|id|Name of the variable|no|`String`|"dev/mongo/password"|
+|ownerid|Owner of the variable|yes|`String`|"demo:group:developers"|
+|mime_type|Media type of the variable|yes|`String`|"text/plain"|
+|kind|Purpose of the variable|no|`String`|"password"|
+|value|Value of the variable|no|`String`|"p89b12ep12puib"|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|201|User created successfully|
+|403|Permission denied|
+|409|A variable with that name already exists|
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
+    + Body
+
+        ```
+        {
+            "id": "dev/mongo/password",
+            "ownerid": "demo:group:developers",
+            "kind": "password",
+            "mime_type": "text/plain",
+            "value": "p89b12ep12puib"
+        }
+        ```
 
 + Response 201 (application/json)
 
@@ -568,19 +711,7 @@ value       - Value of the variable, optional
     }
     ```
 
-+ Response 403
-
-    ```
-    # Invalid permissions
-    ```
-
-+ Response 409
-
-    ```
-    # Variable with that name already exists
-    ```
-
-## Value [/api/variables/{id}/value?version={version}]
+## Value [/api/variables/{id}/value?{version}]
 
 ### Retrieve the value of a variable [GET]
 
@@ -588,26 +719,37 @@ By default this returns the latest version of a variable, but you can retrieve a
 
 Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Variable value is returned|
+|403|Permission denied|
+|404|Variable not found|
+
 + Parameters
-    + id: dev/mongo/password (string) - Name of the variable
+    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
     + version (string, optional) - Version of the variable to retrieve
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
 
 + Response 200 (text/plain)
 
     ```
     p89b12ep12puib
-    ```
-
-+ Response 403
-
-    ```
-    # Invalid permissions
-    ```
-
-+ Response 404
-
-    ```
-    # Variable not found
     ```
 
 ## Values Add [/api/variables/{id}/values]
@@ -616,46 +758,51 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
 
-The body is a JSON object containing:
+---
 
-```
-value       - Value of the variable
-```
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Request Body**
+
+|Field|Description|Required|Type|Example|
+|-----|-----------|----|--------|-------|
+|value|New value to set for the variable|yes|`String`|"np89daed89p"|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|201|Value added|
+|403|Permission denied|
+|404|Variable not found|
+|422|Value malformed or missing|
 
 + Parameters
-    + id: dev/mongo/password (string) - Name of the variable
+    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
 
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
 
-+ Request
+    + Body
 
-    ```
-    {
-        "value": "np89daed89p"
-    }
-    ```
+        ```
+        {
+            "value": "np89daed89p"
+        }
+        ```
 
 + Response 201 (text/plain)
 
     ```
     Value added
-    ```
-
-+ Response 403
-
-    ```
-    # Invalid permissions
-    ```
-
-+ Response 404
-
-    ```
-    # Variable not found
-    ```
-
-+ Response 422
-
-    ```
-    # Value malformed or missing
     ```
 
 ## Group Utilities
@@ -667,9 +814,16 @@ value       - Value of the variable
 This method attempts an internal HTTP or TCP connection to each Conjur service.
 It also attempts a simple transaction against all internal databases.
 
-If all these tests are successful, the response is `HTTP 200`. Otherwise it's `HTTP 502`.
-
 The response body is JSON that can be examined for additional details.
+
+---
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Server is healthy|
+|502|Server is not healthy|
 
 + Response 200
 

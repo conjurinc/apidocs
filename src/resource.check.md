@@ -10,7 +10,7 @@ Note that in the examples, we are checking if a role can fry bacon.
 Conjur defines resource and role types for common use cases, but you
 are free to use your own custom types.
 
-### Check own permissions [GET /api/authz/{account}/resources/{resource_kind}/{resource_id}/?check{&priviledge}]
+### Check your own permissions [GET /api/authz/{account}/resources/{resource_kind}/{resource_id}/?check{&priviledge}]
 
 In this example, we are checking if we have `fry` privilege on the resource `food:bacon`.
 
@@ -26,20 +26,29 @@ You must either:
 
 You are not allowed to check permissions of arbitrary roles or resources.
 
+---
+
+:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The privilege is held; you are allowed to proceed with the transaction.|
+|403|The request is allowed, but the privilege is not held by you.|
+|409|You are not allowed to check permissions on this resource.|
+
 + Parameters
     + account: demo (string) - organization account name
     + resource_kind: food (string) - kind of the resource, for example 'variable' or 'host'
     + resource_id: bacon (string) - ID of the resource you're checking
     + privilege: fry (string) - name of the desired privilege, for example 'execute' or 'update'
 
++ Request
+    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
+
 + Response 204
-The privilege is held; the role is allowed to proceed with the transaction.
 
-+ Response 403
-The request is allowed, but the privilege is not held by the role.
-
-+ Response 404
-The role is not allowed to check permissions on this resource.
 
 ### Check another role's permissions [GET /api/authz/{account}/roles/{role_kind}/{role_id}/?check{&privilege,resource_id}]
 
@@ -58,6 +67,19 @@ You must either:
 
 You are not allowed to check permissions of arbitrary roles or resources.
 
+---
+
+:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The privilege is held; the role is allowed to proceed with the transaction.|
+|403|The request is allowed, but the privilege is not held by the role.|
+|409|The role is not allowed to check permissions on this resource.|
+
+
 + Parameters
     + account: demo (string) - organization account name
     + role_kind: user (string) - kind of the role, for example 'user' or 'host'. If the role is not specified, the currently authenticated role is used.
@@ -65,11 +87,7 @@ You are not allowed to check permissions of arbitrary roles or resources.
     + resource_id: food:bacon (string) - the kind and ID of the resource, joined by a colon
     + privilege: fry (string) - name of the desired privilege, for example 'execute' or 'update'
 
++ Request
+    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
+
 + Response 204
-The privilege is held; the role is allowed to proceed with the transaction.
-
-+ Response 403
-The request is allowed, but the privilege is not held by the role.
-
-+ Response 404
-The role is not allowed to check permissions on this resource.

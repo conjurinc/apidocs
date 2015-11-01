@@ -5,9 +5,16 @@
 This method attempts an internal HTTP or TCP connection to each Conjur service.
 It also attempts a simple transaction against all internal databases.
 
-If all these tests are successful, the response is `HTTP 200`. Otherwise it's `HTTP 502`.
-
 The response body is JSON that can be examined for additional details.
+
+---
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Server is healthy|
+|502|Server is not healthy|
 
 + Response 200
 

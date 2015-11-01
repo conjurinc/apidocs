@@ -14,12 +14,25 @@ This command includes features such as:
 The result only includes resources on which the current role has some privilege.
 In other words, resources on which you have no privilege are invisible to you.
 
+---
+
+:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of visible resources|
+
 + Parameters
     + account: demo (string) - organization account name
     + kind: host (string) - kind of the resource, for example 'variable' or 'host'
-    + search: ec2 (string) - search string
-    + limit: 5 (number) - limits the number of response records
-    + offset: 0 (number) - offset into the first response record
+    + search: ec2 (string, optional) - search string
+    + limit (number, optional) - limits the number of response records
+    + offset (number, optional) - offset into the first response record
+
++ Request
+    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
 + Response 200 (application/json)
 

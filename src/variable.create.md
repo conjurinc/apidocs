@@ -3,29 +3,44 @@
 ### Create a new variable [PUT]
 
 A variable can be created with or without an initial value.
-If you don't give the variable an `id` one will be randomly generated.
+If you don't give the variable an ID, one will be randomly generated.
 
-The body is a JSON object containing:
+---
 
-```
-id          - Name of the variable, optional
-ownerid     - Owner of the variable
-mime_type   - Media type of the variable
-kind        - Purpose of the variable, optional
-value       - Value of the variable, optional
-```
+:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
 
-+ Request
+**Request Body**
 
-    ```
-    {
-        "id": "dev/mongo/password",
-        "ownerid": "demo:group:developers",
-        "kind": "password",
-        "mime_type": "text/plain",
-        "value": "p89b12ep12puib"
-    }
-    ```
+|Field|Description|Required|Type|Example|
+|-----|-----------|----|--------|-------|
+|id|Name of the variable|no|`String`|"dev/mongo/password"|
+|ownerid|Owner of the variable|yes|`String`|"demo:group:developers"|
+|mime_type|Media type of the variable|yes|`String`|"text/plain"|
+|kind|Purpose of the variable|no|`String`|"password"|
+|value|Value of the variable|no|`String`|"p89b12ep12puib"|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|201|User created successfully|
+|403|Permission denied|
+|409|A variable with that name already exists|
+
++ Request (application/json)
+    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
+
+    + Body
+
+        ```
+        {
+            "id": "dev/mongo/password",
+            "ownerid": "demo:group:developers",
+            "kind": "password",
+            "mime_type": "text/plain",
+            "value": "p89b12ep12puib"
+        }
+        ```
 
 + Response 201 (application/json)
 
@@ -39,16 +54,4 @@ value       - Value of the variable, optional
         "resource_identifier": "demo:variable:dev/mongo/password",
         "version_count": 1
     }
-    ```
-
-+ Response 403
-
-    ```
-    # Invalid permissions
-    ```
-
-+ Response 409
-
-    ```
-    # Variable with that name already exists
     ```
