@@ -51,6 +51,8 @@ A `variable` is a 'secret' and can be any value.
 
 :[variable.create](variable.create.md)
 
+:[variable.show](variable.show.md)
+
 :[variable.value](variable.value.md)
 
 :[variable.values_add](variable.values_add.md)

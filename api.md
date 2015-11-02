@@ -693,11 +693,63 @@ If you don't give the variable an ID, one will be randomly generated.
             "ownerid": "demo:group:developers",
             "kind": "password",
             "mime_type": "text/plain",
-            "value": "p89b12ep12puib",
+            "value": "p89b12ep12puib"
         }
         ```
 
 + Response 201 (application/json)
+
+    ```
+    {
+        "id": "dev/mongo/password",
+        "userid": "demo",
+        "mime_type": "text/plain",
+        "kind": "password",
+        "ownerid": "demo:group:developers",
+        "resource_identifier": "demo:variable:dev/mongo/password",
+        "version_count": 1
+    }
+    ```
+
+## Show [/api/variables/{id}]
+
+### Retrieve a variable's metadata [GET]
+
+This route returns information about a variable, but **not** the
+variable's value. Use the [variable#value](#reference/variable/value)
+route to retrieve variable values.
+
+Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
+
+**Permission required**: `read` privilege on the variable
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Variable metadata is returned|
+|403|Permission denied|
+|404|Variable not found|
+
++ Parameters
+    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
 
     ```
     {
