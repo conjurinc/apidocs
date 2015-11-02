@@ -6,7 +6,14 @@ Using [hercule](https://github.com/jamesramsay/hercule) to keep organization san
 
 Testbed is up on [Apiary](http://docs.conjur.apiary.io/).
 
----
+Apiary email/password are stored in Conjur:
+
+```
+apiary.io/email
+apiary.io/password
+```
+
+## Development
 
 **Don't edit `api.md` directly!**
 
