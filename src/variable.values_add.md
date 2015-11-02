@@ -37,8 +37,16 @@ Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
         }
         ```
 
-+ Response 201 (text/plain)
++ Response 201 (application/json)
 
     ```
-    Value added
+    {
+        "id":"dev/mongo/password",
+        "userid":"demo",
+        "mime_type":"text/plain",
+        "kind":"secret",
+        "ownerid":"demo:group:developers",
+        "resource_identifier":"demo:variable:dev/mongo/password",
+        "version_count":2
+    }
     ```

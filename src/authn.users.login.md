@@ -19,7 +19,7 @@ $ echo myusername:mypassword | base64
 + Request (application/json)
     + Headers
 
-            Authorization: Basic ZHVzdGluOm5hdStpbHVzMQ==
+            Authorization: Basic ZHVzdGluOm43dStpbHVzMQo=
 
 + Response 200
 

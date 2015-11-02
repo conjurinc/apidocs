@@ -1,4 +1,4 @@
-## Authenticate [/api/authn/{login}/authenticate]
+## Authenticate [/api/authn/users/{login}/authenticate]
 
 ### Exchange a user login and API key for an API token [POST]
 

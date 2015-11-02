@@ -30,7 +30,7 @@ $ echo myusername:mypassword | base64
 + Request (application/json)
     + Headers
 
-            Authorization: Basic ZHVzdGluOm5hdStpbHVzMQ==
+            Authorization: Basic ZHVzdGluOm43dStpbHVzMQo=
 
 + Response 200
 
@@ -45,7 +45,7 @@ $ echo myusername:mypassword | base64
     # The credentials were not accepted.
     ```
 
-## Authenticate [/api/authn/{login}/authenticate]
+## Authenticate [/api/authn/users/{login}/authenticate]
 
 ### Exchange a user login and API key for an API token [POST]
 
@@ -647,7 +647,7 @@ A `variable` is a 'secret' and can be any value.
 
 ## Create [/api/variables]
 
-### Create a new variable [PUT]
+### Create a new variable [POST]
 
 A variable can be created with or without an initial value.
 If you don't give the variable an ID, one will be randomly generated.
@@ -665,7 +665,7 @@ If you don't give the variable an ID, one will be randomly generated.
 |Field|Description|Required|Type|Example|
 |-----|-----------|----|--------|-------|
 |id|Name of the variable|no|`String`|"dev/mongo/password"|
-|ownerid|Owner of the variable|yes|`String`|"demo:group:developers"|
+|ownerid|Owner of the variable|no|`String`|"demo:group:developers"|
 |mime_type|Media type of the variable|yes|`String`|"text/plain"|
 |kind|Purpose of the variable|no|`String`|"password"|
 |value|Value of the variable|no|`String`|"p89b12ep12puib"|
@@ -693,7 +693,7 @@ If you don't give the variable an ID, one will be randomly generated.
             "ownerid": "demo:group:developers",
             "kind": "password",
             "mime_type": "text/plain",
-            "value": "p89b12ep12puib"
+            "value": "p89b12ep12puib",
         }
         ```
 
@@ -799,10 +799,18 @@ Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
         }
         ```
 
-+ Response 201 (text/plain)
++ Response 201 (application/json)
 
     ```
-    Value added
+    {
+        "id":"dev/mongo/password",
+        "userid":"demo",
+        "mime_type":"text/plain",
+        "kind":"secret",
+        "ownerid":"demo:group:developers",
+        "resource_identifier":"demo:variable:dev/mongo/password",
+        "version_count":2
+    }
     ```
 
 ## Group Utilities
