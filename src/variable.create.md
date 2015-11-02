@@ -14,7 +14,7 @@ If you don't give the variable an ID, one will be randomly generated.
 |Field|Description|Required|Type|Example|
 |-----|-----------|----|--------|-------|
 |id|Name of the variable|no|`String`|"dev/mongo/password"|
-|ownerid|Owner of the variable|no|`String`|"demo:group:developers"|
+|ownerid|Fully qualified ID of a Conjur role that will own the new variable|no|`String`|"demo:group:developers"|
 |mime_type|Media type of the variable|yes|`String`|"text/plain"|
 |kind|Purpose of the variable|no|`String`|"password"|
 |value|Value of the variable|no|`String`|"p89b12ep12puib"|

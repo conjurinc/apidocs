@@ -39,11 +39,21 @@ A `resource` is a record on which permissions are defined. They are partitioned 
 
 A `user` represents an identity for a human.
 
-:[user.show](user.show.md)
-
 :[user.create](user.create.md)
 
+:[user.show](user.show.md)
+
 :[user.update_password](user.update_password.md)
+
+## Group Group
+
+A `group` represents a collection of users.
+
+:[group.create](group.create.md)
+
+:[group.show](group.show.md)
+
+:[group.list_members](group.list_members.md)
 
 ## Group Variable
 

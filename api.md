@@ -447,9 +447,8 @@ You are not allowed to check permissions of arbitrary roles or resources.
 |Code|Description|
 |----|-----------|
 |204|The privilege is held; the role is allowed to proceed with the transaction.|
-|403|The request is allowed, but the privilege is not held by the role.|
-|409|The role is not allowed to check permissions on this resource.|
-
+|403|The role is not allowed to check permissions on this resource.|
+|404|The request is allowed, but the privilege is not held by the role.|
 
 + Parameters
     + account: demo (string) - organization account name
@@ -470,58 +469,6 @@ You are not allowed to check permissions of arbitrary roles or resources.
 ## Group User
 
 A `user` represents an identity for a human.
-
-## Show [GET /api/users/{login}]
-
-Retrieve a user's record.
-
-The response for this method is similar to that from create,
-but it **does not contain the user's API key**.
-
-The login parameter must be url encoded.
-
-**Permission Required**
-
-`read` permission on the user's resource.
-
----
-
-**Headers**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
-
-**Response**
-
-|Code|Description|
-|----|-----------|
-|200|The response body contains the user's record|
-|403|You don't have permission to view the record|
-|404|No user exists with the given login name|
-
-+ Parameters
-    + login: alice (string) - The user's login
-
-+ Request
-    + Headers
-    
-        ```
-        Authorization: Token token="eyJkYX...Rhb="
-        ```
-
-+ Response 200 (application/json)
-
-    ```
-    {
-      "login":"alice",
-      "userid":"admin",
-      "ownerid":"ci:group:developers",
-      "uidnumber":1234567,
-      "roleid":"ci:user:alice",
-      "resource_identifier":"ci:user:alice"
-    }
-    ```
 
 ## Create [POST /api/users]
 
@@ -593,6 +540,58 @@ to a particular group when it is created.
     }
     ```
 
+## Show [GET /api/users/{login}]
+
+Retrieve a user's record.
+
+The response for this method is similar to that from create,
+but it **does not contain the user's API key**.
+
+The login parameter must be url encoded.
+
+**Permission Required**
+
+`read` permission on the user's resource.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|The response body contains the user's record|
+|403|You don't have permission to view the record|
+|404|No user exists with the given login name|
+
++ Parameters
+    + login: alice (string) - The user's login
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    {
+      "login":"alice",
+      "userid":"admin",
+      "ownerid":"ci:group:developers",
+      "uidnumber":1234567,
+      "roleid":"ci:user:alice",
+      "resource_identifier":"ci:user:alice"
+    }
+    ```
+
 ## Update Password [PUT /api/users/]
 
 Change a user's password.
@@ -641,6 +640,184 @@ The new password, in the example "n82p9819pb12d12dsa".
 
 + Response 204
 
+## Group Group
+
+A `group` represents a collection of users.
+
+## Create [/api/groups]
+
+### Create a new group [POST]
+
+If you don't provide an `id`, one will be randomly generated.
+
+If you don't provide an `ownerid`, your user will be the owner of the group.
+This means that no one else will be able to see your group.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Request Body**
+
+|Field|Description|Required|Type|Example|
+|-----|-----------|----|--------|-------|
+|id|Name of the variable|no|`String`|"developers"|
+|ownerid|Fully qualified ID of a Conjur role that will own the new group|no|`String`|"demo:group:security_admin"|
+|gidnumber|A GID number for the new group, primarily for use with LDAP|no|`Number`|27001|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|201|Group created successfully|
+|403|Permission denied|
+|409|A group with that name already exists|
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
+    + Body
+
+        ```
+        {
+            "id": "developers",
+            "ownerid": "demo:group:security_admin",
+            "gidnumber": 27001
+        }
+        ```
+
++ Response 201 (application/json)
+
+    ```
+    {
+        "id": "developers",
+        "userid": "demo",
+        "ownerid": "demo:group:security_admin",
+        "gidnumber": 27001,
+        "roleid": "demo:group:developers",
+        "resource_identifier": "demo:group:developers"
+    }
+    ```
+
+## Show [/api/groups/{id}]
+
+### Retrieve a group's metadata [GET]
+
+Returns information about a group.
+
+Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
+
+**Permission required**: `read` privilege on the group.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Group metadata is returned|
+|403|Permission denied|
+|404|Group not found|
+
++ Parameters
+    + id: tech%2Fops (string) - Name of the group, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    {
+        "id":"tech/ops",
+        "userid":"demo",
+        "ownerid":"demo:group:security_admin",
+        "gidnumber":null,
+        "roleid":"demo:group:tech/ops",
+        "resource_identifier":"demo:group:tech/ops"
+    }
+    ```
+
+## List Members [/api/authz/{account}/roles/group/{id}?members]
+
+### List a group's members [GET]
+
+Lists the direct members of a group.
+
+Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
+
+**Permission required**: `read` privilege on the group.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|List of group members returned|
+|403|Permission denied|
+|404|Group not found|
+
++ Parameters
+    + account: demo (string) - Organization account name
+    + id: tech%2Fops (string) - Name of the group, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    [
+      {
+        "admin_option": true,
+        "grantor": "demo:group:security_admin",
+        "member": "demo:user:admin",
+        "role": "demo:group:security_admin"
+      },
+      {
+        "admin_option": true,
+        "grantor": "demo:user:admin",
+        "member": "demo:user:dustin",
+        "role": "demo:group:security_admin"
+      },
+      {
+        "admin_option": false,
+        "grantor": "demo:user:dustin",
+        "member": "demo:user:bob",
+        "role": "demo:group:security_admin"
+      }
+    ]
+    ```
+
 ## Group Variable
 
 A `variable` is a 'secret' and can be any value.
@@ -665,7 +842,7 @@ If you don't give the variable an ID, one will be randomly generated.
 |Field|Description|Required|Type|Example|
 |-----|-----------|----|--------|-------|
 |id|Name of the variable|no|`String`|"dev/mongo/password"|
-|ownerid|Owner of the variable|no|`String`|"demo:group:developers"|
+|ownerid|Fully qualified ID of a Conjur role that will own the new variable|no|`String`|"demo:group:developers"|
 |mime_type|Media type of the variable|yes|`String`|"text/plain"|
 |kind|Purpose of the variable|no|`String`|"password"|
 |value|Value of the variable|no|`String`|"p89b12ep12puib"|
@@ -785,7 +962,7 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |----|-----------|
 |200|Variable value is returned|
 |403|Permission denied|
-|404|Variable not found|
+|404|Variable, or requested version of the value, not found|
 
 + Parameters
     + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped

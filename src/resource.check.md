@@ -76,9 +76,8 @@ You are not allowed to check permissions of arbitrary roles or resources.
 |Code|Description|
 |----|-----------|
 |204|The privilege is held; the role is allowed to proceed with the transaction.|
-|403|The request is allowed, but the privilege is not held by the role.|
-|409|The role is not allowed to check permissions on this resource.|
-
+|403|The role is not allowed to check permissions on this resource.|
+|404|The request is allowed, but the privilege is not held by the role.|
 
 + Parameters
     + account: demo (string) - organization account name
