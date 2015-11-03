@@ -47,7 +47,19 @@ A `group` represents a collection of users.
 
 ## Group Host
 
-TODO
+A `host` represents an identity for a non-human. This could be a VM, Docker container, CI job, etc.
+
+Hosts are grouped into layers.
+
+[Read more](https://developer.conjur.net/reference/services/directory/host/) about hosts.
+
+:[host.create](host.create.md)
+
+:[host.list](host.list.md)
+
+:[host.show](host.show.md)
+
+:[host.layers](host.layers.md)
 
 ## Group Layer
 

@@ -17,7 +17,7 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 
 |Code|Description|
 |----|-----------|
-|201|Host added to the layer|
+|200|Host added to the layer|
 |403|Permission denied|
 |404|Existing layer or host not found|
 
@@ -28,7 +28,7 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
     ```
     {

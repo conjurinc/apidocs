@@ -26,7 +26,7 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 201 (application/json)
++ Response 204 (application/json)
 
     ```
     {

@@ -698,7 +698,234 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 ## Group Host
 
-TODO
+A `host` represents an identity for a non-human. This could be a VM, Docker container, CI job, etc.
+
+Hosts are grouped into layers.
+
+[Read more](https://developer.conjur.net/reference/services/directory/host/) about hosts.
+
+## Create [/api/hosts/]
+
+### Create a new host [POST]
+
+If you don't provide an `id`, one will be randomly generated.
+
+If you don't provide an `ownerid`, your user will be the owner of the host.
+This means that no one else will be able to see your host.
+
+The API key for the host is returned in the response. This is the **only** time you
+will see the API key, so save it somewhere if you want to be able to log in as the host
+identity on the command line.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Request Body**
+
+|Field|Description|Required|Type|Example|
+|-----|-----------|----|--------|-------|
+|id|Name of the host|no|`String`|"redis001"|
+|ownerid|Fully qualified ID of a Conjur role that will own the new host|no|`String`|"demo:group:ops"|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|201|Host created successfully|
+|403|Permission denied|
+|409|A host with that name already exists|
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
+    + Body
+
+        ```
+        {
+            "id": "redis001",
+            "ownerid": "demo:group:ops"
+        }
+        ```
+
++ Response 201 (application/json)
+
+    ```
+    {
+      "id": "redis001",
+      "userid": "demo",
+      "created_at": "2015-11-03T21:34:47Z",
+      "ownerid": "demo:group:ops",
+      "roleid": "demo:host:redis001",
+      "resource_identifier": "demo:host:redis001",
+      "api_key": "3sqgnzs2yqtjgf3hx6fw6cdh8012hb6ehy1wh406eeg8ktj27jgabd"
+    }
+    ```
+
+## List [/api/authz/{account}/resources/host{?search,limit,offset,acting_as}]
+
+### List hosts [GET]
+
+Lists all hosts the calling identity has `read` privilege on.
+
+You can switch the role to act as with the `acting_as` parameter.
+
+Run a full-text search of the hosts with the `search` parameter.
+
+You can also limit, offset and shorten the resulting list.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of hosts is returned|
+|403|Permission denied|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + search: ec2 (string, optional) - Query for search
+    + limit: 100 (number, optional) - Limit the number of records returned
+    + offset: 0 (number, optional) - Set the starting record index to return
+    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    [
+      {
+        "id": "ec2/i-9129nasd",
+        "owner": "demo:group:ops",
+        "permissions": [
+          {
+            "privilege": "read",
+            "grant_option": false,
+            "resource": "demo:host:ec2/i-9129nasd",
+            "role": "demo:host:ec2/i-9129nasd",
+            "grantor": "demo:user:fred"
+          }
+        ],
+        "annotations": []
+      }
+    ]
+    ```
+
+## Show [/api/hosts/{id}]
+
+### Retrieve a host's metadata [GET]
+
+This route returns information about a host.
+The host's API key is not returned in this response.
+
+Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
+
+**Permission required**: `read` privilege on the host.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Host metadata is returned|
+|403|Permission denied|
+|404|Host not found|
+
++ Parameters
+    + id: redis001 (string) - Name of the host, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    {
+      "id": "redis001",
+      "userid": "demo",
+      "created_at": "2015-11-03T21:33:17Z",
+      "ownerid": "demo:group:ops",
+      "roleid": "demo:host:redis001",
+      "resource_identifier": "demo:host:redis001"
+    }
+    ```
+
+## List Layers [/api/authz/{account}/roles/host/{id}/?all]
+
+### List the layers to which a host belongs [GET]
+
+A host may belong to multiple layers at once.
+
+Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
+
+**Permission required**: `read` privilege on the host.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|List of layers is returned|
+|403|Permission denied|
+|404|Host not found|
+
++ Parameters
+    + account: demo (string) - Organization account name
+    + id: slave01 (string) - Name of the host, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    [
+        "jenkins/slaves"
+    ]
+    ```
 
 ## Group Layer
 
@@ -770,11 +997,17 @@ This means that no one else will be able to see your layer.
     }
     ```
 
-## List [/api/layers]
+## List [/api/authz/{account}/resources/layer{?search,limit,offset,acting_as}]
 
-### List layers [GET]
+### List Layers [GET]
 
 Lists all layers the calling identity has `read` privilege on.
+
+You can switch the role to act as with the `acting_as` parameter.
+
+Run a full-text search of the hosts with the `search` parameter.
+
+You can also limit, offset and shorten the resulting list.
 
 ---
 
@@ -788,8 +1021,15 @@ Lists all layers the calling identity has `read` privilege on.
 
 |Code|Description|
 |----|-----------|
-|200|JSON list of layers returned|
+|200|JSON list of layers is returned|
 |403|Permission denied|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + search: jenkins (string, optional) - Query for search
+    + limit: 100 (number, optional) - Limit the number of records returned
+    + offset: 0 (number, optional) - Set the starting record index to return
+    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
 + Request (application/json)
     + Headers
@@ -804,25 +1044,17 @@ Lists all layers the calling identity has `read` privilege on.
     [
       {
         "id": "jenkins/slaves",
-        "userid": "demo",
-        "ownerid": "demo:group:ops",
-        "roleid": "demo:layer:jenkins/slaves",
-        "resource_identifier": "demo:layer:jenkins/slaves",
-        "hosts": [
-            "demo:host:slave01"
-        ]
-      },
-      {
-        "id": "web/app1",
-        "userid": "demo",
-        "ownerid": "demo:group:developers",
-        "roleid": "demo:layer:web/app1",
-        "resource_identifier": "demo:layer:web/app1",
-        "hosts": [
-            "demo:host:app1-01",
-            "demo:host:app1-02",
-            "demo:host:app1-03"
-        ]
+        "owner": "demo:group:ops",
+        "permissions": [
+          {
+            "privilege": "read",
+            "grant_option": false,
+            "resource": "demo:layer:jenkins/slaves",
+            "role": "demo:layer:jenkins/slaves",
+            "grantor": "demo:user:admin"
+          }
+        ],
+        "annotations": []
       }
     ]
     ```
@@ -901,7 +1133,7 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 
 |Code|Description|
 |----|-----------|
-|201|Host added to the layer|
+|200|Host added to the layer|
 |403|Permission denied|
 |404|Existing layer or host not found|
 
@@ -916,7 +1148,7 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
     ```
     {
@@ -967,7 +1199,7 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 201 (application/json)
++ Response 204 (application/json)
 
     ```
     {
