@@ -13,27 +13,17 @@ Most API calls require authentication.
 
 :[authn.users.authenticate](authn.users.authenticate.md)
 
-## Group Role
+## Group Variable
 
-A `role` is an actor in the system, in the classical sense of role-based access control. Roles are the entities which receive permission grants.
+A `variable` is a 'secret' and can be any value.
 
-[Read more](https://developer.conjur.net/reference/services/authorization/role/)
+:[variable.create](variable.create.md)
 
-:[role.members](role.members.md)
+:[variable.show](variable.show.md)
 
-:[role.grant_to](role.grant_to.md)
+:[variable.value](variable.value.md)
 
-:[role.revoke_from](role.revoke_from.md)
-
-## Group Resource
-
-A `resource` is a record on which permissions are defined. They are partitioned by "kind", such as "group", "host", "file", "environment", "variable", etc.
-
-[Read more](https://developer.conjur.net/reference/services/authorization/resource/)
-
-:[resource.list](resource.list.md)
-
-:[resource.check](resource.check.md)
+:[variable.values_add](variable.values_add.md)
 
 ## Group User
 
@@ -55,17 +45,52 @@ A `group` represents a collection of users.
 
 :[group.list_members](group.list_members.md)
 
-## Group Variable
+## Group Host
 
-A `variable` is a 'secret' and can be any value.
+TODO
 
-:[variable.create](variable.create.md)
+## Group Layer
 
-:[variable.show](variable.show.md)
+A `layer` is a collection of hosts.
 
-:[variable.value](variable.value.md)
+Granting privileges on layers instead of the hosts themselves allows for easy auto-scaling.
+A host assumes the permissions of the layer when it is enrolled.
 
-:[variable.values_add](variable.values_add.md)
+[Read more](https://developer.conjur.net/reference/services/directory/layer/) about layers.
+
+:[layer.create](layer.create.md)
+
+:[layer.list](layer.list.md)
+
+:[layer.show](layer.show.md)
+
+:[layer.add_host](layer.add_host.md)
+
+:[layer.remove_host](layer.remove_host.md)
+
+## Group Role
+
+A `role` is an actor in the system, in the classical sense of role-based access control. 
+Roles are the entities which receive permission grants.
+
+[Read more](https://developer.conjur.net/reference/services/authorization/role/)
+
+:[role.members](role.members.md)
+
+:[role.grant_to](role.grant_to.md)
+
+:[role.revoke_from](role.revoke_from.md)
+
+## Group Resource
+
+A `resource` is a record on which permissions are defined. 
+They are partitioned by "kind", such as "group", "host", "file", "environment", "variable", etc.
+
+[Read more](https://developer.conjur.net/reference/services/authorization/resource/)
+
+:[resource.list](resource.list.md)
+
+:[resource.check](resource.check.md)
 
 ## Group Utilities
 

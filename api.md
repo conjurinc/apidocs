@@ -120,76 +120,16 @@ conjur authn authenticate -H
     # The credentials were not accepted.
     ```
 
-## Group Role
+## Group Variable
 
-A `role` is an actor in the system, in the classical sense of role-based access control. Roles are the entities which receive permission grants.
+A `variable` is a 'secret' and can be any value.
 
-[Read more](https://developer.conjur.net/reference/services/authorization/role/)
+## Create [/api/variables]
 
-## Get members [/api/authz/{account}/roles/{role_kind}/{role_id}?members]
+### Create a new variable [POST]
 
-### Lists the roles that have been the recipient of a role grant [GET]
-
-The creator of the role is always a role member and role administrator.
-
-If role "A" is created by user "U" and then granted to roles "B" and "C",
-then the members of role "A" are [ "U", "B", "C" ].
-
-Role members are not expanded transitively.
-Only roles which have been explicitly granted the role in question are listed.
-
-**Permission Required**: Admin option on the role
-
----
-
-**Headers**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
-
-+ Parameters
-    + account: demo (string) - organization account name
-    + role_kind: group (string) - kind of the role, for example 'group' or 'layer'
-    + role_id: v1/ops (string) - ID of the role
-
-+ Request
-    + Headers
-    
-        ```
-        Authorization: Token token="eyJkYX...Rhb="
-        ```
-
-+ Response 200 (application/json)
-
-    ```
-    [
-      {
-        "admin_option": true,
-        "grantor": "demo:group:v1/ops",
-        "member": "demo:group:security_admin",
-        "role": "demo:group:v1/ops"
-      },
-      {
-        "admin_option": false,
-        "grantor": "demo:user:demo",
-        "member": "demo:user:donna",
-        "role": "demo:group:v1/ops"
-      }
-    ]
-    ```
-
-## Grant to / Revoke from [/api/authz/{account}/roles/{role_a}/?members&member={role_b}]
-
-### Grant a role to another role [PUT]
-
-All of this role's privileges are thereby granted to the new role.
-
-When granted with `admin_option`, the grantee (given-to) role can grant the grantor (given-by) role to others.
-
-`admin_option` is passed in the request body.
-
-**Permission Required**: Admin option on the role
+A variable can be created with or without an initial value.
+If you don't give the variable an ID, one will be randomly generated.
 
 ---
 
@@ -203,22 +143,21 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
 
 |Field|Description|Required|Type|Example|
 |-----|-----------|----|--------|-------|
-|admin_option|Allow grantee admin rights|no|`Boolean`|true|
+|id|Name of the variable|no|`String`|"dev/mongo/password"|
+|ownerid|Fully qualified ID of a Conjur role that will own the new variable|no|`String`|"demo:group:developers"|
+|mime_type|Media type of the variable|yes|`String`|"text/plain"|
+|kind|Purpose of the variable|no|`String`|"password"|
+|value|Value of the variable|no|`String`|"p89b12ep12puib"|
 
 **Response**
 
 |Code|Description|
 |----|-----------|
-|200|Role granted|
+|201|Variable created successfully|
 |403|Permission denied|
-|404|Role does not exist|
+|409|A variable with that name already exists|
 
-+ Parameters
-    + account: demo (string) - organization account name
-    + role_a: layer/webhosts (string) - ID of the owner role
-    + role_b: group:v1/ops (string) - ID of the role we're granting membership to
-
-+ Request
++ Request (application/json)
     + Headers
     
         ```
@@ -228,21 +167,40 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
     + Body
 
         ```
-        {admin_option: true}
+        {
+            "id": "dev/mongo/password",
+            "ownerid": "demo:group:developers",
+            "kind": "password",
+            "mime_type": "text/plain",
+            "value": "p89b12ep12puib"
+        }
         ```
 
-+ Response 200 (text/plain)
++ Response 201 (application/json)
 
     ```
-    Role granted
+    {
+        "id": "dev/mongo/password",
+        "userid": "demo",
+        "mime_type": "text/plain",
+        "kind": "password",
+        "ownerid": "demo:group:developers",
+        "resource_identifier": "demo:variable:dev/mongo/password",
+        "version_count": 1
+    }
     ```
 
+## Show [/api/variables/{id}]
 
-### Revoke a granted role [DELETE]
+### Retrieve a variable's metadata [GET]
 
-Inverse of `role#grant_to`.
+This route returns information about a variable, but **not** the
+variable's value. Use the [variable#value](#reference/variable/value)
+route to retrieve variable values.
 
-**Permission Required**: Admin option on the role
+Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
+
+**Permission required**: `read` privilege on the variable
 
 ---
 
@@ -256,72 +214,14 @@ Inverse of `role#grant_to`.
 
 |Code|Description|
 |----|-----------|
-|200|Role revoked|
+|200|Variable metadata is returned|
 |403|Permission denied|
-|404|Role does not exist|
+|404|Variable not found|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + role_a: layer/webhosts (string) - ID of the owner role
-    + role_b: group:v1/ops (string) - ID of the role we're granting membership to
+    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
 
-+ Request
-    + Headers
-    
-        ```
-        Authorization: Token token="eyJkYX...Rhb="
-        ```
-
-+ Response 200 (text/plain)
-
-    ```
-    Role revoked
-    ```
-
-## Group Resource
-
-A `resource` is a record on which permissions are defined. They are partitioned by "kind", such as "group", "host", "file", "environment", "variable", etc.
-
-[Read more](https://developer.conjur.net/reference/services/authorization/resource/)
-
-## List [/api/authz/{account}/resources/{kind}{?search,limit,offset}]
-
-### Find and list resources [GET]
-
-This command includes features such as:
-
-* Full-text search of resource ids and annotations
-* Filtering by resource kind
-* Search offset and limit
-* Display full resource JSON, or IDs only
-
-**Permission Required**
-
-The result only includes resources on which the current role has some privilege.
-In other words, resources on which you have no privilege are invisible to you.
-
----
-
-**Headers**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
-
-**Response**
-
-|Code|Description|
-|----|-----------|
-|200|JSON list of visible resources|
-
-+ Parameters
-    + account: demo (string) - organization account name
-    + kind: host (string) - kind of the resource, for example 'variable' or 'host'
-    + search: ec2 (string, optional) - search string
-    + limit (number, optional) - limits the number of response records
-    + offset (number, optional) - offset into the first response record
-
-+ Request
++ Request (application/json)
     + Headers
     
         ```
@@ -331,59 +231,24 @@ In other words, resources on which you have no privilege are invisible to you.
 + Response 200 (application/json)
 
     ```
-    [
-        {
-            "id": "conjurops:host:ec2/i-2e3c83df",
-            "owner": "conjurops:group:v4/build",
-            "permissions": [
-              {
-                "privilege": "execute",
-                "grant_option": false,
-                "resource": "conjurops:host:ec2/i-2e3c83df",
-                "role": "conjurops:@:layer/build-0.1.0/jenkins/use_host",
-                "grantor": "conjurops:deputy:production/jenkins-2.0/jenkins-slaves"
-              },
-              {
-                "privilege": "read",
-                "grant_option": false,
-                "resource": "conjurops:host:ec2/i-2e3c83df",
-                "role": "conjurops:host:ec2/i-2e3c83df",
-                "grantor": "conjurops:deputy:production/jenkins-2.0/jenkins-slaves"
-              }
-            ],
-            "annotations": {
-            }
-          }
-    ]
+    {
+        "id": "dev/mongo/password",
+        "userid": "demo",
+        "mime_type": "text/plain",
+        "kind": "password",
+        "ownerid": "demo:group:developers",
+        "resource_identifier": "demo:variable:dev/mongo/password",
+        "version_count": 1
+    }
     ```
 
-## Check [/api]
+## Value [/api/variables/{id}/value?{version}]
 
-Check whether a role has a certain permission on a resource.
+### Retrieve the value of a variable [GET]
 
-There are 2 routes here:
-* The first route uses the currently logged-in user as the role.
-* The second route allows you to *specify* the role on which to check permissions.
+By default this returns the latest version of a variable, but you can retrieve any earlier version as well.
 
-Note that in the examples, we are checking if a role can fry bacon.
-Conjur defines resource and role types for common use cases, but you
-are free to use your own custom types.
-
-### Check your own permissions [GET /api/authz/{account}/resources/{resource_kind}/{resource_id}/?check{&priviledge}]
-
-In this example, we are checking if we have `fry` privilege on the resource `food:bacon`.
-
-The response body is empty, privilege is communicated through the response status code.
-
-**Permission required**
-
-You must either:
-
-* Be the owner of the resource
-* Have some permission on the resource
-* Be granted the role that you are checking (which includes your own role)
-
-You are not allowed to check permissions of arbitrary roles or resources.
+Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 ---
 
@@ -397,15 +262,13 @@ You are not allowed to check permissions of arbitrary roles or resources.
 
 |Code|Description|
 |----|-----------|
-|204|The privilege is held; you are allowed to proceed with the transaction.|
-|403|The request is allowed, but the privilege is not held by you.|
-|409|You are not allowed to check permissions on this resource.|
+|200|Variable value is returned|
+|403|Permission denied|
+|404|Variable, or requested version of the value, not found|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + resource_kind: food (string) - kind of the resource, for example 'variable' or 'host'
-    + resource_id: bacon (string) - ID of the resource you're checking
-    + privilege: fry (string) - name of the desired privilege, for example 'execute' or 'update'
+    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
+    + version (string, optional) - Version of the variable to retrieve
 
 + Request
     + Headers
@@ -414,25 +277,17 @@ You are not allowed to check permissions of arbitrary roles or resources.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 204
++ Response 200 (text/plain)
 
+    ```
+    p89b12ep12puib
+    ```
 
-### Check another role's permissions [GET /api/authz/{account}/roles/{role_kind}/{role_id}/?check{&privilege,resource_id}]
+## Values Add [/api/variables/{id}/values]
 
-In this example, we are checking if the user 'alice' has
-`fry` privilege on the resource `food:bacon`.
+### Add a value to a variable [POST]
 
-The response body is empty, privilege is communicated through the response status code.
-
-**Permission required**
-
-You must either:
-
-* Be the owner of the resource
-* Have some permission on the resource
-* Be granted the role that you are checking (which includes your own role)
-
-You are not allowed to check permissions of arbitrary roles or resources.
+Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 ---
 
@@ -442,29 +297,52 @@ You are not allowed to check permissions of arbitrary roles or resources.
 |----|------------|-------|
 |Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
 
+**Request Body**
+
+|Field|Description|Required|Type|Example|
+|-----|-----------|----|--------|-------|
+|value|New value to set for the variable|yes|`String`|"np89daed89p"|
+
 **Response**
 
 |Code|Description|
 |----|-----------|
-|204|The privilege is held; the role is allowed to proceed with the transaction.|
-|403|The role is not allowed to check permissions on this resource.|
-|404|The request is allowed, but the privilege is not held by the role.|
+|201|Value added|
+|403|Permission denied|
+|404|Variable not found|
+|422|Value malformed or missing|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + role_kind: user (string) - kind of the role, for example 'user' or 'host'. If the role is not specified, the currently authenticated role is used.
-    + role_id: alice (string) - ID of the role. If the role is not specified, the current authenticated role is used.
-    + resource_id: food:bacon (string) - the kind and ID of the resource, joined by a colon
-    + privilege: fry (string) - name of the desired privilege, for example 'execute' or 'update'
+    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
 
-+ Request
++ Request (application/json)
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 204
+    + Body
+
+        ```
+        {
+            "value": "np89daed89p"
+        }
+        ```
+
++ Response 201 (application/json)
+
+    ```
+    {
+        "id":"dev/mongo/password",
+        "userid":"demo",
+        "mime_type":"text/plain",
+        "kind":"secret",
+        "ownerid":"demo:group:developers",
+        "resource_identifier":"demo:variable:dev/mongo/password",
+        "version_count":2
+    }
+    ```
 
 ## Group User
 
@@ -818,16 +696,27 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
     ]
     ```
 
-## Group Variable
+## Group Host
 
-A `variable` is a 'secret' and can be any value.
+TODO
 
-## Create [/api/variables]
+## Group Layer
 
-### Create a new variable [POST]
+A `layer` is a collection of hosts.
 
-A variable can be created with or without an initial value.
-If you don't give the variable an ID, one will be randomly generated.
+Granting privileges on layers instead of the hosts themselves allows for easy auto-scaling.
+A host assumes the permissions of the layer when it is enrolled.
+
+[Read more](https://developer.conjur.net/reference/services/directory/layer/) about layers.
+
+## Create [/api/layers/]
+
+### Create a new layer [POST]
+
+If you don't provide an `id`, one will be randomly generated.
+
+If you don't provide an `ownerid`, your user will be the owner of the group.
+This means that no one else will be able to see your group.
 
 ---
 
@@ -841,19 +730,16 @@ If you don't give the variable an ID, one will be randomly generated.
 
 |Field|Description|Required|Type|Example|
 |-----|-----------|----|--------|-------|
-|id|Name of the variable|no|`String`|"dev/mongo/password"|
-|ownerid|Fully qualified ID of a Conjur role that will own the new variable|no|`String`|"demo:group:developers"|
-|mime_type|Media type of the variable|yes|`String`|"text/plain"|
-|kind|Purpose of the variable|no|`String`|"password"|
-|value|Value of the variable|no|`String`|"p89b12ep12puib"|
+|id|Name of the layer|no|`String`|"jenkins/slaves"|
+|ownerid|Fully qualified ID of a Conjur role that will own the new layer|no|`String`|"demo:group:ops"|
 
 **Response**
 
 |Code|Description|
 |----|-----------|
-|201|User created successfully|
+|201|Layer created successfully|
 |403|Permission denied|
-|409|A variable with that name already exists|
+|409|A layer with that name already exists|
 
 + Request (application/json)
     + Headers
@@ -866,11 +752,8 @@ If you don't give the variable an ID, one will be randomly generated.
 
         ```
         {
-            "id": "dev/mongo/password",
-            "ownerid": "demo:group:developers",
-            "kind": "password",
-            "mime_type": "text/plain",
-            "value": "p89b12ep12puib"
+            "id": "jenkins/slaves",
+            "ownerid": "demo:group:ops",
         }
         ```
 
@@ -878,27 +761,20 @@ If you don't give the variable an ID, one will be randomly generated.
 
     ```
     {
-        "id": "dev/mongo/password",
-        "userid": "demo",
-        "mime_type": "text/plain",
-        "kind": "password",
-        "ownerid": "demo:group:developers",
-        "resource_identifier": "demo:variable:dev/mongo/password",
-        "version_count": 1
+      "id": "jenkins/slaves",
+      "userid": "demo",
+      "ownerid": "demo:group:ops",
+      "roleid": "demo:layer:jenkins/slaves",
+      "resource_identifier": "demo:layer:jenkins/slaves",
+      "hosts": []
     }
     ```
 
-## Show [/api/variables/{id}]
+## List [/api/layers]
 
-### Retrieve a variable's metadata [GET]
+### List layers [GET]
 
-This route returns information about a variable, but **not** the
-variable's value. Use the [variable#value](#reference/variable/value)
-route to retrieve variable values.
-
-Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
-
-**Permission required**: `read` privilege on the variable
+Lists all layers the calling identity has `read` privilege on.
 
 ---
 
@@ -912,12 +788,73 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 |Code|Description|
 |----|-----------|
-|200|Variable metadata is returned|
+|200|JSON list of layers returned|
 |403|Permission denied|
-|404|Variable not found|
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    [
+      {
+        "id": "jenkins/slaves",
+        "userid": "demo",
+        "ownerid": "demo:group:ops",
+        "roleid": "demo:layer:jenkins/slaves",
+        "resource_identifier": "demo:layer:jenkins/slaves",
+        "hosts": [
+            "demo:host:slave01"
+        ]
+      },
+      {
+        "id": "web/app1",
+        "userid": "demo",
+        "ownerid": "demo:group:developers",
+        "roleid": "demo:layer:web/app1",
+        "resource_identifier": "demo:layer:web/app1",
+        "hosts": [
+            "demo:host:app1-01",
+            "demo:host:app1-02",
+            "demo:host:app1-03"
+        ]
+      }
+    ]
+    ```
+
+## Show [/api/layers/{id}]
+
+### Retrieve a layer's metadata [GET]
+
+This route returns information about a layer, including its attached hosts.
+
+Layer IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
+
+**Permission required**: `read` privilege on the layer.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Layer metadata is returned|
+|403|Permission denied|
+|404|Layer not found|
 
 + Parameters
-    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
+    + id: jenkins%2Fslaves (string) - Name of the layer, query-escaped
 
 + Request (application/json)
     + Headers
@@ -930,23 +867,26 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
     ```
     {
-        "id": "dev/mongo/password",
+        "id": "jenkins/slaves",
         "userid": "demo",
-        "mime_type": "text/plain",
-        "kind": "password",
-        "ownerid": "demo:group:developers",
-        "resource_identifier": "demo:variable:dev/mongo/password",
-        "version_count": 1
+        "ownerid": "demo:group:ops",
+        "roleid": "demo:layer:jenkins/slaves",
+        "resource_identifier": "demo:layer:jenkins/slaves",
+        "hosts": [
+            "demo:host:slave01"
+        ]
     }
     ```
 
-## Value [/api/variables/{id}/value?{version}]
+## Add Host [/api/layers/{id}/hosts/{?hostid}]
 
-### Retrieve the value of a variable [GET]
+### Add a host to a layer [POST]
 
-By default this returns the latest version of a variable, but you can retrieve any earlier version as well.
+Adds a new host to an existing layer. The host will assume all privileges of the layer.
 
-Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
+This operation is idempotent: if the host is already in the layer, adding it again will do nothing.
+
+Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 
 ---
 
@@ -956,17 +896,124 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |----|------------|-------|
 |Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
 
+
 **Response**
 
 |Code|Description|
 |----|-----------|
-|200|Variable value is returned|
+|201|Host added to the layer|
 |403|Permission denied|
-|404|Variable, or requested version of the value, not found|
+|404|Existing layer or host not found|
 
 + Parameters
-    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
-    + version (string, optional) - Version of the variable to retrieve
+    + id: jenkins%2Fslaves (string) - ID of the layer, query-escaped
+    + hostid: demo%3Ahost%3Aslave01 (string) - Fully qualified ID of the host to add, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 201 (application/json)
+
+    ```
+    {
+      "id": "jenkins/slaves",
+      "userid": "demo",
+      "ownerid": "demo:group:ops",
+      "roleid": "demo:layer:jenkins/slaves",
+      "resource_identifier": "demo:layer:jenkins/slaves",
+      "hosts": [
+        "demo:host:slave01"
+      ]
+    }
+    ```
+
+## Remove Host [/api/layers/{id}/hosts/{hostid}]
+
+### Remove a host from a layer [DELETE]
+
+Remove a host from an existing layer. All privileges the host gained through layer enrollment are revoked.
+
+Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|Host removed from the layer|
+|403|Permission denied|
+|404|Existing layer or host not found|
+
++ Parameters
+    + id: jenkins%2Fslaves (string) - ID of the layer, query-escaped
+    + hostid: demo%3Ahost%3Aslave01 (string) - Fully qualified ID of the host to remove, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 201 (application/json)
+
+    ```
+    {
+      "id": "jenkins/slaves",
+      "userid": "demo",
+      "ownerid": "demo:group:ops",
+      "roleid": "demo:layer:jenkins/slaves",
+      "resource_identifier": "demo:layer:jenkins/slaves",
+      "hosts": [
+      ]
+    }
+    ```
+
+## Group Role
+
+A `role` is an actor in the system, in the classical sense of role-based access control. 
+Roles are the entities which receive permission grants.
+
+[Read more](https://developer.conjur.net/reference/services/authorization/role/)
+
+## Get members [/api/authz/{account}/roles/{role_kind}/{role_id}?members]
+
+### Lists the roles that have been the recipient of a role grant [GET]
+
+The creator of the role is always a role member and role administrator.
+
+If role "A" is created by user "U" and then granted to roles "B" and "C",
+then the members of role "A" are [ "U", "B", "C" ].
+
+Role members are not expanded transitively.
+Only roles which have been explicitly granted the role in question are listed.
+
+**Permission Required**: Admin option on the role
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + role_kind: group (string) - kind of the role, for example 'group' or 'layer'
+    + role_id: v1/ops (string) - ID of the role
 
 + Request
     + Headers
@@ -975,17 +1022,36 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (text/plain)
++ Response 200 (application/json)
 
     ```
-    p89b12ep12puib
+    [
+      {
+        "admin_option": true,
+        "grantor": "demo:group:v1/ops",
+        "member": "demo:group:security_admin",
+        "role": "demo:group:v1/ops"
+      },
+      {
+        "admin_option": false,
+        "grantor": "demo:user:demo",
+        "member": "demo:user:donna",
+        "role": "demo:group:v1/ops"
+      }
+    ]
     ```
 
-## Values Add [/api/variables/{id}/values]
+## Grant to / Revoke from [/api/authz/{account}/roles/{role_a}/?members&member={role_b}]
 
-### Add a value to a variable [POST]
+### Grant a role to another role [PUT]
 
-Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
+All of this role's privileges are thereby granted to the new role.
+
+When granted with `admin_option`, the grantee (given-to) role can grant the grantor (given-by) role to others.
+
+`admin_option` is passed in the request body.
+
+**Permission Required**: Admin option on the role
 
 ---
 
@@ -999,21 +1065,22 @@ Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 |Field|Description|Required|Type|Example|
 |-----|-----------|----|--------|-------|
-|value|New value to set for the variable|yes|`String`|"np89daed89p"|
+|admin_option|Allow grantee admin rights|no|`Boolean`|true|
 
 **Response**
 
 |Code|Description|
 |----|-----------|
-|201|Value added|
+|200|Role granted|
 |403|Permission denied|
-|404|Variable not found|
-|422|Value malformed or missing|
+|404|Role does not exist|
 
 + Parameters
-    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
+    + account: demo (string) - organization account name
+    + role_a: layer/webhosts (string) - ID of the owner role
+    + role_b: group:v1/ops (string) - ID of the role we're granting membership to
 
-+ Request (application/json)
++ Request
     + Headers
     
         ```
@@ -1023,24 +1090,244 @@ Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
     + Body
 
         ```
-        {
-            "value": "np89daed89p"
-        }
+        {admin_option: true}
         ```
 
-+ Response 201 (application/json)
++ Response 200 (text/plain)
 
     ```
-    {
-        "id":"dev/mongo/password",
-        "userid":"demo",
-        "mime_type":"text/plain",
-        "kind":"secret",
-        "ownerid":"demo:group:developers",
-        "resource_identifier":"demo:variable:dev/mongo/password",
-        "version_count":2
-    }
+    Role granted
     ```
+
+
+### Revoke a granted role [DELETE]
+
+Inverse of `role#grant_to`.
+
+**Permission Required**: Admin option on the role
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Role revoked|
+|403|Permission denied|
+|404|Role does not exist|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + role_a: layer/webhosts (string) - ID of the owner role
+    + role_b: group:v1/ops (string) - ID of the role we're granting membership to
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (text/plain)
+
+    ```
+    Role revoked
+    ```
+
+## Group Resource
+
+A `resource` is a record on which permissions are defined. 
+They are partitioned by "kind", such as "group", "host", "file", "environment", "variable", etc.
+
+[Read more](https://developer.conjur.net/reference/services/authorization/resource/)
+
+## List [/api/authz/{account}/resources/{kind}{?search,limit,offset}]
+
+### Find and list resources [GET]
+
+This command includes features such as:
+
+* Full-text search of resource ids and annotations
+* Filtering by resource kind
+* Search offset and limit
+* Display full resource JSON, or IDs only
+
+**Permission Required**
+
+The result only includes resources on which the current role has some privilege.
+In other words, resources on which you have no privilege are invisible to you.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of visible resources|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + kind: host (string) - kind of the resource, for example 'variable' or 'host'
+    + search: ec2 (string, optional) - search string
+    + limit (number, optional) - limits the number of response records
+    + offset (number, optional) - offset into the first response record
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    [
+        {
+            "id": "conjurops:host:ec2/i-2e3c83df",
+            "owner": "conjurops:group:v4/build",
+            "permissions": [
+              {
+                "privilege": "execute",
+                "grant_option": false,
+                "resource": "conjurops:host:ec2/i-2e3c83df",
+                "role": "conjurops:@:layer/build-0.1.0/jenkins/use_host",
+                "grantor": "conjurops:deputy:production/jenkins-2.0/jenkins-slaves"
+              },
+              {
+                "privilege": "read",
+                "grant_option": false,
+                "resource": "conjurops:host:ec2/i-2e3c83df",
+                "role": "conjurops:host:ec2/i-2e3c83df",
+                "grantor": "conjurops:deputy:production/jenkins-2.0/jenkins-slaves"
+              }
+            ],
+            "annotations": {
+            }
+          }
+    ]
+    ```
+
+## Check [/api]
+
+Check whether a role has a certain permission on a resource.
+
+There are 2 routes here:
+* The first route uses the currently logged-in user as the role.
+* The second route allows you to *specify* the role on which to check permissions.
+
+Note that in the examples, we are checking if a role can fry bacon.
+Conjur defines resource and role types for common use cases, but you
+are free to use your own custom types.
+
+### Check your own permissions [GET /api/authz/{account}/resources/{resource_kind}/{resource_id}/?check{&priviledge}]
+
+In this example, we are checking if we have `fry` privilege on the resource `food:bacon`.
+
+The response body is empty, privilege is communicated through the response status code.
+
+**Permission required**
+
+You must either:
+
+* Be the owner of the resource
+* Have some permission on the resource
+* Be granted the role that you are checking (which includes your own role)
+
+You are not allowed to check permissions of arbitrary roles or resources.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The privilege is held; you are allowed to proceed with the transaction.|
+|403|The request is allowed, but the privilege is not held by you.|
+|409|You are not allowed to check permissions on this resource.|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + resource_kind: food (string) - kind of the resource, for example 'variable' or 'host'
+    + resource_id: bacon (string) - ID of the resource you're checking
+    + privilege: fry (string) - name of the desired privilege, for example 'execute' or 'update'
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 204
+
+
+### Check another role's permissions [GET /api/authz/{account}/roles/{role_kind}/{role_id}/?check{&privilege,resource_id}]
+
+In this example, we are checking if the user 'alice' has
+`fry` privilege on the resource `food:bacon`.
+
+The response body is empty, privilege is communicated through the response status code.
+
+**Permission required**
+
+You must either:
+
+* Be the owner of the resource
+* Have some permission on the resource
+* Be granted the role that you are checking (which includes your own role)
+
+You are not allowed to check permissions of arbitrary roles or resources.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The privilege is held; the role is allowed to proceed with the transaction.|
+|403|The role is not allowed to check permissions on this resource.|
+|404|The request is allowed, but the privilege is not held by the role.|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + role_kind: user (string) - kind of the role, for example 'user' or 'host'. If the role is not specified, the currently authenticated role is used.
+    + role_id: alice (string) - ID of the role. If the role is not specified, the current authenticated role is used.
+    + resource_id: food:bacon (string) - the kind and ID of the resource, joined by a colon
+    + privilege: fry (string) - name of the desired privilege, for example 'execute' or 'update'
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 204
 
 ## Group Utilities
 

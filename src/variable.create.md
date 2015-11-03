@@ -23,7 +23,7 @@ If you don't give the variable an ID, one will be randomly generated.
 
 |Code|Description|
 |----|-----------|
-|201|User created successfully|
+|201|Variable created successfully|
 |403|Permission denied|
 |409|A variable with that name already exists|
 
