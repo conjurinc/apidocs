@@ -4,8 +4,8 @@
 
 If you don't provide an `id`, one will be randomly generated.
 
-If you don't provide an `ownerid`, your user will be the owner of the group.
-This means that no one else will be able to see your group.
+If you don't provide an `ownerid`, your user will be the owner of the layer.
+This means that no one else will be able to see your layer.
 
 ---
 
