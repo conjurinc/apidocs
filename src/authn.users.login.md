@@ -12,24 +12,33 @@ If you login through the command-line interface, you can print your current
 logged-in identity with the `conjur authn whoami` CLI command.
 
 The value for the `Authorization` Basic Auth header can be obtained with:
+
 ```
 $ echo myusername:mypassword | base64
 ```
 
-+ Request (application/json)
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|HTTP Basic Auth|Basic ZHVzdGluOm43dStpbHVzMQo=|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|The response body is the API key|
+|400|The credentials were not accepted|
+
++ Request
     + Headers
-
-            Authorization: Basic ZHVzdGluOm43dStpbHVzMQo=
-
+        ```
+        Authorization: Basic ZHVzdGluOm43dStpbHVzMQo=
+        ```
 + Response 200
 
     ```
-    # The response body is the API key.
     1dsvap135aqvnv3z1bpwdkh92052rf9csv20510ne2gqnssc363g69y
-    ```
-
-+ Response 400
-
-    ```
-    # The credentials were not accepted.
     ```

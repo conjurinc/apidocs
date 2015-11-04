@@ -2,10 +2,18 @@ FORMAT: 1A
 
 # Conjur API
 
-Welcome to the Conjur API documentation.
+Welcome to the Conjur API documentation!
 
-Any manipulation of resources in Conjur can be done through this RESTful API.
-Most API calls require authentication.
+Any manipulation of resources in Conjur can be done through this API.
+
+Most API calls require authentication. 
+View the [Login](/#reference/authentication/login) and [Authenticate](/#reference/authentication/authenticate) routes
+to see how to obtain an API key and auth token, respectively. Auth tokens expire after
+8 minutes.
+
+Use the public key you obtained when running `conjur init` for SSL verification when talking to your Conjur endpoint.
+This is a *public* key, so you can check it into source control if needed.
+
 
 ## Group Authentication
 
@@ -23,26 +31,35 @@ If you login through the command-line interface, you can print your current
 logged-in identity with the `conjur authn whoami` CLI command.
 
 The value for the `Authorization` Basic Auth header can be obtained with:
+
 ```
 $ echo myusername:mypassword | base64
 ```
 
-+ Request (application/json)
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|HTTP Basic Auth|Basic ZHVzdGluOm43dStpbHVzMQo=|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|The response body is the API key|
+|400|The credentials were not accepted|
+
++ Request
     + Headers
-
-            Authorization: Basic ZHVzdGluOm43dStpbHVzMQo=
-
+        ```
+        Authorization: Basic ZHVzdGluOm43dStpbHVzMQo=
+        ```
 + Response 200
 
     ```
-    # The response body is the API key.
     1dsvap135aqvnv3z1bpwdkh92052rf9csv20510ne2gqnssc363g69y
-    ```
-
-+ Response 400
-
-    ```
-    # The credentials were not accepted.
     ```
 
 ## Authenticate [/api/authn/users/{login}/authenticate]
@@ -53,8 +70,6 @@ Conjur authentication is based on auto-expiring tokens, which are issued by Conj
 
 * A login name
 * A corresponding password or API key
-
----
 
 The Conjur Token provides authentication for API calls.
 
@@ -73,7 +88,7 @@ Properties of the token include:
 * It has a fixed life span of several minutes, after which it is no longer valid.
 
 Before the token can be used to make subsequent calls to the API, it must be formatted.
-Take the response from the `authenticate` call and base64-encode it and strip out newlines.
+Take the response from the `authenticate` call and base64-encode it, stripping out newlines.
 
 ```
 token=$(echo -n $response | base64 | tr -d '\r\n')
@@ -93,6 +108,21 @@ NOTE: If you have the Conjur CLI installed you can get a pre-formatted token wit
 conjur authn authenticate -H
 ```
 
+---
+
+**Request Body**
+
+Description|Required|Type|Example|
+-----------|----|--------|-------|
+Conjur API key|yes|`String`|"1dsvap135aqvnv3z1bpwdkh92052rf9csv20510ne2gqnssc363g69y"|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|The response body is the raw data needed to create an auth token|
+|400|The credentials were not accepted|
+
 + Parameters
     + login (string) - login name for the user/host. For hosts this is `host/<hostid>`
 
@@ -107,22 +137,18 @@ conjur authn authenticate -H
 
     ```
     {
-        "data": "dustin",
+        "data": "lisa",
         "timestamp": "2015-10-24 20:31:50 UTC",
         "signature": "BpR0FEbQL8TpvpIjJ1awYr8uklvPecmXt-EpIIPcHpdAKBjoyrBQDZv8he1z7vKtF54H3webS0imvL0-UrHOE5yp_KB0fQdeF_z-oPYmaTywTcbwgsHNGzTkomcEUO49zeCmPdJN_zy_umiLqFJMBWfyFGMGj8lcJxcKTDMaXqJq5jK4e2-u1P0pG_AVnat9xtabL2_S7eySE1_2eK0SC7FHQ-7gY2b0YN7L5pjtHrfBMatg3ofCAgAbFmngTKCrtH389g2mmYXfAMillK1ZrndJ-vTIeDg5K8AGAQ7pz8xM0Cb0rqESWpYMc8ZuaipE5UMbmOym57m0uMuMftIJ_akBQZjb4zB-3IBQE25Sb4nrbFCgH_OyaqOt90Cw4397",
         "key": "15ab2712d65e6983cf7107a5350aaac0"
     }
     ```
 
-+ Response 400
-
-    ```
-    # The credentials were not accepted.
-    ```
-
 ## Group Variable
 
-A `variable` is a 'secret' and can be any value.
+A `variable` is a 'secret' and can be any value. It is a `resource`, in RBAC terms.
+
+[Read more](https://developer.conjur.net/key_concepts/secrets.html) about variables.
 
 ## Create [/api/variables]
 
@@ -346,7 +372,9 @@ Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 ## Group User
 
-A `user` represents an identity for a human.
+A `user` represents an identity for a human. It is a `role`, in RBAC terms.
+
+[Read more](https://developer.conjur.net/reference/services/directory/user/) about users.
 
 ## Create [POST /api/users]
 
@@ -520,7 +548,9 @@ The new password, in the example "n82p9819pb12d12dsa".
 
 ## Group Group
 
-A `group` represents a collection of users.
+A `group` represents a collection of users or groups. It is a `role` and a collection of `roles`, in RBAC terms.
+
+[Read more](https://developer.conjur.net/reference/services/directory/group/) about groups.
 
 ## Create [/api/groups]
 
@@ -699,6 +729,7 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 ## Group Host
 
 A `host` represents an identity for a non-human. This could be a VM, Docker container, CI job, etc.
+It is both a `role` and `resource`, in RBAC terms.
 
 Hosts are grouped into layers.
 
@@ -929,7 +960,7 @@ Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 ## Group Layer
 
-A `layer` is a collection of hosts.
+A `layer` is a collection of hosts. It is a `role`, in RBAC terms.
 
 Granting privileges on layers instead of the hosts themselves allows for easy auto-scaling.
 A host assumes the permissions of the layer when it is enrolled.
@@ -1218,7 +1249,7 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 A `role` is an actor in the system, in the classical sense of role-based access control. 
 Roles are the entities which receive permission grants.
 
-[Read more](https://developer.conjur.net/reference/services/authorization/role/)
+[Read more](https://developer.conjur.net/reference/services/authorization/role/) about roles.
 
 ## Get members [/api/authz/{account}/roles/{role_kind}/{role_id}?members]
 
@@ -1377,7 +1408,7 @@ Inverse of `role#grant_to`.
 A `resource` is a record on which permissions are defined. 
 They are partitioned by "kind", such as "group", "host", "file", "environment", "variable", etc.
 
-[Read more](https://developer.conjur.net/reference/services/authorization/resource/)
+[Read more](https://developer.conjur.net/reference/services/authorization/resource/) abour resources.
 
 ## List [/api/authz/{account}/resources/{kind}{?search,limit,offset}]
 
@@ -1583,7 +1614,7 @@ You can limit and offset the resulting list of events.
 |Field|Description|Example|
 |----|------------|-------|
 |Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
-|Accept-Encoding|Encoding required to accept the large response|gzip, deflate|
+|Accept-Encoding|Encoding required to accept a large response|gzip, deflate|
 
 
 **Response**
@@ -1670,7 +1701,7 @@ You can limit and offset the resulting list of events.
 |Field|Description|Example|
 |----|------------|-------|
 |Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
-|Accept-Encoding|Encoding required to accept the large response|gzip, deflate|
+|Accept-Encoding|Encoding required to accept a large response|gzip, deflate|
 
 
 **Response**

@@ -2,10 +2,18 @@ FORMAT: 1A
 
 # Conjur API
 
-Welcome to the Conjur API documentation.
+Welcome to the Conjur API documentation!
 
-Any manipulation of resources in Conjur can be done through this RESTful API.
-Most API calls require authentication.
+Any manipulation of resources in Conjur can be done through this API.
+
+Most API calls require authentication. 
+View the [Login](/#reference/authentication/login) and [Authenticate](/#reference/authentication/authenticate) routes
+to see how to obtain an API key and auth token, respectively. Auth tokens expire after
+8 minutes.
+
+Use the public key you obtained when running `conjur init` for SSL verification when talking to your Conjur endpoint.
+This is a *public* key, so you can check it into source control if needed.
+
 
 ## Group Authentication
 
@@ -15,7 +23,9 @@ Most API calls require authentication.
 
 ## Group Variable
 
-A `variable` is a 'secret' and can be any value.
+A `variable` is a 'secret' and can be any value. It is a `resource`, in RBAC terms.
+
+[Read more](https://developer.conjur.net/key_concepts/secrets.html) about variables.
 
 :[variable.create](variable.create.md)
 
@@ -27,7 +37,9 @@ A `variable` is a 'secret' and can be any value.
 
 ## Group User
 
-A `user` represents an identity for a human.
+A `user` represents an identity for a human. It is a `role`, in RBAC terms.
+
+[Read more](https://developer.conjur.net/reference/services/directory/user/) about users.
 
 :[user.create](user.create.md)
 
@@ -37,7 +49,9 @@ A `user` represents an identity for a human.
 
 ## Group Group
 
-A `group` represents a collection of users.
+A `group` represents a collection of users or groups. It is a `role` and a collection of `roles`, in RBAC terms.
+
+[Read more](https://developer.conjur.net/reference/services/directory/group/) about groups.
 
 :[group.create](group.create.md)
 
@@ -48,6 +62,7 @@ A `group` represents a collection of users.
 ## Group Host
 
 A `host` represents an identity for a non-human. This could be a VM, Docker container, CI job, etc.
+It is both a `role` and `resource`, in RBAC terms.
 
 Hosts are grouped into layers.
 
@@ -63,7 +78,7 @@ Hosts are grouped into layers.
 
 ## Group Layer
 
-A `layer` is a collection of hosts.
+A `layer` is a collection of hosts. It is a `role`, in RBAC terms.
 
 Granting privileges on layers instead of the hosts themselves allows for easy auto-scaling.
 A host assumes the permissions of the layer when it is enrolled.
@@ -85,7 +100,7 @@ A host assumes the permissions of the layer when it is enrolled.
 A `role` is an actor in the system, in the classical sense of role-based access control. 
 Roles are the entities which receive permission grants.
 
-[Read more](https://developer.conjur.net/reference/services/authorization/role/)
+[Read more](https://developer.conjur.net/reference/services/authorization/role/) about roles.
 
 :[role.members](role.members.md)
 
@@ -98,7 +113,7 @@ Roles are the entities which receive permission grants.
 A `resource` is a record on which permissions are defined. 
 They are partitioned by "kind", such as "group", "host", "file", "environment", "variable", etc.
 
-[Read more](https://developer.conjur.net/reference/services/authorization/resource/)
+[Read more](https://developer.conjur.net/reference/services/authorization/resource/) abour resources.
 
 :[resource.list](resource.list.md)
 

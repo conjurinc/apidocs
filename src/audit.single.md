@@ -11,7 +11,7 @@ You can limit and offset the resulting list of events.
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)
-|Accept-Encoding|Encoding required to accept the large response|gzip, deflate|
+|Accept-Encoding|Encoding required to accept a large response|gzip, deflate|
 
 
 **Response**
