@@ -216,9 +216,9 @@ If you don't give the variable an ID, one will be randomly generated.
     }
     ```
 
-## List [/api/authz/{account}/resources/variable{?search,limit,offset,acting_as}]
+## List/Search [/api/authz/{account}/resources/variable{?search,limit,offset,acting_as}]
 
-### List variables [GET]
+### List or search for variables [GET]
 
 Lists all variables the calling identity has `read` privilege on.
 
@@ -275,7 +275,7 @@ You can also limit, offset and shorten the resulting list.
 
 ## Show [/api/variables/{id}]
 
-### Retrieve a variable's metadata [GET]
+### Retrieve a variable's record [GET]
 
 This route returns information about a variable, but **not** the
 variable's value. Use the [variable#value](#reference/variable/value)
@@ -433,7 +433,9 @@ A `user` represents an identity for a human. It is a `role`, in RBAC terms.
 
 [Read more](https://developer.conjur.net/reference/services/directory/user/) about users.
 
-## Create [POST /api/users]
+## Create [/api/users]
+
+### Create a new user [POST]
 
 Create a Conjur user.
 
@@ -503,9 +505,159 @@ to a particular group when it is created.
     }
     ```
 
-## Show [GET /api/users/{login}]
+## Update [/api/users/{login}/{?uidnumber}]
 
-Retrieve a user's record.
+### Update a user record [PUT]
+
+You can change a user's password or update their UID number with this route.
+
+In order to change a user's password, you must be able to prove that you
+are the user. You can do so by giving an `Authorization` header with
+either a Conjur authentication token or HTTP Basic Auth containing
+the user's login and old password.
+Note that the user whose password is to be updated is determined by
+the value of the `Authorization` header.
+
+This operation will also replace the user's API key with a securely
+generated random value. You can fetch the new API key using the
+Conjur CLI's `authn login` method.
+
+---
+
+**Header**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur authentication token or Http Basic Auth|"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="|
+
+**Request Body**
+
+The new password, in the example "n82p9819pb12d12dsa".
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The password/UID has been updated|
+|401|Invalid or missing Authorization header|
+|403|Permission denied|
+|404|User not found|
+
++ Parameters
+    + login: lisa (string) - Login name of the user, query-escaped
+    + uidnumber: 57000 (number, optional) - New UID number to set for the user
+
++ Request
+    + Headers
+
+        ```
+        Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+        ```
+    + Body
+
+        ```
+        n82p9819pb12d12dsa
+        ```
+
+## List/Search [/api/authz/{account}/resources/user{?search,limit,offset,acting_as}]
+
+### List or search for users [GET]
+
+Lists all users the calling identity has `read` privilege on.
+
+You can switch the role to act as with the `acting_as` parameter.
+
+Run a full-text search of the users with the `search` parameter.
+
+You can also limit, offset and shorten the resulting list.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of users is returned|
+|403|Permission denied|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + search: kenneth (string, optional) - Query for search, query-escaped
+    + limit: 100 (number, optional) - Limit the number of records returned
+    + offset: 0 (number, optional) - Set the starting record index to return
+    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    [
+      {
+        "id": "demo:user:kenneth",
+        "owner": "demo:group:ops",
+        "permissions": [
+    
+        ],
+        "annotations": {
+        }
+      }
+    ]
+    ```
+
+## Search by UID [/api/users/search{?uidnumber}]
+
+### Search for users by UID number [GET]
+
+If you set UID numbers for your users, you can search on that field.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of usernames matching the UID|
+|403|Permission denied|
+
++ Parameters
+    + uidnumber: 57000 (number) - UID to match on
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    [
+        "kenneth"
+    ]
+    ```
+
+## Show [/api/users/{login}]
+
+### Retrieve a user's record [GET]
 
 The response for this method is similar to that from create,
 but it **does not contain the user's API key**.
@@ -554,54 +706,6 @@ The login parameter must be url encoded.
       "resource_identifier":"ci:user:alice"
     }
     ```
-
-## Update Password [PUT /api/users/]
-
-Change a user's password.
-
-In order to change a user's password, you must be able to prove that you
-are the user. You can do so by giving an `Authorization` header with
-either a Conjur authentication token or HTTP Basic Auth containing
-the user's login and old password.
-Note that the user whose password is to be updated is determined by
-the value of the `Authorization` header.
-
-This operation will also replace the user's API key with a securely
-generated random value. You can fetch the new API key using the
-Conjur CLI's `authn login` method.
-
----
-
-**Header**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur authentication token or Http Basic Auth|"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="|
-
-**Request Body**
-
-The new password, in the example "n82p9819pb12d12dsa".
-
-**Response**
-
-|Code|Description|
-|----|-----------|
-|204|The password has been updated|
-|401|Invalid or missing Authorization header|
-
-+ Request
-    + Headers
-
-        ```
-        Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
-        ```
-    + Body
-
-        ```
-        n82p9819pb12d12dsa
-        ```
-
-+ Response 204
 
 ## Group Group
 
@@ -670,6 +774,136 @@ This means that no one else will be able to see your group.
         "roleid": "demo:group:developers",
         "resource_identifier": "demo:group:developers"
     }
+    ```
+
+## Update [/api/groups/{id}/{?gidnumber}]
+
+### Update a group record [PUT]
+
+You can change a group's GID number with this route.
+
+---
+
+**Header**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur authentication token or Http Basic Auth|"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The GID has been updated|
+|401|Invalid or missing Authorization header|
+|403|Permission denied|
+|404|Group not found|
+
++ Parameters
+    + id: ops (string) - Name of the group, query-escaped
+    + gidnumber: 63000 (number) - New GID number to set for the group
+
++ Request
+    + Headers
+
+        ```
+        Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+        ```
+
+## List/Search [/api/authz/{account}/resources/group{?search,limit,offset,acting_as}]
+
+### List or search for groups [GET]
+
+Lists all groups the calling identity has `read` privilege on.
+
+You can switch the role to act as with the `acting_as` parameter.
+
+Run a full-text search of the groups with the `search` parameter.
+
+You can also limit, offset and shorten the resulting list.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of groups is returned|
+|403|Permission denied|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + search: ops (string, optional) - Query for search, query-escaped
+    + limit: 100 (number, optional) - Limit the number of records returned
+    + offset: 0 (number, optional) - Set the starting record index to return
+    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    [
+      {
+        "id": "demo:group:ops",
+        "owner": "demo:group:security_admin",
+        "permissions": [
+    
+        ],
+        "annotations": {
+        }
+      }
+    ]
+    ```
+
+## Search by GID [/api/groups/search{?gidnumber}]
+
+### Search for groups by GID number [GET]
+
+If you set GID numbers for your groups, you can search on that field.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of group names matching the GID|
+|403|Permission denied|
+
++ Parameters
+    + gidnumber: 63000 (number) - GID to match on
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    [
+        "ops"
+    ]
     ```
 
 ## Show [/api/groups/{id}]

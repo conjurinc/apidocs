@@ -1,6 +1,8 @@
-## Update Password [PUT /api/users/]
+## Update [/api/users/{login}/{?uidnumber}]
 
-Change a user's password.
+### Update a user record [PUT]
+
+You can change a user's password or update their UID number with this route.
 
 In order to change a user's password, you must be able to prove that you
 are the user. You can do so by giving an `Authorization` header with
@@ -29,8 +31,14 @@ The new password, in the example "n82p9819pb12d12dsa".
 
 |Code|Description|
 |----|-----------|
-|204|The password has been updated|
+|204|The password/UID has been updated|
 |401|Invalid or missing Authorization header|
+|403|Permission denied|
+|404|User not found|
+
++ Parameters
+    + login: lisa (string) - Login name of the user, query-escaped
+    + uidnumber: 57000 (number, optional) - New UID number to set for the user
 
 + Request
     + Headers
@@ -43,5 +51,3 @@ The new password, in the example "n82p9819pb12d12dsa".
         ```
         n82p9819pb12d12dsa
         ```
-
-+ Response 204

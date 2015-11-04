@@ -45,9 +45,13 @@ A `user` represents an identity for a human. It is a `role`, in RBAC terms.
 
 :[user.create](user.create.md)
 
-:[user.show](user.show.md)
+:[user.update](user.update.md)
 
-:[user.update_password](user.update_password.md)
+:[user.list](user.list.md)
+
+:[user.search_by_uid](user.search_by_uid.md)
+
+:[user.show](user.show.md)
 
 ## Group Group
 
@@ -56,6 +60,12 @@ A `group` represents a collection of users or groups. It is a `role` and a colle
 [Read more](https://developer.conjur.net/reference/services/directory/group/) about groups.
 
 :[group.create](group.create.md)
+
+:[group.update](group.update.md)
+
+:[group.list](group.list.md)
+
+:[group.search_by_gid](group.search_by_gid.md)
 
 :[group.show](group.show.md)
 

@@ -1,6 +1,6 @@
-## Show [GET /api/users/{login}]
+## Show [/api/users/{login}]
 
-Retrieve a user's record.
+### Retrieve a user's record [GET]
 
 The response for this method is similar to that from create,
 but it **does not contain the user's API key**.

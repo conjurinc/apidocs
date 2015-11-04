@@ -1,4 +1,6 @@
-## Create [POST /api/users]
+## Create [/api/users]
+
+### Create a new user [POST]
 
 Create a Conjur user.
 

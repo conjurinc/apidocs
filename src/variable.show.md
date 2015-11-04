@@ -1,6 +1,6 @@
 ## Show [/api/variables/{id}]
 
-### Retrieve a variable's metadata [GET]
+### Retrieve a variable's record [GET]
 
 This route returns information about a variable, but **not** the
 variable's value. Use the [variable#value](#reference/variable/value)
