@@ -120,6 +120,10 @@ Roles are the entities which receive permission grants.
 
 [Read more](https://developer.conjur.net/reference/services/authorization/role/) about roles.
 
+:[role.create](role.create.md)
+
+:[role.exists](role.exists.md)
+
 :[role.members](role.members.md)
 
 :[role.grant_to](role.grant_to.md)

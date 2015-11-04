@@ -1675,7 +1675,84 @@ Roles are the entities which receive permission grants.
 
 [Read more](https://developer.conjur.net/reference/services/authorization/role/) about roles.
 
-## Get members [/api/authz/{account}/roles/{role_kind}/{role_id}?members]
+## Create [/api/authz/{account}/roles/{kind}/{id}{?acting_as}]
+
+### Create a new role [PUT]
+
+You can create roles of custom kinds to better match your infrastructure and workflows.
+
+If you don't provide `acting_as`, your user will be the owner of the role.
+This means that no one else will be able to see your role.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|201|Role created successfully|
+|403|Permission denied|
+|409|A role with that name already exists|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + kind: chatbot (string) - Purpose of the role
+    + id: hubot (string) - Name of the role, query-escaped
+    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 201 (application/json)
+
+## Exists [/api/authz/{account}/roles/{role_kind}/{role_id}]
+
+### Determine whether a role exists [HEAD]
+
+Check for the existence of a role.
+Only roles that you have `read` permission on will be searched.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|Role exists|
+|404|Role does not exist|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + role_kind: group (string) - kind of the role, for example 'group' or 'layer'
+    + role_id: v1/ops (string) - ID of the role, do not query-escape
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 204
+
+## List members [/api/authz/{account}/roles/{role_kind}/{role_id}?members]
 
 ### Lists the roles that have been the recipient of a role grant [GET]
 

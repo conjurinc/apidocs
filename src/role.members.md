@@ -1,4 +1,4 @@
-## Get members [/api/authz/{account}/roles/{role_kind}/{role_id}?members]
+## List members [/api/authz/{account}/roles/{role_kind}/{role_id}?members]
 
 ### Lists the roles that have been the recipient of a role grant [GET]
 
