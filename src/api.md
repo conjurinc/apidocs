@@ -104,6 +104,17 @@ They are partitioned by "kind", such as "group", "host", "file", "environment", 
 
 :[resource.check](resource.check.md)
 
+## Group Audit
+
+Every privilege modification, variable retrieval and SSH action is logged to an immutable audit trail in Conjur.
+
+Audit records can be retrieved via the API for everything or a single role/resource.
+Fetching all audit records can return a very large response, so it is best to the the `limit` parameter.
+
+:[audit.all](audit.all.md)
+
+:[audit.single](audit.single.md)
+
 ## Group Utilities
 
 :[utilities.health](utilities.health.md)

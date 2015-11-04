@@ -1561,6 +1561,229 @@ You are not allowed to check permissions of arbitrary roles or resources.
 
 + Response 204
 
+## Group Audit
+
+Every privilege modification, variable retrieval and SSH action is logged to an immutable audit trail in Conjur.
+
+Audit records can be retrieved via the API for everything or a single role/resource.
+Fetching all audit records can return a very large response, so it is best to the the `limit` parameter.
+
+## All [/api/audit{?limit,offset}]
+
+### Fetch all audit events [GET]
+
+Fetch audit events for all roles and resources the calling identity has `read` privilege on.
+
+You can limit and offset the resulting list of events.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+|Accept-Encoding|Encoding required to accept the large response|gzip, deflate|
+
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of audit events is returned|
+|403|Permission denied|
+
++ Parameters
+    + limit: 100 (number, optional) - Limit the number of records returned
+    + offset: 0 (number, optional) - Set the starting record index to return
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        Accept-Encoding: gzip, deflate
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    [
+        {
+          "resources": [],
+          "roles": [
+            "demo:user:lisa",
+            "demo:@:layer/jenkins/slaves/observe",
+            "demo:@:layer/jenkins/slaves/use_host"
+          ],
+          "action": "grant",
+          "role": "demo:@:layer/jenkins/slaves/observe",
+          "member": "demo:@:layer/jenkins/slaves/use_host",
+          "grantor": "demo:user:lisa",
+          "timestamp": "2015-11-03T20:11:47.789Z",
+          "event_id": "8bf37b524d95df2ab4c1fe7e3f89267d",
+          "id": 96,
+          "user": "demo:user:lisa",
+          "acting_as": "demo:user:lisa",
+          "request": {
+            "ip": "74.97.185.119",
+            "url": "http://localhost:5100/demo/roles/@/layer/jenkins/slaves/observe?members&member=demo:@:layer/jenkins/slaves/use_host",
+            "method": "PUT",
+            "params": {
+              "members": null,
+              "member": "demo:@:layer/jenkins/slaves/use_host",
+              "controller": "roles",
+              "action": "update_member",
+              "account": "demo",
+              "role": "@/layer/jenkins/slaves/observe",
+              "admin_option": null
+            },
+            "uuid": "3f0a0cfe-eef1-4a6d-a4a5-a0ebc1f20fc6"
+          },
+          "conjur": {
+            "domain": "authz",
+            "env": "appliance",
+            "user": "demo:user:lisa",
+            "role": "demo:user:lisa",
+            "account": "demo"
+          },
+          "kind": "role"
+        }
+        ... // more events
+    ]
+    ```
+
+## Single [/api/audit/{kind}/{id}{?limit,offset}]
+
+### Fetch audit events for a single role/resource [GET]
+
+Fetch audit events for a role/resource the calling identity has `read` privilege on.
+
+You can limit and offset the resulting list of events.
+
+`id` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+|Accept-Encoding|Encoding required to accept the large response|gzip, deflate|
+
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of audit events is returned|
+|403|Permission denied|
+|404|Role/resource not found|
+
++ Parameters
+    + kind: roles (string) - Type of object, 'roles' or 'resources'
+    + id: demo%3Ahost%3Aredis001 (string) - Fully qualified ID of a Conjur role/resource, query-escaped
+    + limit: 100 (number, optional) - Limit the number of records returned
+    + offset: 0 (number, optional) - Set the starting record index to return
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        Accept-Encoding: gzip, deflate
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    [
+        {
+          "resources": [],
+          "roles": [
+            "demo:user:lisa",
+            "demo:group:security_admin",
+            "demo:host:redis001"
+          ],
+          "action": "create",
+          "role_id": "demo:host:redis001",
+          "creator": "demo:group:security_admin",
+          "role": "demo:host:redis001",
+          "timestamp": "2015-11-03T21:33:17.974Z",
+          "event_id": "c5e9788790c51fb334d9517fdd603ce4",
+          "id": 183,
+          "user": "demo:user:lisa",
+          "acting_as": "demo:group:security_admin",
+          "request": {
+            "ip": "74.97.185.119",
+            "url": "http://localhost:5100/demo/roles/host/redis001",
+            "method": "PUT",
+            "params": {
+              "acting_as": "demo:group:security_admin",
+              "controller": "roles",
+              "action": "create",
+              "account": "demo",
+              "role": "host/redis001"
+            },
+            "uuid": "a432a32e-875e-489f-8f18-6aa3ef6df0cc"
+          },
+          "conjur": {
+            "domain": "authz",
+            "env": "appliance",
+            "user": "demo:user:lisa",
+            "role": "demo:group:security_admin",
+            "account": "demo"
+          },
+          "kind": "role"
+        },
+        {
+          "resources": [
+            "demo:host:redis001"
+          ],
+          "roles": [
+            "demo:user:lisa",
+            "demo:host:redis001"
+          ],
+          "resource": "demo:host:redis001",
+          "action": "permit",
+          "privilege": "read",
+          "grantee": "demo:host:redis001",
+          "grantor": "demo:user:lisa",
+          "timestamp": "2015-11-03T21:33:18.012Z",
+          "event_id": "8faec6a55a4e299abd737af9e0187d3e",
+          "id": 185,
+          "user": "demo:user:lisa",
+          "acting_as": "demo:user:lisa",
+          "request": {
+            "ip": "74.97.185.119",
+            "url": "http://localhost:5100/demo/resources/host/redis001?permit&privilege=read&role=demo:host:redis001",
+            "method": "POST",
+            "params": {
+              "permit": null,
+              "privilege": "read",
+              "role": "demo:host:redis001",
+              "controller": "resources",
+              "action": "grant_permission",
+              "account": "demo",
+              "kind": "host",
+              "identifier": "redis001"
+            },
+            "uuid": "3c50d04a-0f34-420b-8027-f9e4df3b882a"
+          },
+          "conjur": {
+            "domain": "authz",
+            "env": "appliance",
+            "user": "demo:user:lisa",
+            "role": "demo:user:lisa",
+            "account": "demo"
+          },
+          "kind": "resource"
+        }
+        ... // more events
+    ]
+    ```
+
 ## Group Utilities
 
 ## Health [/health]
