@@ -137,9 +137,25 @@ They are partitioned by "kind", such as "group", "host", "file", "environment", 
 
 [Read more](https://developer.conjur.net/reference/services/authorization/resource/) abour resources.
 
+:[resource.create](resource.create.md)
+
+:[resource.exists](resource.exists.md)
+
+:[resource.show](resource.show.md)
+
 :[resource.list](resource.list.md)
 
+:[resource.annotate](resource.annotate.md)
+
+:[resource.list_annotations](resource.list_annotations.md)
+
+:[resource.give](resource.give.md)
+
 :[resource.check](resource.check.md)
+
+:[resource.permit](resource.permit.md)
+
+:[resource.deny](resource.deny.md)
 
 ## Group Audit
 

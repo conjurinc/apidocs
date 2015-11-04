@@ -1,13 +1,12 @@
-## List [/api/authz/{account}/resources/{kind}{?search,limit,offset}]
+## List/Search [/api/authz/{account}/resources/{kind}{?search,limit,offset}]
 
-### Find and list resources [GET]
+### List or search for resources [GET]
 
-This command includes features such as:
+Lists all resources the calling identity has `read` privilege on.
 
-* Full-text search of resource ids and annotations
-* Filtering by resource kind
-* Search offset and limit
-* Display full resource JSON, or IDs only
+Run a full-text search of the resources with the `search` parameter.
+
+You can also limit, offset and shorten the resulting list.
 
 **Permission Required**
 

@@ -1,4 +1,4 @@
-## List members [/api/authz/{account}/roles/{role_kind}/{role_id}?members]
+## List members [/api/authz/{account}/roles/{kind}/{id}?members]
 
 ### Lists the roles that have been the recipient of a role grant [GET]
 
@@ -18,8 +18,8 @@ Only roles which have been explicitly granted the role in question are listed.
 
 + Parameters
     + account: demo (string) - organization account name
-    + role_kind: group (string) - kind of the role, for example 'group' or 'layer'
-    + role_id: v1/ops (string) - ID of the role
+    + kind: group (string) - kind of the role, for example 'group' or 'layer'
+    + id: v1/ops (string) - ID of the role
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)

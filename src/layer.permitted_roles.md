@@ -1,6 +1,6 @@
 ## Permitted Roles [/api/authz/{account}/roles/@/layer/{layer}/{privilege}/?members]
 
-### List roles that have a permission on the hosts [GET]
+### List roles that have a permission on the hosts in a layer [GET]
 
 List the roles that have a specified privilege on the hosts in a layer.
 

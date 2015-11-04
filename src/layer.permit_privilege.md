@@ -17,7 +17,7 @@ Privileges available are:
 
 |Code|Description|
 |----|-----------|
-|200|Privilege granted|
+|204|Privilege granted|
 |403|Permission denied|
 |404|Layer not found|
 
@@ -30,5 +30,4 @@ Privileges available are:
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json)
-
++ Response 204
