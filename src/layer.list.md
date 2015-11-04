@@ -1,6 +1,6 @@
-## List [/api/authz/{account}/resources/layer{?search,limit,offset,acting_as}]
+## List/Search [/api/authz/{account}/resources/layer{?search,limit,offset,acting_as}]
 
-### List Layers [GET]
+### List or search for layers [GET]
 
 Lists all layers the calling identity has `read` privilege on.
 

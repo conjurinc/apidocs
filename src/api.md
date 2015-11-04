@@ -107,6 +107,12 @@ A host assumes the permissions of the layer when it is enrolled.
 
 :[layer.remove_host](layer.remove_host.md)
 
+:[layer.permitted_roles](layer.permitted_roles.md)
+
+:[layer.permit_privilege](layer.permit_privilege.md)
+
+:[layer.deny_privilege](layer.deny_privilege.md)
+
 ## Group Role
 
 A `role` is an actor in the system, in the classical sense of role-based access control. 

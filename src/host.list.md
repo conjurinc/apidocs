@@ -1,6 +1,6 @@
-## List [/api/authz/{account}/resources/host{?search,limit,offset,acting_as}]
+## List/Search [/api/authz/{account}/resources/host{?search,limit,offset,acting_as}]
 
-### List hosts [GET]
+### List or search for hosts [GET]
 
 Lists all hosts the calling identity has `read` privilege on.
 

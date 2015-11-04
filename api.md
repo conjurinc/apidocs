@@ -1092,9 +1092,9 @@ identity on the command line.
     }
     ```
 
-## List [/api/authz/{account}/resources/host{?search,limit,offset,acting_as}]
+## List/Search [/api/authz/{account}/resources/host{?search,limit,offset,acting_as}]
 
-### List hosts [GET]
+### List or search for hosts [GET]
 
 Lists all hosts the calling identity has `read` privilege on.
 
@@ -1319,9 +1319,9 @@ This means that no one else will be able to see your layer.
     }
     ```
 
-## List [/api/authz/{account}/resources/layer{?search,limit,offset,acting_as}]
+## List/Search [/api/authz/{account}/resources/layer{?search,limit,offset,acting_as}]
 
-### List Layers [GET]
+### List or search for layers [GET]
 
 Lists all layers the calling identity has `read` privilege on.
 
@@ -1534,6 +1534,139 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
       ]
     }
     ```
+
+## Permitted Roles [/api/authz/{account}/roles/@/layer/{layer}/{privilege}/?members]
+
+### List roles that have a permission on the hosts [GET]
+
+List the roles that have a specified privilege on the hosts in a layer.
+
+Privileges available are:
+
+* `use_host` - Maps to `execute` privilege
+* `admin_host` - Maps to `update` privilege
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of roles with specified permission|
+|403|Permission denied|
+|404|Layer not found|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + layer: jenkins/slaves (string) - Name of the layer, do not query-escape
+    + privilege: use_host (string) - Privilege to query for
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+    ```
+    [
+      "demo:group:security_admin",
+      "demo:user:bob"
+    ]
+    ```
+
+## Permit on Hosts [/api/authz/{account}/roles/@/layer/{layer}/{privilege}?members{&member}]
+
+### Permit a privilege on hosts in a layer [PUT]
+
+Create a privilege grant for hosts in a layer to a role.
+
+Privileges available are:
+
+* `use_host` - Maps to `execute` privilege
+* `admin_host` - Maps to `update` privilege
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Privilege granted|
+|403|Permission denied|
+|404|Layer not found|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + layer: jenkins/slaves (string) - Name of the layer, do not query-escape
+    + privilege: use_host (string) - Privilege to permit
+    + member: user:bob (string) - Qualified role name, do not query-escape
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
+
+
+## Deny on Hosts [/api/authz/{account}/roles/@/layer/{layer}/{privilege}/?members{&member}]
+
+### Deny a privilege on hosts in a layer [DELETE]
+
+Revoke a privilege grant for hosts in a layer to a role.
+
+Privileges available are:
+
+* `use_host` - Maps to `execute` privilege
+* `admin_host` - Maps to `update` privilege
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Privilege removed|
+|403|Permission denied|
+|404|Layer or privilege not found|
+
++ Parameters
+    + account: demo (string) - organization account name
+    + layer: jenkins/slaves (string) - Name of the layer, do not query-escape
+    + privilege: use_host (string) - Privilege to permit
+    + member: user:bob (string) - Qualified role name, do not query-escape
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json)
 
 ## Group Role
 
