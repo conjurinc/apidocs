@@ -12,7 +12,11 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 ---
 
-:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
 
 **Response**
 
@@ -23,21 +27,25 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |404|Variable not found|
 
 + Parameters
-    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
+    + id: dev/mongo/password (string) - Name of the variable, query-escaped
 
-+ Request (application/json)
-    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
++ Request (application/json; charset=utf-8)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     {
         "id": "dev/mongo/password",
-        "userid": "demo",
+        "userid": "admin",
         "mime_type": "text/plain",
         "kind": "password",
-        "ownerid": "demo:group:developers",
-        "resource_identifier": "demo:variable:dev/mongo/password",
+        "ownerid": "conjur:user:admin",
+        "resource_identifier": "conjur:variable:dev/mongo/password",
         "version_count": 1
     }
     ```

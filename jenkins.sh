@@ -4,7 +4,7 @@ hercule src/api.md -o api.md
 
 function finish {
     # Stop and remove the Conjur container
-#    docker rm -f ${cid}
+    docker rm -f ${cid}
     echo
 }
 trap finish EXIT

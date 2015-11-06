@@ -8,7 +8,11 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 ---
 
-:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
 
 **Response**
 
@@ -19,14 +23,18 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |404|Variable, or requested version of the value, not found|
 
 + Parameters
-    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
+    + id: dev/mongo/password (string) - Name of the variable, query-escaped
     + version (string, optional) - Version of the variable to retrieve
 
 + Request
-    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
 
-+ Response 200 (text/plain)
++ Response 200 (text/plain; charset=utf-8)
 
     ```
-    p89b12ep12puib
+    np89daed89p
     ```

@@ -185,7 +185,7 @@ If you don't give the variable an ID, one will be randomly generated.
 |403|Permission denied|
 |409|A variable with that name already exists|
 
-+ Request (application/json)
++ Request (application/json; ut)
     + Headers
     
         ```
@@ -197,23 +197,22 @@ If you don't give the variable an ID, one will be randomly generated.
         ```
         {
             "id": "dev/mongo/password",
-            "ownerid": "demo:group:developers",
             "kind": "password",
             "mime_type": "text/plain",
             "value": "p89b12ep12puib"
         }
         ```
 
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
     ```
     {
         "id": "dev/mongo/password",
-        "userid": "demo",
+        "userid": "admin",
         "mime_type": "text/plain",
         "kind": "password",
-        "ownerid": "demo:group:developers",
-        "resource_identifier": "demo:variable:dev/mongo/password",
+        "ownerid": "conjur:user:admin",
+        "resource_identifier": "conjur:variable:dev/mongo/password",
         "version_count": 1
     }
     ```
@@ -250,7 +249,7 @@ You can also limit, offset and shorten the resulting list.
     + search: mongo (string, optional) - Query for search, query-escaped
     + limit: 100 (number, optional) - Limit the number of records returned
     + offset: 0 (number, optional) - Set the starting record index to return
-    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+    + acting_as (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
 + Request (application/json)
     + Headers
@@ -259,18 +258,18 @@ You can also limit, offset and shorten the resulting list.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
       {
-        "id": "demo:variable:dev/mongo/password",
-        "owner": "demo:group:ops",
+        "id": "conjur:variable:dev/mongo/password",
+        "owner": "conjur:user:admin",
         "permissions": [
     
         ],
-        "annotations": {
-        }
+        "annotations": [
+        ]
       }
     ]
     ```
@@ -304,68 +303,27 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |404|Variable not found|
 
 + Parameters
-    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
+    + id: dev/mongo/password (string) - Name of the variable, query-escaped
 
-+ Request (application/json)
++ Request (application/json; charset=utf-8)
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     {
         "id": "dev/mongo/password",
-        "userid": "demo",
+        "userid": "admin",
         "mime_type": "text/plain",
         "kind": "password",
-        "ownerid": "demo:group:developers",
-        "resource_identifier": "demo:variable:dev/mongo/password",
+        "ownerid": "conjur:user:admin",
+        "resource_identifier": "conjur:variable:dev/mongo/password",
         "version_count": 1
     }
-    ```
-
-## Value [/api/variables/{id}/value?{version}]
-
-### Retrieve the value of a variable [GET]
-
-By default this returns the latest version of a variable, but you can retrieve any earlier version as well.
-
-Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
-
----
-
-**Headers**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
-
-**Response**
-
-|Code|Description|
-|----|-----------|
-|200|Variable value is returned|
-|403|Permission denied|
-|404|Variable, or requested version of the value, not found|
-
-+ Parameters
-    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
-    + version (string, optional) - Version of the variable to retrieve
-
-+ Request
-    + Headers
-    
-        ```
-        Authorization: Token token="eyJkYX...Rhb="
-        ```
-
-+ Response 200 (text/plain)
-
-    ```
-    p89b12ep12puib
     ```
 
 ## Values Add [/api/variables/{id}/values]
@@ -398,7 +356,7 @@ Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
 |422|Value malformed or missing|
 
 + Parameters
-    + id: dev%2Fmongo%2Fpassword (string) - Name of the variable, query-escaped
+    + id: dev/mongo/password (string) - Name of the variable, query-escaped
 
 + Request (application/json)
     + Headers
@@ -415,18 +373,59 @@ Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
         }
         ```
 
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
     ```
     {
         "id":"dev/mongo/password",
-        "userid":"demo",
+        "userid":"admin",
         "mime_type":"text/plain",
         "kind":"secret",
-        "ownerid":"demo:group:developers",
-        "resource_identifier":"demo:variable:dev/mongo/password",
-        "version_count":2
+        "ownerid":"conjur:user:admin",
+        "resource_identifier":"conjur:variable:dev/mongo/password",
+        "version_count":1
     }
+    ```
+
+## Value [/api/variables/{id}/value?{version}]
+
+### Retrieve the value of a variable [GET]
+
+By default this returns the latest version of a variable, but you can retrieve any earlier version as well.
+
+Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Variable value is returned|
+|403|Permission denied|
+|404|Variable, or requested version of the value, not found|
+
++ Parameters
+    + id: dev/mongo/password (string) - Name of the variable, query-escaped
+    + version (string, optional) - Version of the variable to retrieve
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (text/plain; charset=utf-8)
+
+    ```
+    np89daed89p
     ```
 
 ## Group User

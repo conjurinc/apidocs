@@ -33,9 +33,9 @@ A `variable` is a 'secret' and can be any value. It is a `resource`, in RBAC ter
 
 :[variable.show](variable.show.md)
 
-:[variable.value](variable.value.md)
-
 :[variable.values_add](variable.values_add.md)
+
+:[variable.value](variable.value.md)
 
 ## Group User
 

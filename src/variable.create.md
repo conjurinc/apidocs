@@ -7,7 +7,11 @@ If you don't give the variable an ID, one will be randomly generated.
 
 ---
 
-:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
 
 **Request Body**
 
@@ -27,31 +31,34 @@ If you don't give the variable an ID, one will be randomly generated.
 |403|Permission denied|
 |409|A variable with that name already exists|
 
-+ Request (application/json)
-    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
++ Request (application/json; ut)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
 
     + Body
 
         ```
         {
             "id": "dev/mongo/password",
-            "ownerid": "demo:group:developers",
             "kind": "password",
             "mime_type": "text/plain",
             "value": "p89b12ep12puib"
         }
         ```
 
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
     ```
     {
         "id": "dev/mongo/password",
-        "userid": "demo",
+        "userid": "admin",
         "mime_type": "text/plain",
         "kind": "password",
-        "ownerid": "demo:group:developers",
-        "resource_identifier": "demo:variable:dev/mongo/password",
+        "ownerid": "conjur:user:admin",
+        "resource_identifier": "conjur:variable:dev/mongo/password",
         "version_count": 1
     }
     ```
