@@ -24,3 +24,12 @@ hercule src/api.md -o api.md
 ```
 
 to compile them into `api.md`.
+
+## Testing
+
+Tests are run with dredd in a Docker container
+
+```
+docker build -t apidocs .
+docker run --rm -v $PWD:/app apidocs dredd
+```

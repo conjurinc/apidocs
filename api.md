@@ -33,7 +33,7 @@ logged-in identity with the `conjur authn whoami` CLI command.
 The value for the `Authorization` Basic Auth header can be obtained with:
 
 ```
-$ echo myusername:mypassword | base64
+$ echo -n myusername:mypassword | base64
 ```
 
 ---
@@ -42,7 +42,7 @@ $ echo myusername:mypassword | base64
 
 |Field|Description|Example|
 |----|------------|-------|
-|Authorization|HTTP Basic Auth|Basic ZHVzdGluOm43dStpbHVzMQo=|
+|Authorization|HTTP Basic Auth|Basic YWRtaW46cGFzc3dvcmQ=|
 
 **Response**
 
@@ -53,13 +53,15 @@ $ echo myusername:mypassword | base64
 
 + Request
     + Headers
+    
         ```
-        Authorization: Basic ZHVzdGluOm43dStpbHVzMQo=
+        Authorization: Basic YWRtaW46cGFzc3dvcmQ=
         ```
-+ Response 200
+        
++ Response 200 (text/html; charset=utf-8)
 
     ```
-    1dsvap135aqvnv3z1bpwdkh92052rf9csv20510ne2gqnssc363g69y
+    14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc
     ```
 
 ## Authenticate [/api/authn/users/{login}/authenticate]
@@ -114,7 +116,7 @@ conjur authn authenticate -H
 
 Description|Required|Type|Example|
 -----------|----|--------|-------|
-Conjur API key|yes|`String`|"1dsvap135aqvnv3z1bpwdkh92052rf9csv20510ne2gqnssc363g69y"|
+Conjur API key|yes|`String`|"14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc"|
 
 **Response**
 
@@ -124,13 +126,13 @@ Conjur API key|yes|`String`|"1dsvap135aqvnv3z1bpwdkh92052rf9csv20510ne2gqnssc363
 |400|The credentials were not accepted|
 
 + Parameters
-    + login (string) - login name for the user/host. For hosts this is `host/<hostid>`
+    + login: admin (string) - login name for the user/host. For hosts this is `host/<hostid>`
 
-+ Request
++ Request (text/plain)
     + Body
 
         ```
-        1dsvap135aqvnv3z1bpwdkh92052rf9csv20510ne2gqnssc363g69y
+        14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc
         ```
 
 + Response 200

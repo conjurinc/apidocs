@@ -14,7 +14,7 @@ logged-in identity with the `conjur authn whoami` CLI command.
 The value for the `Authorization` Basic Auth header can be obtained with:
 
 ```
-$ echo myusername:mypassword | base64
+$ echo -n myusername:mypassword | base64
 ```
 
 ---
@@ -23,7 +23,7 @@ $ echo myusername:mypassword | base64
 
 |Field|Description|Example|
 |----|------------|-------|
-|Authorization|HTTP Basic Auth|Basic ZHVzdGluOm43dStpbHVzMQo=|
+|Authorization|HTTP Basic Auth|Basic YWRtaW46cGFzc3dvcmQ=|
 
 **Response**
 
@@ -34,11 +34,13 @@ $ echo myusername:mypassword | base64
 
 + Request
     + Headers
+    
         ```
-        Authorization: Basic ZHVzdGluOm43dStpbHVzMQo=
+        Authorization: Basic YWRtaW46cGFzc3dvcmQ=
         ```
-+ Response 200
+        
++ Response 200 (text/html; charset=utf-8)
 
     ```
-    1dsvap135aqvnv3z1bpwdkh92052rf9csv20510ne2gqnssc363g69y
+    14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc
     ```

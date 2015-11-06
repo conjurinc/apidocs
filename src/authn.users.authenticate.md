@@ -50,7 +50,7 @@ conjur authn authenticate -H
 
 Description|Required|Type|Example|
 -----------|----|--------|-------|
-Conjur API key|yes|`String`|"1dsvap135aqvnv3z1bpwdkh92052rf9csv20510ne2gqnssc363g69y"|
+Conjur API key|yes|`String`|"14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc"|
 
 **Response**
 
@@ -60,13 +60,13 @@ Conjur API key|yes|`String`|"1dsvap135aqvnv3z1bpwdkh92052rf9csv20510ne2gqnssc363
 |400|The credentials were not accepted|
 
 + Parameters
-    + login (string) - login name for the user/host. For hosts this is `host/<hostid>`
+    + login: admin (string) - login name for the user/host. For hosts this is `host/<hostid>`
 
-+ Request
++ Request (text/plain)
     + Body
 
         ```
-        1dsvap135aqvnv3z1bpwdkh92052rf9csv20510ne2gqnssc363g69y
+        14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc
         ```
 
 + Response 200
