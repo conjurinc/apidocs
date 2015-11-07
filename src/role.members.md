@@ -16,29 +16,30 @@ Only roles which have been explicitly granted the role in question are listed.
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)
 
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Role memberships returned as JSON list|
+|404|Role does not exist|
+
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: group (string) - kind of the role, for example 'group' or 'layer'
-    + id: v1/ops (string) - ID of the role
+    + id: ops (string) - ID of the role
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
       {
         "admin_option": true,
-        "grantor": "demo:group:v1/ops",
-        "member": "demo:group:security_admin",
-        "role": "demo:group:v1/ops"
-      },
-      {
-        "admin_option": false,
-        "grantor": "demo:user:demo",
-        "member": "demo:user:donna",
-        "role": "demo:group:v1/ops"
+        "grantor": "conjur:group:ops",
+        "member": "conjur:group:security_admin",
+        "role": "conjur:group:ops"
       }
     ]
     ```

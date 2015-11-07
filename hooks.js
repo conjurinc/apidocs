@@ -12,6 +12,11 @@ hooks.beforeEach(function(transaction) {
     }
 });
 
+// Trim response bodies, role#create returns ' ' as text/html ...wtf?
+hooks.beforeEachValidation(function(transaction) {
+   transaction.real.body = trim(transaction.real.body);
+});
+
 // The API key is randomly generated, so only check for 200 on route
 hooks.beforeValidation("Authentication > Login > Exchange a user login and password for an API key", function(transaction) {
     if (transaction.real.statusCode == '200') {
@@ -58,7 +63,16 @@ hooks.after("User > Update Password > Update a user's password", function(transa
     transaction.request['header']['Authorization'] = 'Token token="' + stash['apitoken'] + '"';
 });
 
-// Trims newlines
+// role#create throws "405 Method not allowed" on duplicate insert, catch this and ignore it
+hooks.beforeValidation('Role > Create > Create a new role', function(transaction) {
+    if (transaction.real.statusCode === 405) {
+        console.log('Skipping create, object already created');
+        transaction.real.statusCode = transaction.expected.statusCode;
+        transaction.real.body = transaction.expected.body;
+    }
+});
+
+// Trims newlines from a string
 function trim(input) {
     return input.replace(/^\s+|\s+$/g, "");
 }

@@ -116,8 +116,6 @@ A host assumes the permissions of the layer when it is enrolled.
 
 :[layer.deny_privilege](layer.deny_privilege.md)
 
-<!--
-
 ## Group Role
 
 A `role` is an actor in the system, in the classical sense of role-based access control. 
@@ -134,6 +132,8 @@ Roles are the entities which receive permission grants.
 :[role.grant_to](role.grant_to.md)
 
 :[role.revoke_from](role.revoke_from.md)
+
+<!--
 
 ## Group Resource
 

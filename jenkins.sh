@@ -2,6 +2,8 @@
 
 hercule src/api.md -o api.md
 
+DOCKER_IMAGE="registry.tld/conjur-appliance:4.5-stable"
+
 function finish {
     # Stop and remove the Conjur container
 #    docker rm -f ${cid}
@@ -21,10 +23,10 @@ cid=$(docker run -d -p "443:443" -p "636:636" conjurinc/appliance)
 
 docker exec ${cid} evoke configure master -h ${hostname} -p ${password} ${orgaccount}
 
-yes yes | conjur init -f .conjurrc -h ${hostname}
+yes yes yes | conjur init -f .conjurrc -h ${hostname}
 export CONJURRC=.conjurrc
 conjur authn login -u admin -p ${password}
-yes no | conjur bootstrap
+printf "test\npassword\npassword\nno\nn" | conjur bootstrap
 
 # Run the tests
 docker run --rm -v $PWD:/app \

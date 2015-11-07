@@ -20,12 +20,12 @@ This means that no one else will be able to see your role.
 |409|A resource with that name already exists|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: variable_group (string) - Purpose of the resource
     + id: aws_keys (string) - Name of the resource, query-escaped
-    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+    + acting_as: conjur:group:security_admin (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
-+ Request (application/json)
++ Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)

@@ -1682,8 +1682,6 @@ Privileges available are:
 
 + Response 204
 
-<!--
-
 ## Group Role
 
 A `role` is an actor in the system, in the classical sense of role-based access control. 
@@ -1714,13 +1712,13 @@ This means that no one else will be able to see your role.
 |----|-----------|
 |201|Role created successfully|
 |403|Permission denied|
-|409|A role with that name already exists|
+|405|A role with that name already exists|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: chatbot (string) - Purpose of the role
     + id: hubot (string) - Name of the role, query-escaped
-    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+    + acting_as: conjur:group:ops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
 + Request (application/json)
     + Headers
@@ -1729,7 +1727,7 @@ This means that no one else will be able to see your role.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 201 (application/json)
++ Response 201
 
 ## Exists [/api/authz/{account}/roles/{kind}/{id}]
 
@@ -1755,9 +1753,9 @@ Only roles that you have `read` permission on will be searched.
 |404|Role does not exist|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: group (string) - kind of the role, for example 'group' or 'layer'
-    + id: v1/ops (string) - ID of the role, do not query-escape
+    + id: ops (string) - ID of the role, do not query-escape
 
 + Request
     + Headers
@@ -1790,10 +1788,17 @@ Only roles which have been explicitly granted the role in question are listed.
 |----|------------|-------|
 |Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
 
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Role memberships returned as JSON list|
+|404|Role does not exist|
+
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: group (string) - kind of the role, for example 'group' or 'layer'
-    + id: v1/ops (string) - ID of the role
+    + id: ops (string) - ID of the role
 
 + Request
     + Headers
@@ -1802,21 +1807,15 @@ Only roles which have been explicitly granted the role in question are listed.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
       {
         "admin_option": true,
-        "grantor": "demo:group:v1/ops",
-        "member": "demo:group:security_admin",
-        "role": "demo:group:v1/ops"
-      },
-      {
-        "admin_option": false,
-        "grantor": "demo:user:demo",
-        "member": "demo:user:donna",
-        "role": "demo:group:v1/ops"
+        "grantor": "conjur:group:ops",
+        "member": "conjur:group:security_admin",
+        "role": "conjur:group:ops"
       }
     ]
     ```
@@ -1856,9 +1855,9 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
 |404|Role does not exist|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + role_a: layer/webhosts (string) - ID of the owner role
-    + role_b: group:v1/ops (string) - ID of the role we're granting membership to
+    + account: conjur (string) - organization account name
+    + role_a: user/alice (string) - ID of the owner role `{kind}/{id}`, query-escaped
+    + role_b: group:ops (string) - Qualified ID of the role we're granting membership to
 
 + Request
     + Headers
@@ -1873,12 +1872,7 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
         {admin_option: true}
         ```
 
-+ Response 200 (text/plain)
-
-    ```
-    Role granted
-    ```
-
++ Response 200
 
 ### Revoke a granted role [DELETE]
 
@@ -1898,14 +1892,14 @@ Inverse of `role#grant_to`.
 
 |Code|Description|
 |----|-----------|
-|200|Role revoked|
+|204|Role revoked|
 |403|Permission denied|
 |404|Role does not exist|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + role_a: layer/webhosts (string) - ID of the owner role
-    + role_b: group:v1/ops (string) - ID of the role we're granting membership to
+    + account: conjur (string) - organization account name
+    + role_a: user/alice (string) - ID of the owner role
+    + role_b: group:ops (string) - ID of the role we're granting membership to
 
 + Request
     + Headers
@@ -1914,11 +1908,9 @@ Inverse of `role#grant_to`.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (text/plain)
++ Response 204
 
-    ```
-    Role revoked
-    ```
+<!--
 
 ## Group Resource
 
@@ -1953,19 +1945,19 @@ This means that no one else will be able to see your role.
 |409|A resource with that name already exists|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: variable_group (string) - Purpose of the resource
     + id: aws_keys (string) - Name of the resource, query-escaped
-    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+    + acting_as: conjur:group:security_admin (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
-+ Request (application/json)
++ Request
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
 ## Exists [/api/authz/{account}/resources/{kind}/{id}]
 
