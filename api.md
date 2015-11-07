@@ -1910,8 +1910,6 @@ Inverse of `role#grant_to`.
 
 + Response 204
 
-<!--
-
 ## Group Resource
 
 A `resource` is a record on which permissions are defined. 
@@ -1919,14 +1917,14 @@ They are partitioned by "kind", such as "group", "host", "file", "environment", 
 
 [Read more](https://developer.conjur.net/reference/services/authorization/resource/) abour resources.
 
-## Create [/api/authz/{account}/resource/{kind}/{id}{?acting_as}]
+## Create [/api/authz/{account}/resources/{kind}/{id}{?acting_as}]
 
 ### Create a new resource [PUT]
 
-You can create resource of custom kinds to better match your infrastructure and workflows.
+You can create resources of custom kinds to better match your infrastructure and workflows.
 
-If you don't provide `acting_as`, your user will be the owner of the role.
-This means that no one else will be able to see your role.
+If you don't provide `acting_as`, your user will be the owner of the resource.
+This means that no one else will be able to see your resource.
 
 ---
 
@@ -1940,7 +1938,7 @@ This means that no one else will be able to see your role.
 
 |Code|Description|
 |----|-----------|
-|201|Resource created successfully|
+|204|Resource created successfully|
 |403|Permission denied|
 |409|A resource with that name already exists|
 
@@ -1948,7 +1946,7 @@ This means that no one else will be able to see your role.
     + account: conjur (string) - organization account name
     + kind: variable_group (string) - Purpose of the resource
     + id: aws_keys (string) - Name of the resource, query-escaped
-    + acting_as: conjur:group:security_admin (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+    + acting_as: conjur:group:ops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
 + Request
     + Headers
@@ -1957,7 +1955,7 @@ This means that no one else will be able to see your role.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 201 (application/json; charset=utf-8)
++ Response 204
 
 ## Exists [/api/authz/{account}/resources/{kind}/{id}]
 
@@ -1979,13 +1977,13 @@ Only resources that you have `read` permission on will be searched.
 
 |Code|Description|
 |----|-----------|
-|204|resource exists|
+|200|resource exists|
 |404|resource does not exist|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + kind: host (string) - kind of the resource, for example 'variable' or 'host'
-    + id: redis001 (string) - ID of the resource, do not query-escape
+    + account: conjur (string) - organization account name
+    + kind: variable_group (string) - kind of the resource, for example 'variable' or 'host'
+    + id: aws_keys (string) - ID of the resource, do not query-escape
 
 + Request
     + Headers
@@ -1994,9 +1992,9 @@ Only resources that you have `read` permission on will be searched.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 204
++ Response 200
 
-## Show [/api/authz/{account}/annotations/{kind}/{id}/]
+## Show [/api/authz/{account}/resources/{kind}/{id}/]
 
 ### Retrieve a resources's record [GET]
 
@@ -2023,9 +2021,9 @@ Retrieves a resource's metadata, including annotations.
 |404|No record exists with the given ID|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + kind: chatbot (string) - kind of the resource, for example 'variable' or 'host'
-    + id: hubot (string) - ID of the resource to show
+    + account: conjur (string) - organization account name
+    + kind: variable_group (string) - kind of the resource, for example 'variable' or 'host'
+    + id: aws_keys (string) - ID of the resource to show
 
 + Request
     + Headers
@@ -2034,24 +2032,14 @@ Retrieves a resource's metadata, including annotations.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     {
-      "id": "demo:chatbot:hubot",
-      "owner": "demo:group:ops",
-      "permissions": [
-    
-      ],
-      "annotations": [
-          {
-            "resource_id": 36,
-            "name": "client",
-            "value": "slack",
-            "created_at": "2015-11-04T21:06:14.208+00:00",
-            "updated_at": "2015-11-04T21:06:14.208+00:00"
-          }
-      ]
+      "id": "conjur:variable_group:aws_keys",
+      "owner": "conjur:group:ops",
+      "permissions": [],
+      "annotations": []
     }
     ```
 
@@ -2086,10 +2074,10 @@ In other words, resources on which you have no privilege are invisible to you.
 
 + Parameters
     + account: demo (string) - organization account name
-    + kind: host (string) - kind of the resource, for example 'variable' or 'host'
-    + search: ec2 (string, optional) - search string
-    + limit (number, optional) - limits the number of response records
-    + offset (number, optional) - offset into the first response record
+    + kind: variable_group (string) - kind of the resource, for example 'variable' or 'host'
+    + search: aws_keys (string, optional) - search string
+    + limit (string, optional) - limits the number of response records
+    + offset (string, optional) - offset into the first response record
 
 + Request
     + Headers
@@ -2098,32 +2086,16 @@ In other words, resources on which you have no privilege are invisible to you.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
-        {
-            "id": "conjurops:host:ec2/i-2e3c83df",
-            "owner": "conjurops:group:v4/build",
-            "permissions": [
-              {
-                "privilege": "execute",
-                "grant_option": false,
-                "resource": "conjurops:host:ec2/i-2e3c83df",
-                "role": "conjurops:@:layer/build-0.1.0/jenkins/use_host",
-                "grantor": "conjurops:deputy:production/jenkins-2.0/jenkins-slaves"
-              },
-              {
-                "privilege": "read",
-                "grant_option": false,
-                "resource": "conjurops:host:ec2/i-2e3c83df",
-                "role": "conjurops:host:ec2/i-2e3c83df",
-                "grantor": "conjurops:deputy:production/jenkins-2.0/jenkins-slaves"
-              }
-            ],
-            "annotations": {
-            }
-          }
+      {
+        "id": "conjur:variable_group:aws_keys",
+        "owner": "conjur:group:ops",
+        "permissions": [],
+        "annotations": []
+      }
     ]
     ```
 
@@ -2155,10 +2127,10 @@ The key and value must be query-escaped:  `/` -> `%2F`, `:` -> `%3A`.
 |404|Resource not found|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: layer (string) - kind of the resource, for example 'variable' or 'host'
-    + id: jenkins/slaves (string) - ID of the resource you're annotating
-    + name: aws%2Faccount (string) - Key for the annotation, query-escaped
+    + id: redis (string) - ID of the resource you're annotating
+    + name: aws:account (string) - Key for the annotation, query-escaped
     + value: ci (string) - Value for the annotation, query-escaped
 
 + Request (application/json)
@@ -2168,9 +2140,9 @@ The key and value must be query-escaped:  `/` -> `%2F`, `:` -> `%3A`.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200
 
-## List Annotations [/api/authz/{account}/annotations/{kind}/{id}]
+## List Annotations [/api/authz/{account}/resources/{kind}/{id}]
 
 ### List the annotations on a resource [GET]
 
@@ -2196,9 +2168,9 @@ lists all annotations when you retrieve it. You can then parse the JSON to get t
 |404|Resource not found|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: layer (string) - kind of the resource, for example 'variable' or 'host'
-    + id: jenkins/slaves (string) - ID of the resource to show
+    + id: redis (string) - ID of the resource to show
 
 + Request (application/json)
     + Headers
@@ -2207,30 +2179,30 @@ lists all annotations when you retrieve it. You can then parse the JSON to get t
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     {
-      "id": "demo:layer:jenkins/slaves",
-      "owner": "demo:group:security_admin",
-      "permissions": [
-        {
-          "privilege": "read",
-          "grant_option": false,
-          "resource": "demo:layer:jenkins/slaves",
-          "role": "demo:@:layer/jenkins/slaves/observe",
-          "grantor": "demo:user:terry"
-        }
-      ],
-      "annotations": [
-        {
-          "resource_id": 25,
-          "name": "aws/account",
-          "value": "ci",
-          "created_at": "2015-11-04T20:51:19.716+00:00",
-          "updated_at": "2015-11-04T20:51:19.716+00:00"
-        }
-      ]
+        "id":"conjur:layer:redis",
+        "owner":"conjur:group:security_admin",
+        "permissions":[
+            {
+                "privilege":"read",
+                "grant_option":false,
+                "resource":"conjur:layer:redis",
+                "role":"conjur:@:layer/redis/observe",
+                "grantor":"conjur:user:admin"
+            }
+        ],
+        "annotations":[
+            {
+                "resource_id":18,
+                "name":"aws:account",
+                "value":"ci",
+                "created_at":"2015-11-07T16:51:50.446+00:00",
+                "updated_at":"2015-11-07T16:53:37.524+00:00"
+            }
+        ]
     }
     ```
 
@@ -2258,69 +2230,10 @@ In this example, we are transferring ownership of a variable to a group.
 |403|Permission denied|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: variable (string) - Purpose of the resource
-    + id: aws%2Faccess_key_id (string) - Name of the resource, query-escaped
-    + owner: demo%3Agroup%3Aops (string) - Fully-qualified Conjur ID of the new owner role, query-escaped
-
-+ Request (application/json)
-    + Headers
-    
-        ```
-        Authorization: Token token="eyJkYX...Rhb="
-        ```
-
-+ Response 200 (application/json)
-
-## Check [/api]
-
-Check whether a role has a certain permission on a resource.
-
-There are 2 routes here:
-* The first route uses the currently logged-in user as the role.
-* The second route allows you to *specify* the role on which to check permissions.
-
-Note that in the examples, we are checking if a role can fry bacon.
-Conjur defines resource and role types for common use cases, but you
-are free to use your own custom types.
-
-### Check your own permissions [GET /api/authz/{account}/resources/{kind}/{id}/?check{&priviledge}]
-
-In this example, we are checking if we have `fry` privilege on the resource `food:bacon`.
-
-The response body is empty, privilege is communicated through the response status code.
-
-**Permission required**
-
-You must either:
-
-* Be the owner of the resource
-* Have some permission on the resource
-* Be granted the role that you are checking (which includes your own role)
-
-You are not allowed to check permissions of arbitrary roles or resources.
-
----
-
-**Headers**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
-
-**Response**
-
-|Code|Description|
-|----|-----------|
-|204|The privilege is held; you are allowed to proceed with the transaction.|
-|403|The request is allowed, but the privilege is not held by you.|
-|409|You are not allowed to check permissions on this resource.|
-
-+ Parameters
-    + account: demo (string) - organization account name
-    + kind: food (string) - kind of the resource, for example 'variable' or 'host'
-    + id: bacon (string) - ID of the resource you're checking
-    + privilege: fry (string) - name of the desired privilege, for example 'execute' or 'update'
+    + id: dev/mongo/password (string) - Name of the resource, query-escaped
+    + owner: conjur:group:ops (string) - Fully-qualified Conjur ID of the new owner role, query-escaped
 
 + Request
     + Headers
@@ -2329,57 +2242,7 @@ You are not allowed to check permissions of arbitrary roles or resources.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 204
-
-
-### Check another role's permissions [GET /api/authz/{account}/roles/{kind}/{id}/?check{&privilege,resource_id}]
-
-In this example, we are checking if the user 'alice' has
-`fry` privilege on the resource `food:bacon`.
-
-The response body is empty, privilege is communicated through the response status code.
-
-**Permission required**
-
-You must either:
-
-* Be the owner of the resource
-* Have some permission on the resource
-* Be granted the role that you are checking (which includes your own role)
-
-You are not allowed to check permissions of arbitrary roles or resources.
-
----
-
-**Headers**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
-
-**Response**
-
-|Code|Description|
-|----|-----------|
-|204|The privilege is held; the role is allowed to proceed with the transaction.|
-|403|The role is not allowed to check permissions on this resource.|
-|404|The request is allowed, but the privilege is not held by the role.|
-
-+ Parameters
-    + account: demo (string) - organization account name
-    + kind: user (string) - kind of the role, for example 'user' or 'host'. If the role is not specified, the currently authenticated role is used.
-    + id: alice (string) - ID of the role. If the role is not specified, the current authenticated role is used.
-    + resource_id: food:bacon (string) - the kind and ID of the resource, joined by a colon
-    + privilege: fry (string) - name of the desired privilege, for example 'execute' or 'update'
-
-+ Request
-    + Headers
-    
-        ```
-        Authorization: Token token="eyJkYX...Rhb="
-        ```
-
-+ Response 204
++ Response 200
 
 ## Permit [/api/authz/{account}/resources/{kind}/{id}/?permit{&privilege,role}]
 
@@ -2413,10 +2276,10 @@ These have special meanings in Conjur, but you can create your own as needed.
 |404|Resource not found|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: variable (string) - kind of the resource, for example 'variable' or 'host'
     + id: dev/mongo/password (string) - ID of the resource to act on, do not query-escape
-    + privilege: use_host (string) - Privilege to permit
+    + privilege: execute (string) - Privilege to permit
     + role: group:ops (string) - Qualified role name to grant privilege to, do not query-escape
 
 + Request (application/json)
@@ -2463,13 +2326,122 @@ These have special meanings in Conjur, but you can create your own as needed.
 |404|Resource not found|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: variable (string) - kind of the resource, for example 'variable' or 'host'
     + id: dev/mongo/password (string) - ID of the resource to act on, do not query-escape
-    + privilege: use_host (string) - Privilege to deny
+    + privilege: execute (string) - Privilege to deny
     + role: group:ops (string) - Qualified role name to revoke privilege from, do not query-escape
 
 + Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 204
+
+## Check [/api]
+
+Check whether a role has a certain permission on a resource.
+
+There are 2 routes here:
+* The first route uses the currently logged-in user as the role.
+* The second route allows you to *specify* the role on which to check permissions.
+
+Note that in the examples, we are checking if a role can fry bacon.
+Conjur defines resource and role types for common use cases, but you
+are free to use your own custom types.
+
+### Check your own permissions [GET /api/authz/{account}/resources/{kind}/{id}/?check=true{&privilege}]
+
+In this example, we are checking if we have `fry` privilege on the resource `food:bacon`.
+
+The response body is empty, privilege is communicated through the response status code.
+
+**Permission required**
+
+You must either:
+
+* Be the owner of the resource
+* Have some permission on the resource
+* Be granted the role that you are checking (which includes your own role)
+
+You are not allowed to check permissions of arbitrary roles or resources.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The privilege is held; you are allowed to proceed with the transaction.|
+|403|The request is allowed, but the privilege is not held by you.|
+|409|You are not allowed to check permissions on this resource.|
+
++ Parameters
+    + account: conjur (string) - organization account name
+    + kind: variable (string) - kind of the resource, for example 'variable' or 'host'
+    + id: dev/mongo/password (string) - ID of the resource you're checking
+    + privilege: execute (string) - name of the desired privilege, for example 'execute' or 'update'
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 204
+
+
+### Check another role's permissions [GET /api/authz/{account}/roles/{kind}/{id}/?check{&privilege,resource_id}]
+
+In this example, we are checking if the group `ops` has
+`execute` privilege on the variable `dev/mongo/password`.
+
+The response body is empty, privilege is communicated through the response status code.
+
+**Permission required**
+
+You must either:
+
+* Be the owner of the resource
+* Have some permission on the resource
+* Be granted the role that you are checking (which includes your own role)
+
+You are not allowed to check permissions of arbitrary roles or resources.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The privilege is held; the role is allowed to proceed with the transaction.|
+|403|The role is not allowed to check permissions on this resource.|
+|404|The request is allowed, but the privilege is not held by the role.|
+
++ Parameters
+    + account: conjur (string) - organization account name
+    + kind: group (string) - kind of the role, for example 'user' or 'host'. If the role is not specified, the currently authenticated role is used.
+    + id: ops (string) - ID of the role. If the role is not specified, the current authenticated role is used.
+    + resource_id: variable:dev/mongo/password (string) - the kind and ID of the resource, joined by a colon
+    + privilege: execute (string) - name of the desired privilege, for example 'execute' or 'update'
+
++ Request
     + Headers
     
         ```
@@ -2748,4 +2720,3 @@ The response body is JSON that can be examined for additional details.
       "ok":false
     }
     ```
--->

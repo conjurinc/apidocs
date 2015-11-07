@@ -22,13 +22,13 @@ The key and value must be query-escaped:  `/` -> `%2F`, `:` -> `%3A`.
 |404|Resource not found|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: layer (string) - kind of the resource, for example 'variable' or 'host'
-    + id: jenkins/slaves (string) - ID of the resource you're annotating
-    + name: aws%2Faccount (string) - Key for the annotation, query-escaped
+    + id: redis (string) - ID of the resource you're annotating
+    + name: aws:account (string) - Key for the annotation, query-escaped
     + value: ci (string) - Value for the annotation, query-escaped
 
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json)
++ Response 200

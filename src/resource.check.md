@@ -10,7 +10,7 @@ Note that in the examples, we are checking if a role can fry bacon.
 Conjur defines resource and role types for common use cases, but you
 are free to use your own custom types.
 
-### Check your own permissions [GET /api/authz/{account}/resources/{kind}/{id}/?check{&priviledge}]
+### Check your own permissions [GET /api/authz/{account}/resources/{kind}/{id}/?check=true{&privilege}]
 
 In this example, we are checking if we have `fry` privilege on the resource `food:bacon`.
 
@@ -39,10 +39,10 @@ You are not allowed to check permissions of arbitrary roles or resources.
 |409|You are not allowed to check permissions on this resource.|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + kind: food (string) - kind of the resource, for example 'variable' or 'host'
-    + id: bacon (string) - ID of the resource you're checking
-    + privilege: fry (string) - name of the desired privilege, for example 'execute' or 'update'
+    + account: conjur (string) - organization account name
+    + kind: variable (string) - kind of the resource, for example 'variable' or 'host'
+    + id: dev/mongo/password (string) - ID of the resource you're checking
+    + privilege: execute (string) - name of the desired privilege, for example 'execute' or 'update'
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
@@ -52,8 +52,8 @@ You are not allowed to check permissions of arbitrary roles or resources.
 
 ### Check another role's permissions [GET /api/authz/{account}/roles/{kind}/{id}/?check{&privilege,resource_id}]
 
-In this example, we are checking if the user 'alice' has
-`fry` privilege on the resource `food:bacon`.
+In this example, we are checking if the group `ops` has
+`execute` privilege on the variable `dev/mongo/password`.
 
 The response body is empty, privilege is communicated through the response status code.
 
@@ -80,11 +80,11 @@ You are not allowed to check permissions of arbitrary roles or resources.
 |404|The request is allowed, but the privilege is not held by the role.|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + kind: user (string) - kind of the role, for example 'user' or 'host'. If the role is not specified, the currently authenticated role is used.
-    + id: alice (string) - ID of the role. If the role is not specified, the current authenticated role is used.
-    + resource_id: food:bacon (string) - the kind and ID of the resource, joined by a colon
-    + privilege: fry (string) - name of the desired privilege, for example 'execute' or 'update'
+    + account: conjur (string) - organization account name
+    + kind: group (string) - kind of the role, for example 'user' or 'host'. If the role is not specified, the currently authenticated role is used.
+    + id: ops (string) - ID of the role. If the role is not specified, the current authenticated role is used.
+    + resource_id: variable:dev/mongo/password (string) - the kind and ID of the resource, joined by a colon
+    + privilege: execute (string) - name of the desired privilege, for example 'execute' or 'update'
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)

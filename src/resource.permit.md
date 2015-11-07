@@ -26,10 +26,10 @@ These have special meanings in Conjur, but you can create your own as needed.
 |404|Resource not found|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: variable (string) - kind of the resource, for example 'variable' or 'host'
     + id: dev/mongo/password (string) - ID of the resource to act on, do not query-escape
-    + privilege: use_host (string) - Privilege to permit
+    + privilege: execute (string) - Privilege to permit
     + role: group:ops (string) - Qualified role name to grant privilege to, do not query-escape
 
 + Request (application/json)

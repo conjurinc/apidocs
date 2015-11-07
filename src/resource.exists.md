@@ -14,15 +14,15 @@ Only resources that you have `read` permission on will be searched.
 
 |Code|Description|
 |----|-----------|
-|204|resource exists|
+|200|resource exists|
 |404|resource does not exist|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + kind: host (string) - kind of the resource, for example 'variable' or 'host'
-    + id: redis001 (string) - ID of the resource, do not query-escape
+    + account: conjur (string) - organization account name
+    + kind: variable_group (string) - kind of the resource, for example 'variable' or 'host'
+    + id: aws_keys (string) - ID of the resource, do not query-escape
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 204
++ Response 200

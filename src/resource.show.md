@@ -1,4 +1,4 @@
-## Show [/api/authz/{account}/annotations/{kind}/{id}/]
+## Show [/api/authz/{account}/resources/{kind}/{id}/]
 
 ### Retrieve a resources's record [GET]
 
@@ -21,30 +21,20 @@ Retrieves a resource's metadata, including annotations.
 |404|No record exists with the given ID|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + kind: chatbot (string) - kind of the resource, for example 'variable' or 'host'
-    + id: hubot (string) - ID of the resource to show
+    + account: conjur (string) - organization account name
+    + kind: variable_group (string) - kind of the resource, for example 'variable' or 'host'
+    + id: aws_keys (string) - ID of the resource to show
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     {
-      "id": "demo:chatbot:hubot",
-      "owner": "demo:group:ops",
-      "permissions": [
-    
-      ],
-      "annotations": [
-          {
-            "resource_id": 36,
-            "name": "client",
-            "value": "slack",
-            "created_at": "2015-11-04T21:06:14.208+00:00",
-            "updated_at": "2015-11-04T21:06:14.208+00:00"
-          }
-      ]
+      "id": "conjur:variable_group:aws_keys",
+      "owner": "conjur:group:ops",
+      "permissions": [],
+      "annotations": []
     }
     ```

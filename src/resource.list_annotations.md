@@ -1,4 +1,4 @@
-## List Annotations [/api/authz/{account}/annotations/{kind}/{id}]
+## List Annotations [/api/authz/{account}/resources/{kind}/{id}]
 
 ### List the annotations on a resource [GET]
 
@@ -20,36 +20,36 @@ lists all annotations when you retrieve it. You can then parse the JSON to get t
 |404|Resource not found|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + kind: layer (string) - kind of the resource, for example 'variable' or 'host'
-    + id: jenkins/slaves (string) - ID of the resource to show
+    + id: redis (string) - ID of the resource to show
 
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     {
-      "id": "demo:layer:jenkins/slaves",
-      "owner": "demo:group:security_admin",
-      "permissions": [
-        {
-          "privilege": "read",
-          "grant_option": false,
-          "resource": "demo:layer:jenkins/slaves",
-          "role": "demo:@:layer/jenkins/slaves/observe",
-          "grantor": "demo:user:terry"
-        }
-      ],
-      "annotations": [
-        {
-          "resource_id": 25,
-          "name": "aws/account",
-          "value": "ci",
-          "created_at": "2015-11-04T20:51:19.716+00:00",
-          "updated_at": "2015-11-04T20:51:19.716+00:00"
-        }
-      ]
+        "id":"conjur:layer:redis",
+        "owner":"conjur:group:security_admin",
+        "permissions":[
+            {
+                "privilege":"read",
+                "grant_option":false,
+                "resource":"conjur:layer:redis",
+                "role":"conjur:@:layer/redis/observe",
+                "grantor":"conjur:user:admin"
+            }
+        ],
+        "annotations":[
+            {
+                "resource_id":18,
+                "name":"aws:account",
+                "value":"ci",
+                "created_at":"2015-11-07T16:51:50.446+00:00",
+                "updated_at":"2015-11-07T16:53:37.524+00:00"
+            }
+        ]
     }
     ```

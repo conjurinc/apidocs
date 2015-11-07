@@ -72,6 +72,15 @@ hooks.beforeValidation('Role > Create > Create a new role', function(transaction
     }
 });
 
+// resource#create throws "422 UnprocessableEntity" on duplicate insert, catch this and ignore it
+hooks.beforeValidation('Resource > Create > Create a new resource', function(transaction) {
+    if (transaction.real.statusCode === 422) {
+        console.log('Skipping create, object already created');
+        transaction.real.statusCode = transaction.expected.statusCode;
+        transaction.real.body = transaction.expected.body;
+    }
+});
+
 // Trims newlines from a string
 function trim(input) {
     return input.replace(/^\s+|\s+$/g, "");

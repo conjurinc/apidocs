@@ -133,8 +133,6 @@ Roles are the entities which receive permission grants.
 
 :[role.revoke_from](role.revoke_from.md)
 
-<!--
-
 ## Group Resource
 
 A `resource` is a record on which permissions are defined. 
@@ -156,11 +154,11 @@ They are partitioned by "kind", such as "group", "host", "file", "environment", 
 
 :[resource.give](resource.give.md)
 
-:[resource.check](resource.check.md)
-
 :[resource.permit](resource.permit.md)
 
 :[resource.deny](resource.deny.md)
+
+:[resource.check](resource.check.md)
 
 ## Group Audit
 
@@ -176,4 +174,3 @@ Fetching all audit records can return a very large response, so it is best to th
 ## Group Utilities
 
 :[utilities.health](utilities.health.md)
--->

@@ -25,39 +25,23 @@ In other words, resources on which you have no privilege are invisible to you.
 
 + Parameters
     + account: demo (string) - organization account name
-    + kind: host (string) - kind of the resource, for example 'variable' or 'host'
-    + search: ec2 (string, optional) - search string
-    + limit (number, optional) - limits the number of response records
-    + offset (number, optional) - offset into the first response record
+    + kind: variable_group (string) - kind of the resource, for example 'variable' or 'host'
+    + search: aws_keys (string, optional) - search string
+    + limit (string, optional) - limits the number of response records
+    + offset (string, optional) - offset into the first response record
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
-        {
-            "id": "conjurops:host:ec2/i-2e3c83df",
-            "owner": "conjurops:group:v4/build",
-            "permissions": [
-              {
-                "privilege": "execute",
-                "grant_option": false,
-                "resource": "conjurops:host:ec2/i-2e3c83df",
-                "role": "conjurops:@:layer/build-0.1.0/jenkins/use_host",
-                "grantor": "conjurops:deputy:production/jenkins-2.0/jenkins-slaves"
-              },
-              {
-                "privilege": "read",
-                "grant_option": false,
-                "resource": "conjurops:host:ec2/i-2e3c83df",
-                "role": "conjurops:host:ec2/i-2e3c83df",
-                "grantor": "conjurops:deputy:production/jenkins-2.0/jenkins-slaves"
-              }
-            ],
-            "annotations": {
-            }
-          }
+      {
+        "id": "conjur:variable_group:aws_keys",
+        "owner": "conjur:group:ops",
+        "permissions": [],
+        "annotations": []
+      }
     ]
     ```
