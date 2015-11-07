@@ -21,7 +21,7 @@ cid=$(docker run -d -p "443:443" -p "636:636" conjurinc/appliance)
 
 docker exec ${cid} evoke configure master -h ${hostname} -p ${password} ${orgaccount}
 
-yes | conjur init -f .conjurrc -h ${hostname}
+yes yes | conjur init -f .conjurrc -h ${hostname}
 export CONJURRC=.conjurrc
 conjur authn login -u admin -p ${password}
 yes no | conjur bootstrap

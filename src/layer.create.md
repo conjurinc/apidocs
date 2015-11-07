@@ -1,4 +1,4 @@
-## Create [/api/layers/]
+## Create [/api/layers/{?id,ownerid}]
 
 ### Create a new layer [POST]
 
@@ -26,27 +26,22 @@ This means that no one else will be able to see your layer.
 |403|Permission denied|
 |409|A layer with that name already exists|
 
++ Parameters
+    + id: redis (string, optional) - Name of the layer, query-escaped
+    + ownerid: conjur:group:security_admin (string, optional) - Fully qualified ID of a Conjur role that will own the new layer
+
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-    + Body
-
-        ```
-        {
-            "id": "jenkins/slaves",
-            "ownerid": "demo:group:ops",
-        }
-        ```
-
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
     ```
     {
-      "id": "jenkins/slaves",
-      "userid": "demo",
-      "ownerid": "demo:group:ops",
-      "roleid": "demo:layer:jenkins/slaves",
-      "resource_identifier": "demo:layer:jenkins/slaves",
+      "id": "redis",
+      "userid": "admin",
+      "ownerid": "conjur:group:ops",
+      "roleid": "conjur:layer:redis",
+      "resource_identifier": "conjur:layer:redis",
       "hosts": []
     }
     ```

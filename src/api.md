@@ -91,8 +91,6 @@ Hosts are grouped into layers.
 
 :[host.layers](host.layers.md)
 
-<!--
-
 ## Group Layer
 
 A `layer` is a collection of hosts. It is a `role`, in RBAC terms.
@@ -117,6 +115,8 @@ A host assumes the permissions of the layer when it is enrolled.
 :[layer.permit_privilege](layer.permit_privilege.md)
 
 :[layer.deny_privilege](layer.deny_privilege.md)
+
+<!--
 
 ## Group Role
 

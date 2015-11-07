@@ -784,8 +784,8 @@ This means that no one else will be able to see your group.
 |409|A group with that name already exists|
 
 + Parameters
-    + id: ops (string) - Name of the group, query-escaped
-    + ownerid: conjur:group:security_admin (string) - Fully qualified ID of a Conjur role that will own the new group
+    + id: ops (string, optional) - Name of the group, query-escaped
+    + ownerid: conjur:group:security_admin (string, optionall) - Fully qualified ID of a Conjur role that will own the new group
     + gidnumber: 27001 (number, optional) - A GID number for the new group, primarily for use with LDAP
 
 + Request (application/json)
@@ -1271,8 +1271,6 @@ Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
     ]
     ```
 
-<!--
-
 ## Group Layer
 
 A `layer` is a collection of hosts. It is a `role`, in RBAC terms.
@@ -1282,7 +1280,7 @@ A host assumes the permissions of the layer when it is enrolled.
 
 [Read more](https://developer.conjur.net/reference/services/directory/layer/) about layers.
 
-## Create [/api/layers/]
+## Create [/api/layers/{?id,ownerid}]
 
 ### Create a new layer [POST]
 
@@ -1314,6 +1312,10 @@ This means that no one else will be able to see your layer.
 |403|Permission denied|
 |409|A layer with that name already exists|
 
++ Parameters
+    + id: redis (string, optional) - Name of the layer, query-escaped
+    + ownerid: conjur:group:security_admin (string, optional) - Fully qualified ID of a Conjur role that will own the new layer
+
 + Request (application/json)
     + Headers
     
@@ -1321,24 +1323,15 @@ This means that no one else will be able to see your layer.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-    + Body
-
-        ```
-        {
-            "id": "jenkins/slaves",
-            "ownerid": "demo:group:ops",
-        }
-        ```
-
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
     ```
     {
-      "id": "jenkins/slaves",
-      "userid": "demo",
-      "ownerid": "demo:group:ops",
-      "roleid": "demo:layer:jenkins/slaves",
-      "resource_identifier": "demo:layer:jenkins/slaves",
+      "id": "redis",
+      "userid": "admin",
+      "ownerid": "conjur:group:ops",
+      "roleid": "conjur:layer:redis",
+      "resource_identifier": "conjur:layer:redis",
       "hosts": []
     }
     ```
@@ -1371,11 +1364,11 @@ You can also limit, offset and shorten the resulting list.
 |403|Permission denied|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + search: jenkins (string, optional) - Query for search
+    + account: conjur (string) - organization account name
+    + search: redis (string, optional) - Query for search
     + limit: 100 (number, optional) - Limit the number of records returned
     + offset: 0 (number, optional) - Set the starting record index to return
-    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+    + acting_as (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
 + Request (application/json)
     + Headers
@@ -1384,20 +1377,20 @@ You can also limit, offset and shorten the resulting list.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
       {
-        "id": "jenkins/slaves",
-        "owner": "demo:group:ops",
+        "id": "conjur:layer:redis",
+        "owner": "conjur:group:ops",
         "permissions": [
           {
             "privilege": "read",
             "grant_option": false,
-            "resource": "demo:layer:jenkins/slaves",
-            "role": "demo:layer:jenkins/slaves",
-            "grantor": "demo:user:admin"
+            "resource": "conjur:layer:redis",
+            "role": "conjur:@:layer/redis/observe",
+            "grantor": "conjur:user:admin"
           }
         ],
         "annotations": []
@@ -1407,7 +1400,7 @@ You can also limit, offset and shorten the resulting list.
 
 ## Show [/api/layers/{id}]
 
-### Retrieve a layer's metadata [GET]
+### Retrieve a layer's record [GET]
 
 This route returns information about a layer, including its attached hosts.
 
@@ -1427,12 +1420,12 @@ Layer IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 |Code|Description|
 |----|-----------|
-|200|Layer metadata is returned|
+|200|Layer record is returned|
 |403|Permission denied|
 |404|Layer not found|
 
 + Parameters
-    + id: jenkins%2Fslaves (string) - Name of the layer, query-escaped
+    + id: redis (string) - Name of the layer, query-escaped
 
 + Request (application/json)
     + Headers
@@ -1441,22 +1434,22 @@ Layer IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     {
-        "id": "jenkins/slaves",
-        "userid": "demo",
-        "ownerid": "demo:group:ops",
-        "roleid": "demo:layer:jenkins/slaves",
-        "resource_identifier": "demo:layer:jenkins/slaves",
-        "hosts": [
-            "demo:host:slave01"
-        ]
+      "id": "redis",
+      "userid": "admin",
+      "ownerid": "conjur:group:ops",
+      "roleid": "conjur:layer:redis",
+      "resource_identifier": "conjur:layer:redis",
+      "hosts": [
+        "conjur:host:redis001"
+      ]
     }
     ```
 
-## Add Host [/api/layers/{id}/hosts/{?hostid}]
+## Add Host [/api/layers/{id}/hosts{?hostid}]
 
 ### Add a host to a layer [POST]
 
@@ -1479,32 +1472,32 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 
 |Code|Description|
 |----|-----------|
-|200|Host added to the layer|
+|201|Host added to the layer|
 |403|Permission denied|
 |404|Existing layer or host not found|
 
 + Parameters
-    + id: jenkins%2Fslaves (string) - ID of the layer, query-escaped
-    + hostid: demo%3Ahost%3Aslave01 (string) - Fully qualified ID of the host to add, query-escaped
+    + id: redis (string) - ID of the layer, query-escaped
+    + hostid: conjur:host:redis001 (string) - Fully qualified ID of the host to add, query-escaped
 
-+ Request (application/json)
++ Request
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
     ```
     {
-      "id": "jenkins/slaves",
-      "userid": "demo",
-      "ownerid": "demo:group:ops",
-      "roleid": "demo:layer:jenkins/slaves",
-      "resource_identifier": "demo:layer:jenkins/slaves",
+      "id": "redis",
+      "userid": "admin",
+      "ownerid": "conjur:group:ops",
+      "roleid": "conjur:layer:redis",
+      "resource_identifier": "conjur:layer:redis",
       "hosts": [
-        "demo:host:slave01"
+        "conjur:host:redis001"
       ]
     }
     ```
@@ -1535,8 +1528,8 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 |404|Existing layer or host not found|
 
 + Parameters
-    + id: jenkins%2Fslaves (string) - ID of the layer, query-escaped
-    + hostid: demo%3Ahost%3Aslave01 (string) - Fully qualified ID of the host to remove, query-escaped
+    + id: redis (string) - ID of the layer, query-escaped
+    + hostid: conjur:host:redis001 (string) - Fully qualified ID of the host to remove, query-escaped
 
 + Request (application/json)
     + Headers
@@ -1545,19 +1538,7 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 204 (application/json)
-
-    ```
-    {
-      "id": "jenkins/slaves",
-      "userid": "demo",
-      "ownerid": "demo:group:ops",
-      "roleid": "demo:layer:jenkins/slaves",
-      "resource_identifier": "demo:layer:jenkins/slaves",
-      "hosts": [
-      ]
-    }
-    ```
++ Response 204
 
 ## Permitted Roles [/api/authz/{account}/roles/@/layer/{layer}/{privilege}/?members]
 
@@ -1587,23 +1568,33 @@ Privileges available are:
 |404|Layer not found|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + layer: jenkins/slaves (string) - Name of the layer, do not query-escape
+    + account: conjur (string) - organization account name
+    + layer: redis (string) - Name of the layer, do not query-escape
     + privilege: use_host (string) - Privilege to query for
 
-+ Request (application/json)
++ Request (application/json; charset=utf-8)
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
-      "demo:group:security_admin",
-      "demo:user:bob"
+      {
+        "admin_option": true,
+        "grantor": "conjur:@:layer/redis/use_host",
+        "member": "conjur:group:ops",
+        "role": "conjur:@:layer/redis/use_host"
+      },
+      {
+        "admin_option": false,
+        "grantor": "conjur:user:admin",
+        "member": "conjur:@:layer/redis/admin_host",
+        "role": "conjur:@:layer/redis/use_host"
+      }
     ]
     ```
 
@@ -1630,24 +1621,24 @@ Privileges available are:
 
 |Code|Description|
 |----|-----------|
-|204|Privilege granted|
+|200|Privilege granted|
 |403|Permission denied|
 |404|Layer not found|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + layer: jenkins/slaves (string) - Name of the layer, do not query-escape
+    + account: conjur (string) - organization account name
+    + layer: redis (string) - Name of the layer, do not query-escape
     + privilege: use_host (string) - Privilege to permit
-    + member: user:bob (string) - Qualified role name, do not query-escape
+    + member: group:ops (string) - Qualified role name, do not query-escape
 
-+ Request (application/json)
++ Request (application/json; charset=utf-8)
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 204
++ Response 200
 
 ## Deny on Hosts [/api/authz/{account}/roles/@/layer/{layer}/{privilege}/?members{&member}]
 
@@ -1672,24 +1663,26 @@ Privileges available are:
 
 |Code|Description|
 |----|-----------|
-|200|Privilege removed|
+|200|Privilege revoked|
 |403|Permission denied|
 |404|Layer or privilege not found|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + layer: jenkins/slaves (string) - Name of the layer, do not query-escape
+    + account: conjur (string) - organization account name
+    + layer: redis (string) - Name of the layer, do not query-escape
     + privilege: use_host (string) - Privilege to permit
-    + member: user:bob (string) - Qualified role name, do not query-escape
+    + member: group:ops (string) - Qualified role name, do not query-escape
 
-+ Request (application/json)
++ Request (application/json; charset=utf-8)
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 204
+
+<!--
 
 ## Group Role
 

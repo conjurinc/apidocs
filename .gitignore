@@ -1,4 +1,6 @@
 dredd.yml
+.conjurrc
+conjur-conjur.pem
 api-test.md
 node_modules
 

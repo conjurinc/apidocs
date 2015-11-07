@@ -20,22 +20,10 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 |404|Existing layer or host not found|
 
 + Parameters
-    + id: jenkins%2Fslaves (string) - ID of the layer, query-escaped
-    + hostid: demo%3Ahost%3Aslave01 (string) - Fully qualified ID of the host to remove, query-escaped
+    + id: redis (string) - ID of the layer, query-escaped
+    + hostid: conjur:host:redis001 (string) - Fully qualified ID of the host to remove, query-escaped
 
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 204 (application/json)
-
-    ```
-    {
-      "id": "jenkins/slaves",
-      "userid": "demo",
-      "ownerid": "demo:group:ops",
-      "roleid": "demo:layer:jenkins/slaves",
-      "resource_identifier": "demo:layer:jenkins/slaves",
-      "hosts": [
-      ]
-    }
-    ```
++ Response 204
