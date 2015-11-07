@@ -1,5 +1,10 @@
 #!/bin/bash -eu
 
+# Build the test container
+docker build -t apidocs .
+
+docker run --rm -v $PWD:/app \
+apidocs \
 hercule src/api.md -o api.md
 
 DOCKER_IMAGE="registry.tld/conjur-appliance:4.5-stable"
@@ -16,9 +21,6 @@ function finish {
     fi
 }
 trap finish EXIT
-
-# Build the test container
-docker build -t apidocs .
 
 # Launch and configure a Conjur container
 if [ "$USER" == "jenkins" ]; then
