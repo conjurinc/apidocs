@@ -185,7 +185,7 @@ If you don't give the variable an ID, one will be randomly generated.
 |403|Permission denied|
 |409|A variable with that name already exists|
 
-+ Request (application/json; ut)
++ Request (application/json)
     + Headers
     
         ```
@@ -548,7 +548,7 @@ The new password, in the example "n82p9819pb12d12dsa".
 
 + Response 204
 
-<!-- ## Update Password [/api/authn/users/password]
+## Update Password [/api/authn/users/password]
 
 ### Update a user's password [PUT]
 
@@ -560,6 +560,15 @@ either a Conjur authentication token or HTTP Basic Auth containing
 the user's login and old password.
 Note that the user whose password is to be updated is determined by
 the value of the `Authorization` header.
+
+In this example, we are updating the password of the user `alice`.
+We set her password as '9p8nfsdafbp' when we created the user, so to generate
+the HTTP Basic Auth token on the command-line:
+
+```
+$ echo -n alice:9p8nfsdafbp | base64
+YWxpY2U6OXA4bmZzZGFmYnA=
+```
 
 This operation will also replace the user's API key with a securely
 generated random value. You can fetch the new API key using the
@@ -585,15 +594,13 @@ The new password, in the example "password".
 |401|Invalid or missing Authorization header|
 |403|Permission denied|
 |404|User not found|
+|422|New password not present in request body|
 
-+ Parameters
-    + login: alice (string) - Login name of the user, query-escaped
-
-+ Request(text/plain)
++ Request (text/plain)
     + Headers
     
         ```
-        Authorization: Token token="eyJkYX...Rhb="
+        Authorization: Basic YWxpY2U6OXA4bmZzZGFmYnA=
         ```
     
     + Body
@@ -602,7 +609,7 @@ The new password, in the example "password".
         password
         ```
 
-+ Response 204 -->
++ Response 204
 
 ## List/Search [/api/authz/{account}/resources/user{?search,limit,offset,acting_as}]
 
@@ -2355,9 +2362,9 @@ are free to use your own custom types.
 
 ### Check your own permissions [GET /api/authz/{account}/resources/{kind}/{id}/?check=true{&privilege}]
 
-In this example, we are checking if we have `fry` privilege on the resource `food:bacon`.
+In this example, we are checking if we have `execute` privilege on the variable `dev/mongo/password`.
 
-The response body is empty, privilege is communicated through the response status code.
+The response body is empty; privilege is communicated through the response status code.
 
 **Permission required**
 
@@ -2457,13 +2464,13 @@ Every privilege modification, variable retrieval and SSH action is logged to an 
 Audit records can be retrieved via the API for everything or a single role/resource.
 Fetching all audit records can return a very large response, so it is best to the the `limit` parameter.
 
-## All [/api/audit{?limit,offset}]
+## All [/api/audit]
 
 ### Fetch all audit events [GET]
 
 Fetch audit events for all roles and resources the calling identity has `read` privilege on.
 
-You can limit and offset the resulting list of events.
+The example shows a single audit event returned.
 
 ---
 
@@ -2482,73 +2489,109 @@ You can limit and offset the resulting list of events.
 |200|JSON list of audit events is returned|
 |403|Permission denied|
 
-+ Parameters
-    + limit: 100 (number, optional) - Limit the number of records returned
-    + offset: 0 (number, optional) - Set the starting record index to return
-
 + Request (application/json)
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
-        Accept-Encoding: gzip, deflate
+        Accept: */*
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
-        {
-          "resources": [],
-          "roles": [
-            "demo:user:lisa",
-            "demo:@:layer/jenkins/slaves/observe",
-            "demo:@:layer/jenkins/slaves/use_host"
-          ],
-          "action": "grant",
-          "role": "demo:@:layer/jenkins/slaves/observe",
-          "member": "demo:@:layer/jenkins/slaves/use_host",
-          "grantor": "demo:user:lisa",
-          "timestamp": "2015-11-03T20:11:47.789Z",
-          "event_id": "8bf37b524d95df2ab4c1fe7e3f89267d",
-          "id": 96,
-          "user": "demo:user:lisa",
-          "acting_as": "demo:user:lisa",
-          "request": {
-            "ip": "74.97.185.119",
-            "url": "http://localhost:5100/demo/roles/@/layer/jenkins/slaves/observe?members&member=demo:@:layer/jenkins/slaves/use_host",
-            "method": "PUT",
-            "params": {
-              "members": null,
-              "member": "demo:@:layer/jenkins/slaves/use_host",
-              "controller": "roles",
-              "action": "update_member",
-              "account": "demo",
-              "role": "@/layer/jenkins/slaves/observe",
-              "admin_option": null
-            },
-            "uuid": "3f0a0cfe-eef1-4a6d-a4a5-a0ebc1f20fc6"
+      {
+        "resources":[
+    
+        ],
+        "roles":[
+          "conjur:user:admin"
+        ],
+        "action":"all_roles",
+        "role":"conjur:user:admin",
+        "filter":[
+          "conjur:group:security_admin"
+        ],
+        "allowed":true,
+        "timestamp":"2015-11-07T17:24:21.085Z",
+        "event_id":"4af71f3bf6648b299c59c4ffc8a142db",
+        "id":1122,
+        "user":"conjur:user:admin",
+        "acting_as":"conjur:user:admin",
+        "request":{
+          "ip":"127.0.0.1",
+          "url":"http://localhost:5100/conjur/roles/user/admin?all\u0026filter%5B%5D=conjur%3Agroup%3Asecurity_admin",
+          "method":"GET",
+          "params":{
+            "all":null,
+            "filter":[
+              "conjur:group:security_admin"
+            ],
+            "controller":"roles",
+            "action":"all_roles",
+            "account":"conjur",
+            "role":"user/admin"
           },
-          "conjur": {
-            "domain": "authz",
-            "env": "appliance",
-            "user": "demo:user:lisa",
-            "role": "demo:user:lisa",
-            "account": "demo"
+          "uuid":"b0ced92e-9a1c-461b-aa51-b04211f7d307"
+        },
+        "conjur":{
+          "domain":"authz",
+          "env":"appliance",
+          "user":"conjur:user:admin",
+          "role":"conjur:user:admin",
+          "account":"conjur"
+        },
+        "kind":"role"
+      },
+      {
+        "resources":[
+          "conjur:user:alice"
+        ],
+        "roles":[
+          "conjur:user:admin"
+        ],
+        "resource":"conjur:user:alice",
+        "action":"check",
+        "privilege":"update",
+        "allowed":true,
+        "timestamp":"2015-11-07T17:24:21.118Z",
+        "event_id":"ec72aa9c08f005d6c8598ad055594d88",
+        "id":1123,
+        "user":"conjur:user:admin",
+        "acting_as":"conjur:user:admin",
+        "request":{
+          "ip":"127.0.0.1",
+          "url":"http://localhost:5100/conjur/resources/user/alice?check=true\u0026privilege=update",
+          "method":"GET",
+          "params":{
+            "check":"true",
+            "privilege":"update",
+            "controller":"resources",
+            "action":"check_permission",
+            "account":"conjur",
+            "kind":"user",
+            "identifier":"alice"
           },
-          "kind": "role"
-        }
-        ... // more events
+          "uuid":"aef23372-2933-4aa1-9597-99b7bbcfe22b"
+        },
+        "conjur":{
+          "domain":"authz",
+          "env":"appliance",
+          "user":"conjur:user:admin",
+          "role":"conjur:user:admin",
+          "account":"conjur"
+        },
+        "kind":"resource"
+      }
     ]
     ```
 
-## Single [/api/audit/{kind}/{id}{?limit,offset}]
+## Single [/api/audit/{kind}/{id}]
 
 ### Fetch audit events for a single role/resource [GET]
 
 Fetch audit events for a role/resource the calling identity has `read` privilege on.
-
-You can limit and offset the resulting list of events.
 
 `id` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 
@@ -2572,104 +2615,58 @@ You can limit and offset the resulting list of events.
 
 + Parameters
     + kind: roles (string) - Type of object, 'roles' or 'resources'
-    + id: demo%3Ahost%3Aredis001 (string) - Fully qualified ID of a Conjur role/resource, query-escaped
-    + limit: 100 (number, optional) - Limit the number of records returned
-    + offset: 0 (number, optional) - Set the starting record index to return
+    + id: conjur:host:redis001 (string) - Fully qualified ID of a Conjur role/resource, query-escaped
 
 + Request (application/json)
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
-        Accept-Encoding: gzip, deflate
+        Accept: */*
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
-        {
-          "resources": [],
-          "roles": [
-            "demo:user:lisa",
-            "demo:group:security_admin",
-            "demo:host:redis001"
-          ],
-          "action": "create",
-          "role_id": "demo:host:redis001",
-          "creator": "demo:group:security_admin",
-          "role": "demo:host:redis001",
-          "timestamp": "2015-11-03T21:33:17.974Z",
-          "event_id": "c5e9788790c51fb334d9517fdd603ce4",
-          "id": 183,
-          "user": "demo:user:lisa",
-          "acting_as": "demo:group:security_admin",
-          "request": {
-            "ip": "74.97.185.119",
-            "url": "http://localhost:5100/demo/roles/host/redis001",
-            "method": "PUT",
-            "params": {
-              "acting_as": "demo:group:security_admin",
-              "controller": "roles",
-              "action": "create",
-              "account": "demo",
-              "role": "host/redis001"
-            },
-            "uuid": "a432a32e-875e-489f-8f18-6aa3ef6df0cc"
+      {
+        "resources": [],
+        "roles": [
+          "conjur:user:admin",
+          "conjur:group:ops",
+          "conjur:host:redis001"
+        ],
+        "action": "create",
+        "role_id": "conjur:host:redis001",
+        "creator": "conjur:group:ops",
+        "role": "conjur:host:redis001",
+        "timestamp": "2015-11-07T04:41:22.406Z",
+        "event_id": "a06f5f34da97a544abdd1a38cd337829",
+        "id": 57,
+        "user": "conjur:user:admin",
+        "acting_as": "conjur:group:ops",
+        "request": {
+          "ip": "127.0.0.1",
+          "url": "http://localhost:5100/conjur/roles/host/redis001",
+          "method": "PUT",
+          "params": {
+            "acting_as": "conjur:group:ops",
+            "controller": "roles",
+            "action": "create",
+            "account": "conjur",
+            "role": "host/redis001"
           },
-          "conjur": {
-            "domain": "authz",
-            "env": "appliance",
-            "user": "demo:user:lisa",
-            "role": "demo:group:security_admin",
-            "account": "demo"
-          },
-          "kind": "role"
+          "uuid": "300422d8-342a-416c-a597-8bb698b0361a"
         },
-        {
-          "resources": [
-            "demo:host:redis001"
-          ],
-          "roles": [
-            "demo:user:lisa",
-            "demo:host:redis001"
-          ],
-          "resource": "demo:host:redis001",
-          "action": "permit",
-          "privilege": "read",
-          "grantee": "demo:host:redis001",
-          "grantor": "demo:user:lisa",
-          "timestamp": "2015-11-03T21:33:18.012Z",
-          "event_id": "8faec6a55a4e299abd737af9e0187d3e",
-          "id": 185,
-          "user": "demo:user:lisa",
-          "acting_as": "demo:user:lisa",
-          "request": {
-            "ip": "74.97.185.119",
-            "url": "http://localhost:5100/demo/resources/host/redis001?permit&privilege=read&role=demo:host:redis001",
-            "method": "POST",
-            "params": {
-              "permit": null,
-              "privilege": "read",
-              "role": "demo:host:redis001",
-              "controller": "resources",
-              "action": "grant_permission",
-              "account": "demo",
-              "kind": "host",
-              "identifier": "redis001"
-            },
-            "uuid": "3c50d04a-0f34-420b-8027-f9e4df3b882a"
-          },
-          "conjur": {
-            "domain": "authz",
-            "env": "appliance",
-            "user": "demo:user:lisa",
-            "role": "demo:user:lisa",
-            "account": "demo"
-          },
-          "kind": "resource"
-        }
-        ... // more events
+        "conjur": {
+          "domain": "authz",
+          "env": "appliance",
+          "user": "conjur:user:admin",
+          "role": "conjur:group:ops",
+          "account": "conjur"
+        },
+        "kind": "role"
+      }
     ]
     ```
 

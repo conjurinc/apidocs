@@ -1,10 +1,10 @@
-## All [/api/audit{?limit,offset}]
+## All [/api/audit]
 
 ### Fetch all audit events [GET]
 
 Fetch audit events for all roles and resources the calling identity has `read` privilege on.
 
-You can limit and offset the resulting list of events.
+The example shows a single audit event returned.
 
 ---
 
@@ -19,62 +19,100 @@ You can limit and offset the resulting list of events.
 |200|JSON list of audit events is returned|
 |403|Permission denied|
 
-+ Parameters
-    + limit: 100 (number, optional) - Limit the number of records returned
-    + offset: 0 (number, optional) - Set the starting record index to return
-
 + Request (application/json)
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
-        Accept-Encoding: gzip, deflate
+        Accept: */*
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
-        {
-          "resources": [],
-          "roles": [
-            "demo:user:lisa",
-            "demo:@:layer/jenkins/slaves/observe",
-            "demo:@:layer/jenkins/slaves/use_host"
-          ],
-          "action": "grant",
-          "role": "demo:@:layer/jenkins/slaves/observe",
-          "member": "demo:@:layer/jenkins/slaves/use_host",
-          "grantor": "demo:user:lisa",
-          "timestamp": "2015-11-03T20:11:47.789Z",
-          "event_id": "8bf37b524d95df2ab4c1fe7e3f89267d",
-          "id": 96,
-          "user": "demo:user:lisa",
-          "acting_as": "demo:user:lisa",
-          "request": {
-            "ip": "74.97.185.119",
-            "url": "http://localhost:5100/demo/roles/@/layer/jenkins/slaves/observe?members&member=demo:@:layer/jenkins/slaves/use_host",
-            "method": "PUT",
-            "params": {
-              "members": null,
-              "member": "demo:@:layer/jenkins/slaves/use_host",
-              "controller": "roles",
-              "action": "update_member",
-              "account": "demo",
-              "role": "@/layer/jenkins/slaves/observe",
-              "admin_option": null
-            },
-            "uuid": "3f0a0cfe-eef1-4a6d-a4a5-a0ebc1f20fc6"
+      {
+        "resources":[
+    
+        ],
+        "roles":[
+          "conjur:user:admin"
+        ],
+        "action":"all_roles",
+        "role":"conjur:user:admin",
+        "filter":[
+          "conjur:group:security_admin"
+        ],
+        "allowed":true,
+        "timestamp":"2015-11-07T17:24:21.085Z",
+        "event_id":"4af71f3bf6648b299c59c4ffc8a142db",
+        "id":1122,
+        "user":"conjur:user:admin",
+        "acting_as":"conjur:user:admin",
+        "request":{
+          "ip":"127.0.0.1",
+          "url":"http://localhost:5100/conjur/roles/user/admin?all\u0026filter%5B%5D=conjur%3Agroup%3Asecurity_admin",
+          "method":"GET",
+          "params":{
+            "all":null,
+            "filter":[
+              "conjur:group:security_admin"
+            ],
+            "controller":"roles",
+            "action":"all_roles",
+            "account":"conjur",
+            "role":"user/admin"
           },
-          "conjur": {
-            "domain": "authz",
-            "env": "appliance",
-            "user": "demo:user:lisa",
-            "role": "demo:user:lisa",
-            "account": "demo"
+          "uuid":"b0ced92e-9a1c-461b-aa51-b04211f7d307"
+        },
+        "conjur":{
+          "domain":"authz",
+          "env":"appliance",
+          "user":"conjur:user:admin",
+          "role":"conjur:user:admin",
+          "account":"conjur"
+        },
+        "kind":"role"
+      },
+      {
+        "resources":[
+          "conjur:user:alice"
+        ],
+        "roles":[
+          "conjur:user:admin"
+        ],
+        "resource":"conjur:user:alice",
+        "action":"check",
+        "privilege":"update",
+        "allowed":true,
+        "timestamp":"2015-11-07T17:24:21.118Z",
+        "event_id":"ec72aa9c08f005d6c8598ad055594d88",
+        "id":1123,
+        "user":"conjur:user:admin",
+        "acting_as":"conjur:user:admin",
+        "request":{
+          "ip":"127.0.0.1",
+          "url":"http://localhost:5100/conjur/resources/user/alice?check=true\u0026privilege=update",
+          "method":"GET",
+          "params":{
+            "check":"true",
+            "privilege":"update",
+            "controller":"resources",
+            "action":"check_permission",
+            "account":"conjur",
+            "kind":"user",
+            "identifier":"alice"
           },
-          "kind": "role"
-        }
-        ... // more events
+          "uuid":"aef23372-2933-4aa1-9597-99b7bbcfe22b"
+        },
+        "conjur":{
+          "domain":"authz",
+          "env":"appliance",
+          "user":"conjur:user:admin",
+          "role":"conjur:user:admin",
+          "account":"conjur"
+        },
+        "kind":"resource"
+      }
     ]
     ```

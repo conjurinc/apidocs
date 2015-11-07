@@ -48,7 +48,7 @@ A `user` represents an identity for a human. It is a `role`, in RBAC terms.
 
 :[user.update](user.update.md)
 
-<!-- :[user.update_password](user.update_password.md) -->
+:[user.update_password](user.update_password.md)
 
 :[user.list](user.list.md)
 

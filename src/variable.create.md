@@ -27,7 +27,7 @@ If you don't give the variable an ID, one will be randomly generated.
 |403|Permission denied|
 |409|A variable with that name already exists|
 
-+ Request (application/json; ut)
++ Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
     + Body

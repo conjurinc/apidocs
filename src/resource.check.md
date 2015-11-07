@@ -12,9 +12,9 @@ are free to use your own custom types.
 
 ### Check your own permissions [GET /api/authz/{account}/resources/{kind}/{id}/?check=true{&privilege}]
 
-In this example, we are checking if we have `fry` privilege on the resource `food:bacon`.
+In this example, we are checking if we have `execute` privilege on the variable `dev/mongo/password`.
 
-The response body is empty, privilege is communicated through the response status code.
+The response body is empty; privilege is communicated through the response status code.
 
 **Permission required**
 

@@ -1,5 +1,6 @@
-dredd.yml
-.conjurrc
+report.xml
+dredd.yml*
+.conjurrc*
 *.pem
 api-test.md
 node_modules
