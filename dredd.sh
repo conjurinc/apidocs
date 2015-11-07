@@ -13,8 +13,9 @@ dredd \
 ./api.md \
 "${hostname}" \
 --reporter junit \
+--output report.xml \
 --reporter html \
---reporter apiary \
 --output report.html \
+--reporter apiary \
 --hookfiles hooks.js \
 --language nodejs
