@@ -15,8 +15,8 @@ RCFILE=".conjurrc.testing"
 function finish {
     # Stop and remove the Conjur container if env var NOKILL != "1"
     if [ "$NOKILL" != "1" ]; then
-        rm ${RCFILE}
-        rm *.pem
+        rm -f ${RCFILE}
+        rm -f *.pem
         docker rm -f ${cid}
     fi
 }
