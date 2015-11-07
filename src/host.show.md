@@ -24,18 +24,18 @@ Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 + Parameters
     + id: redis001 (string) - Name of the host, query-escaped
 
-+ Request (application/json)
++ Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     {
       "id": "redis001",
-      "userid": "demo",
+      "userid": "admin",
       "created_at": "2015-11-03T21:33:17Z",
-      "ownerid": "demo:group:ops",
-      "roleid": "demo:host:redis001",
-      "resource_identifier": "demo:host:redis001"
+      "ownerid": "conjur:group:ops",
+      "roleid": "conjur:host:redis001",
+      "resource_identifier": "conjur:host:redis001"
     }
     ```

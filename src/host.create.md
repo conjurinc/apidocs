@@ -1,4 +1,4 @@
-## Create [/api/hosts/]
+## Create [/api/hosts/{?id,ownerid}]
 
 ### Create a new host [POST]
 
@@ -15,13 +15,6 @@ identity on the command line.
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)
 
-**Request Body**
-
-|Field|Description|Required|Type|Example|
-|-----|-----------|----|--------|-------|
-|id|Name of the host|no|`String`|"redis001"|
-|ownerid|Fully qualified ID of a Conjur role that will own the new host|no|`String`|"demo:group:ops"|
-
 **Response**
 
 |Code|Description|
@@ -30,28 +23,23 @@ identity on the command line.
 |403|Permission denied|
 |409|A host with that name already exists|
 
-+ Request (application/json)
++ Parameters
+    + id: redis001 (string, optional) - Name of the host, query-escaped
+    + ownerid: conjur:group:ops (string, optional) - Fully qualified ID of a Conjur role that will own the new host
+
++ Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-    + Body
-
-        ```
-        {
-            "id": "redis001",
-            "ownerid": "demo:group:ops"
-        }
-        ```
-
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
     ```
     {
       "id": "redis001",
-      "userid": "demo",
+      "userid": "admin",
       "created_at": "2015-11-03T21:34:47Z",
-      "ownerid": "demo:group:ops",
-      "roleid": "demo:host:redis001",
-      "resource_identifier": "demo:host:redis001",
+      "ownerid": "conjur:group:ops",
+      "roleid": "conjur:host:redis001",
+      "resource_identifier": "conjur:host:redis001",
       "api_key": "3sqgnzs2yqtjgf3hx6fw6cdh8012hb6ehy1wh406eeg8ktj27jgabd"
     }
     ```

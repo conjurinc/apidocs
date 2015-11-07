@@ -22,29 +22,29 @@ You can also limit, offset and shorten the resulting list.
 |403|Permission denied|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + search: ec2 (string, optional) - Query for search
+    + account: conjur (string) - organization account name
+    + search: redis (string, optional) - Query for search
     + limit: 100 (number, optional) - Limit the number of records returned
     + offset: 0 (number, optional) - Set the starting record index to return
-    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+    + acting_as: conjur:group:ops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
       {
-        "id": "ec2/i-9129nasd",
-        "owner": "demo:group:ops",
+        "id": "conjur:host:redis001",
+        "owner": "conjur:group:ops",
         "permissions": [
           {
             "privilege": "read",
             "grant_option": false,
-            "resource": "demo:host:ec2/i-9129nasd",
-            "role": "demo:host:ec2/i-9129nasd",
-            "grantor": "demo:user:fred"
+            "resource": "conjur:host:redis001",
+            "role": "conjur:host:redis001",
+            "grantor": "conjur:user:admin"
           }
         ],
         "annotations": []

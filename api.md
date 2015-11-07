@@ -1060,7 +1060,7 @@ Hosts are grouped into layers.
 
 [Read more](https://developer.conjur.net/reference/services/directory/host/) about hosts.
 
-## Create [/api/hosts/]
+## Create [/api/hosts/{?id,ownerid}]
 
 ### Create a new host [POST]
 
@@ -1081,13 +1081,6 @@ identity on the command line.
 |----|------------|-------|
 |Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
 
-**Request Body**
-
-|Field|Description|Required|Type|Example|
-|-----|-----------|----|--------|-------|
-|id|Name of the host|no|`String`|"redis001"|
-|ownerid|Fully qualified ID of a Conjur role that will own the new host|no|`String`|"demo:group:ops"|
-
 **Response**
 
 |Code|Description|
@@ -1096,32 +1089,27 @@ identity on the command line.
 |403|Permission denied|
 |409|A host with that name already exists|
 
-+ Request (application/json)
++ Parameters
+    + id: redis001 (string, optional) - Name of the host, query-escaped
+    + ownerid: conjur:group:ops (string, optional) - Fully qualified ID of a Conjur role that will own the new host
+
++ Request
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-    + Body
-
-        ```
-        {
-            "id": "redis001",
-            "ownerid": "demo:group:ops"
-        }
-        ```
-
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
     ```
     {
       "id": "redis001",
-      "userid": "demo",
+      "userid": "admin",
       "created_at": "2015-11-03T21:34:47Z",
-      "ownerid": "demo:group:ops",
-      "roleid": "demo:host:redis001",
-      "resource_identifier": "demo:host:redis001",
+      "ownerid": "conjur:group:ops",
+      "roleid": "conjur:host:redis001",
+      "resource_identifier": "conjur:host:redis001",
       "api_key": "3sqgnzs2yqtjgf3hx6fw6cdh8012hb6ehy1wh406eeg8ktj27jgabd"
     }
     ```
@@ -1154,11 +1142,11 @@ You can also limit, offset and shorten the resulting list.
 |403|Permission denied|
 
 + Parameters
-    + account: demo (string) - organization account name
-    + search: ec2 (string, optional) - Query for search
+    + account: conjur (string) - organization account name
+    + search: redis (string, optional) - Query for search
     + limit: 100 (number, optional) - Limit the number of records returned
     + offset: 0 (number, optional) - Set the starting record index to return
-    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+    + acting_as: conjur:group:ops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
 + Request (application/json)
     + Headers
@@ -1167,20 +1155,20 @@ You can also limit, offset and shorten the resulting list.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
       {
-        "id": "ec2/i-9129nasd",
-        "owner": "demo:group:ops",
+        "id": "conjur:host:redis001",
+        "owner": "conjur:group:ops",
         "permissions": [
           {
             "privilege": "read",
             "grant_option": false,
-            "resource": "demo:host:ec2/i-9129nasd",
-            "role": "demo:host:ec2/i-9129nasd",
-            "grantor": "demo:user:fred"
+            "resource": "conjur:host:redis001",
+            "role": "conjur:host:redis001",
+            "grantor": "conjur:user:admin"
           }
         ],
         "annotations": []
@@ -1218,23 +1206,23 @@ Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 + Parameters
     + id: redis001 (string) - Name of the host, query-escaped
 
-+ Request (application/json)
++ Request
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     {
       "id": "redis001",
-      "userid": "demo",
+      "userid": "admin",
       "created_at": "2015-11-03T21:33:17Z",
-      "ownerid": "demo:group:ops",
-      "roleid": "demo:host:redis001",
-      "resource_identifier": "demo:host:redis001"
+      "ownerid": "conjur:group:ops",
+      "roleid": "conjur:host:redis001",
+      "resource_identifier": "conjur:host:redis001"
     }
     ```
 
@@ -1265,8 +1253,8 @@ Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |404|Host not found|
 
 + Parameters
-    + account: demo (string) - Organization account name
-    + id: slave01 (string) - Name of the host, query-escaped
+    + account: conjur (string) - Organization account name
+    + id: redis001 (string) - Name of the host, query-escaped
 
 + Request (application/json)
     + Headers
@@ -1275,11 +1263,11 @@ Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
-        "jenkins/slaves"
+        "redis/nodes"
     ]
     ```
 
