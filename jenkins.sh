@@ -36,7 +36,8 @@ cid=$(docker run -d -p "${PORT}:443" ${DOCKER_IMAGE})
 
 docker exec ${cid} evoke configure master -h ${hostname} -p ${password} ${orgaccount}
 
-printf "yes\nyes\nyes\n" | sudo -E conjur init -f ${RCFILE} -h ${hostname}:${PORT}
-printf "admin\npassword\ntest\npassword\npassword\nno\n" | CONJURRC=${RCFILE} sudo -E conjur bootstrap
+printf "yes\nyes\nyes\n" | sudo conjur init -f ${RCFILE} -h ${hostname}:${PORT}
+CONJURRC=${RCFILE} sudo -E conjur authn login -u admin -p ${password}
+printf "test\npassword\npassword\nno\n" | CONJURRC=${RCFILE} sudo -E conjur bootstrap
 
 ./dredd.sh https://${hostname}:${PORT}

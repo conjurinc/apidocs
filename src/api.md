@@ -1,4 +1,5 @@
 FORMAT: 1A
+HOST: https://conjur.myorg.com
 
 # Conjur API
 
