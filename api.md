@@ -1051,8 +1051,6 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
     ]
     ```
 
-<!--
-
 ## Group Host
 
 A `host` represents an identity for a non-human. This could be a VM, Docker container, CI job, etc.
@@ -1284,6 +1282,8 @@ Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
         "jenkins/slaves"
     ]
     ```
+
+<!--
 
 ## Group Layer
 

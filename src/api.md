@@ -74,8 +74,6 @@ A `group` represents a collection of users or groups. It is a `role` and a colle
 
 :[group.list_members](group.list_members.md)
 
-<!--
-
 ## Group Host
 
 A `host` represents an identity for a non-human. This could be a VM, Docker container, CI job, etc.
@@ -92,6 +90,8 @@ Hosts are grouped into layers.
 :[host.show](host.show.md)
 
 :[host.layers](host.layers.md)
+
+<!--
 
 ## Group Layer
 
