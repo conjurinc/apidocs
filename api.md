@@ -2680,6 +2680,8 @@ Fetch audit events for a role/resource the calling identity has `read` privilege
 This method attempts an internal HTTP or TCP connection to each Conjur service.
 It also attempts a simple transaction against all internal databases.
 
+This route **does not** require authentication.
+
 The response body is JSON that can be examined for additional details.
 
 ---

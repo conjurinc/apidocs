@@ -23,7 +23,7 @@ function finish {
 trap finish EXIT
 
 # Launch and configure a Conjur container
-cid=$(docker run -d ${DOCKER_IMAGE})
+cid=$(docker run -d -p "${PORT}:443" ${DOCKER_IMAGE})
 
 if [ "$USER" == "jenkins" ]; then
     # Use the IP address of the container as the hostname, port collision no more!
@@ -36,6 +36,10 @@ password='password'
 orgaccount='conjur'
 
 docker exec ${cid} evoke configure master -h ${hostname} -p ${password} ${orgaccount}
+
+if [ "$USER" != "jenkins" ]; then
+    hostname="${hostname}:${PORT}"
+fi
 
 printf "yes\nyes\nyes\n" | sudo conjur init -f ${RCFILE} -h ${hostname}
 CONJURRC=${RCFILE} sudo -E conjur authn login -u admin -p ${password}

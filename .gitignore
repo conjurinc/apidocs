@@ -1,4 +1,4 @@
-report.xml
+report.*
 dredd.yml*
 .conjurrc*
 *.pem

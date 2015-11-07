@@ -15,7 +15,7 @@ apiary.io/password
 
 ## Development
 
-**Don't edit `api.md` directly!**
+**Don't edit `./api.md` directly!**
 
 Edit the files in `src/` and then run
 
@@ -23,13 +23,23 @@ Edit the files in `src/` and then run
 hercule src/api.md -o api.md
 ```
 
-to compile them into `api.md`.
+to compile them into `./api.md`.
 
 ## Testing
 
-Tests are run with dredd in a Docker container
+Tests are run with [dredd](http://dredd.readthedocs.org/en/latest/) in a Docker container against a Conjur appliance
+also running in Docker.
+
+Run them with:
 
 ```
-docker build -t apidocs .
-docker run --rm -v $PWD:/app apidocs dredd
+./jenkins.sh
+```
+
+For local development, pass the NOKILL flag. 
+Then you can run the tests without launching a new appliance each time.
+
+```
+NOKILL=1 ./jenkins.sh
+./dredd.sh https://$(docker-machine ip default):61000
 ```

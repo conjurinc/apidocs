@@ -96,11 +96,6 @@ hooks.beforeValidation('Resource > Create > Create a new resource', function(tra
     });
 });
 
-// Skip the health check, doesn't seem to be running on the server TODO: figure out why
-hooks.before('Utilities > Health > Perform a health check on the server', function(transaction) {
-    transaction.skip = true;
-});
-
 /*
     Helper functions
  */
