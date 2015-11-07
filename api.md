@@ -428,6 +428,7 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
     np89daed89p
     ```
 
+
 ## Group User
 
 A `user` represents an identity for a human. It is a `role`, in RBAC terms.
@@ -476,60 +477,50 @@ to a particular group when it is created.
 |409|A user with this login already exists|
 |500|The group specified by `ownerid` doesn't exist, or some other server error occured.|
 
-+ Request
++ Request (application/json)
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
         ```
+    
     + Body
 
-      ```
-      {
-          "login":"alice",
-          "password":"9p8nfsdafbp",
-          "ownerid":"demo:group:security_admin",
-          "uidnumber":123456
-      }
-      ```
+          ```
+          {
+              "login":"alice",
+              "password":"9p8nfsdafbp",
+              "ownerid":"conjur:group:security_admin",
+              "uidnumber":123456
+          }
+          ```
 
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
     ```
     {
         "login":"alice",
         "userid":"admin",
-        "ownerid":"demo:group:security_admin",
+        "ownerid":"conjur:group:security_admin",
         "uidnumber":123456,
-        "roleid":"demo:user:alice",
-        "resource_identifier":"demo:user:alice",
+        "roleid":"conjur:user:alice",
+        "resource_identifier":"conjur:user:alice",
         "api_key":"3c6vwnk3mdtks82k7f23sapp93t6p1nagcergrnqw91b12sxc21zkywy"
     }
     ```
 
-## Update [/api/users/{login}/{?uidnumber}]
+## Update [/api/users/{login}{?uidnumber}]
 
 ### Update a user record [PUT]
 
-You can change a user's password or update their UID number with this route.
-
-In order to change a user's password, you must be able to prove that you
-are the user. You can do so by giving an `Authorization` header with
-either a Conjur authentication token or HTTP Basic Auth containing
-the user's login and old password.
-Note that the user whose password is to be updated is determined by
-the value of the `Authorization` header.
-
-This operation will also replace the user's API key with a securely
-generated random value. You can fetch the new API key using the
-Conjur CLI's `authn login` method.
+Update a user's UID number with this route.
 
 ---
 
-**Header**
+**Headers**
 
 |Field|Description|Example|
 |----|------------|-------|
-|Authorization|Conjur authentication token or Http Basic Auth|"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
 
 **Request Body**
 
@@ -545,20 +536,73 @@ The new password, in the example "n82p9819pb12d12dsa".
 |404|User not found|
 
 + Parameters
-    + login: lisa (string) - Login name of the user, query-escaped
-    + uidnumber: 57000 (number, optional) - New UID number to set for the user
+    + login: alice (string) - Login name of the user, query-escaped
+    + uidnumber: `57000` (number, optional) - New UID number to set for the user
 
 + Request
     + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
 
++ Response 204
+
+<!-- ## Update Password [/api/authn/users/password]
+
+### Update a user's password [PUT]
+
+Change a user's password with this route.
+
+In order to change a user's password, you must be able to prove that you
+are the user. You can do so by giving an `Authorization` header with
+either a Conjur authentication token or HTTP Basic Auth containing
+the user's login and old password.
+Note that the user whose password is to be updated is determined by
+the value of the `Authorization` header.
+
+This operation will also replace the user's API key with a securely
+generated random value. You can fetch the new API key using the
+Conjur CLI's `authn login` method.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Request Body**
+
+The new password, in the example "password".
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The password/UID has been updated|
+|401|Invalid or missing Authorization header|
+|403|Permission denied|
+|404|User not found|
+
++ Parameters
+    + login: alice (string) - Login name of the user, query-escaped
+
++ Request(text/plain)
+    + Headers
+    
         ```
-        Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+        Authorization: Token token="eyJkYX...Rhb="
         ```
+    
     + Body
+    
+        ```
+        password
+        ```
 
-        ```
-        n82p9819pb12d12dsa
-        ```
++ Response 204 -->
 
 ## List/Search [/api/authz/{account}/resources/user{?search,limit,offset,acting_as}]
 
@@ -592,22 +636,22 @@ You can also limit, offset and shorten the resulting list.
     + search: kenneth (string, optional) - Query for search, query-escaped
     + limit: 100 (number, optional) - Limit the number of records returned
     + offset: 0 (number, optional) - Set the starting record index to return
-    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+    + acting_as (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
-+ Request (application/json)
++ Request
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
       {
-        "id": "demo:user:kenneth",
-        "owner": "demo:group:ops",
+        "id": "demo:user:alice",
+        "owner": "conjur:group:admin",
         "permissions": [
     
         ],
@@ -639,7 +683,7 @@ If you set UID numbers for your users, you can search on that field.
 |403|Permission denied|
 
 + Parameters
-    + uidnumber: 57000 (number) - UID to match on
+    + uidnumber: `57000` (number) - UID to match on
 
 + Request (application/json)
     + Headers
@@ -648,11 +692,11 @@ If you set UID numbers for your users, you can search on that field.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
-        "kenneth"
+        "alice"
     ]
     ```
 
@@ -695,7 +739,7 @@ The login parameter must be url encoded.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     {
@@ -714,7 +758,7 @@ A `group` represents a collection of users or groups. It is a `role` and a colle
 
 [Read more](https://developer.conjur.net/reference/services/directory/group/) about groups.
 
-## Create [/api/groups]
+## Create [/api/groups{?id,ownerid,gidnumber}]
 
 ### Create a new group [POST]
 
@@ -731,14 +775,6 @@ This means that no one else will be able to see your group.
 |----|------------|-------|
 |Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
 
-**Request Body**
-
-|Field|Description|Required|Type|Example|
-|-----|-----------|----|--------|-------|
-|id|Name of the variable|no|`String`|"developers"|
-|ownerid|Fully qualified ID of a Conjur role that will own the new group|no|`String`|"demo:group:security_admin"|
-|gidnumber|A GID number for the new group, primarily for use with LDAP|no|`Number`|27001|
-
 **Response**
 
 |Code|Description|
@@ -747,6 +783,11 @@ This means that no one else will be able to see your group.
 |403|Permission denied|
 |409|A group with that name already exists|
 
++ Parameters
+    + id: ops (string) - Name of the group, query-escaped
+    + ownerid: conjur:group:security_admin (string) - Fully qualified ID of a Conjur role that will own the new group
+    + gidnumber: 27001 (number, optional) - A GID number for the new group, primarily for use with LDAP
+
 + Request (application/json)
     + Headers
     
@@ -754,30 +795,20 @@ This means that no one else will be able to see your group.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-    + Body
-
-        ```
-        {
-            "id": "developers",
-            "ownerid": "demo:group:security_admin",
-            "gidnumber": 27001
-        }
-        ```
-
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
     ```
     {
-        "id": "developers",
-        "userid": "demo",
-        "ownerid": "demo:group:security_admin",
+        "id": "ops",
+        "userid": "admin",
+        "ownerid": "conjur:group:security_admin",
         "gidnumber": 27001,
-        "roleid": "demo:group:developers",
-        "resource_identifier": "demo:group:developers"
+        "roleid": "conjur:group:ops",
+        "resource_identifier": "conjur:group:ops"
     }
     ```
 
-## Update [/api/groups/{id}/{?gidnumber}]
+## Update [/api/groups/{id}{?gidnumber}]
 
 ### Update a group record [PUT]
 
@@ -785,11 +816,11 @@ You can change a group's GID number with this route.
 
 ---
 
-**Header**
+**Headers**
 
 |Field|Description|Example|
 |----|------------|-------|
-|Authorization|Conjur authentication token or Http Basic Auth|"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
 
 **Response**
 
@@ -806,10 +837,12 @@ You can change a group's GID number with this route.
 
 + Request
     + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
 
-        ```
-        Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
-        ```
++ Response 204
 
 ## List/Search [/api/authz/{account}/resources/group{?search,limit,offset,acting_as}]
 
@@ -839,11 +872,11 @@ You can also limit, offset and shorten the resulting list.
 |403|Permission denied|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: conjur (string) - organization account name
     + search: ops (string, optional) - Query for search, query-escaped
     + limit: 100 (number, optional) - Limit the number of records returned
     + offset: 0 (number, optional) - Set the starting record index to return
-    + acting_as: demo%3Agroup%3Aops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+    + acting_as (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
 + Request (application/json)
     + Headers
@@ -852,18 +885,18 @@ You can also limit, offset and shorten the resulting list.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
       {
-        "id": "demo:group:ops",
-        "owner": "demo:group:security_admin",
+        "id": "conjur:group:ops",
+        "owner": "conjur:group:security_admin",
         "permissions": [
     
         ],
-        "annotations": {
-        }
+        "annotations": [
+        ]
       }
     ]
     ```
@@ -899,7 +932,7 @@ If you set GID numbers for your groups, you can search on that field.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
@@ -934,25 +967,25 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |404|Group not found|
 
 + Parameters
-    + id: tech%2Fops (string) - Name of the group, query-escaped
+    + id: ops (string) - Name of the group, query-escaped
 
-+ Request (application/json)
++ Request
     + Headers
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     {
-        "id":"tech/ops",
-        "userid":"demo",
-        "ownerid":"demo:group:security_admin",
+        "id":"ops",
+        "userid":"conjur",
+        "ownerid":"conjur:group:security_admin",
         "gidnumber":null,
-        "roleid":"demo:group:tech/ops",
-        "resource_identifier":"demo:group:tech/ops"
+        "roleid":"conjur:group:ops",
+        "resource_identifier":"conjur:group:ops"
     }
     ```
 
@@ -983,8 +1016,8 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |404|Group not found|
 
 + Parameters
-    + account: demo (string) - Organization account name
-    + id: tech%2Fops (string) - Name of the group, query-escaped
+    + account: conjur (string) - Organization account name
+    + id: ops (string) - Name of the group, query-escaped
 
 + Request (application/json)
     + Headers
@@ -993,30 +1026,32 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
         Authorization: Token token="eyJkYX...Rhb="
         ```
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
       {
         "admin_option": true,
-        "grantor": "demo:group:security_admin",
-        "member": "demo:user:admin",
-        "role": "demo:group:security_admin"
+        "grantor": "conjur:group:security_admin",
+        "member": "conjur:user:admin",
+        "role": "conjur:group:security_admin"
       },
       {
         "admin_option": true,
-        "grantor": "demo:user:admin",
-        "member": "demo:user:dustin",
-        "role": "demo:group:security_admin"
+        "grantor": "conjur:user:admin",
+        "member": "conjur:user:dustin",
+        "role": "conjur:group:security_admin"
       },
       {
         "admin_option": false,
-        "grantor": "demo:user:dustin",
-        "member": "demo:user:bob",
-        "role": "demo:group:security_admin"
+        "grantor": "conjur:user:dustin",
+        "member": "conjur:user:bob",
+        "role": "conjur:group:security_admin"
       }
     ]
     ```
+
+<!--
 
 ## Group Host
 
@@ -2740,3 +2775,4 @@ The response body is JSON that can be examined for additional details.
       "ok":false
     }
     ```
+-->

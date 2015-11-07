@@ -12,11 +12,7 @@ You can also limit, offset and shorten the resulting list.
 
 ---
 
-**Headers**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
 
 **Response**
 
@@ -33,11 +29,7 @@ You can also limit, offset and shorten the resulting list.
     + acting_as (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
 + Request (application/json)
-    + Headers
-    
-        ```
-        Authorization: Token token="eyJkYX...Rhb="
-        ```
+    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
 + Response 200 (application/json; charset=utf-8)
 

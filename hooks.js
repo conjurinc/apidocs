@@ -41,13 +41,21 @@ hooks.beforeEach(function(transaction) {
     }
 });
 
-// Postfix variable names w/ testRunId to avoid collisions
-hooks.beforeValidation('Variable > Create > Create a new variable', function(transaction) {
-    if (transaction.real.statusCode == '409') {
-        console.log('Skipping create test, variable already created');
+// If we get a name conflict, continue on
+hooks.beforeEachValidation(function(transaction) {
+    if (transaction.real.statusCode === 409) {
+        console.log('Skipping create, object already created');
         transaction.real.statusCode = transaction.expected.statusCode;
         transaction.real.body = transaction.expected.body;
     }
+});
+
+// Reset the password for 'alice' user, not 'admin'
+hooks.before("User > Update Password > Update a user's password", function(transaction) {
+   transaction.request['header']['Authorization'] = 'Basic' + new Buffer(trim('alice:9p8nfsdafbp')).toString('base64');
+});
+hooks.after("User > Update Password > Update a user's password", function(transaction) {
+    transaction.request['header']['Authorization'] = 'Token token="' + stash['apitoken'] + '"';
 });
 
 // Trims newlines

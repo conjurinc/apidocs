@@ -37,6 +37,7 @@ A `variable` is a 'secret' and can be any value. It is a `resource`, in RBAC ter
 
 :[variable.value](variable.value.md)
 
+
 ## Group User
 
 A `user` represents an identity for a human. It is a `role`, in RBAC terms.
@@ -46,6 +47,8 @@ A `user` represents an identity for a human. It is a `role`, in RBAC terms.
 :[user.create](user.create.md)
 
 :[user.update](user.update.md)
+
+<!-- :[user.update_password](user.update_password.md) -->
 
 :[user.list](user.list.md)
 
@@ -70,6 +73,8 @@ A `group` represents a collection of users or groups. It is a `role` and a colle
 :[group.show](group.show.md)
 
 :[group.list_members](group.list_members.md)
+
+<!--
 
 ## Group Host
 
@@ -171,3 +176,4 @@ Fetching all audit records can return a very large response, so it is best to th
 ## Group Utilities
 
 :[utilities.health](utilities.health.md)
+-->

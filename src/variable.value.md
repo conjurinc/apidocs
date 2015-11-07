@@ -8,11 +8,7 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 ---
 
-**Headers**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
 
 **Response**
 
@@ -27,11 +23,7 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
     + version (string, optional) - Version of the variable to retrieve
 
 + Request
-    + Headers
-    
-        ```
-        Authorization: Token token="eyJkYX...Rhb="
-        ```
+    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
 + Response 200 (text/plain; charset=utf-8)
 

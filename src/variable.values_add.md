@@ -6,11 +6,7 @@ Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
 
 ---
 
-**Headers**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
 
 **Request Body**
 
@@ -31,11 +27,7 @@ Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
     + id: dev/mongo/password (string) - Name of the variable, query-escaped
 
 + Request (application/json)
-    + Headers
-    
-        ```
-        Authorization: Token token="eyJkYX...Rhb="
-        ```
+    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
     + Body
 

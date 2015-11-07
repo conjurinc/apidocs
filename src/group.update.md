@@ -1,4 +1,4 @@
-## Update [/api/groups/{id}/{?gidnumber}]
+## Update [/api/groups/{id}{?gidnumber}]
 
 ### Update a group record [PUT]
 
@@ -6,11 +6,7 @@ You can change a group's GID number with this route.
 
 ---
 
-**Header**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur authentication token or Http Basic Auth|"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="|
+:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
 
 **Response**
 
@@ -26,8 +22,6 @@ You can change a group's GID number with this route.
     + gidnumber: 63000 (number) - New GID number to set for the group
 
 + Request
-    + Headers
+    :[conjur_auth_header_table](partials/conjur_auth_header_code.md)
 
-        ```
-        Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
-        ```
++ Response 204

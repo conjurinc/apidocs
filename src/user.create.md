@@ -36,28 +36,29 @@ to a particular group when it is created.
 |409|A user with this login already exists|
 |500|The group specified by `ownerid` doesn't exist, or some other server error occured.|
 
-+ Request
++ Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
+    
     + Body
 
-      ```
-      {
-          "login":"alice",
-          "password":"9p8nfsdafbp",
-          "ownerid":"demo:group:security_admin",
-          "uidnumber":123456
-      }
-      ```
+          ```
+          {
+              "login":"alice",
+              "password":"9p8nfsdafbp",
+              "ownerid":"conjur:group:security_admin",
+              "uidnumber":123456
+          }
+          ```
 
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
     ```
     {
         "login":"alice",
         "userid":"admin",
-        "ownerid":"demo:group:security_admin",
+        "ownerid":"conjur:group:security_admin",
         "uidnumber":123456,
-        "roleid":"demo:user:alice",
-        "resource_identifier":"demo:user:alice",
+        "roleid":"conjur:user:alice",
+        "resource_identifier":"conjur:user:alice",
         "api_key":"3c6vwnk3mdtks82k7f23sapp93t6p1nagcergrnqw91b12sxc21zkywy"
     }
     ```

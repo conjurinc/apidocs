@@ -1,4 +1,4 @@
-## Create [/api/groups]
+## Create [/api/groups{?id,ownerid,gidnumber}]
 
 ### Create a new group [POST]
 
@@ -11,14 +11,6 @@ This means that no one else will be able to see your group.
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)
 
-**Request Body**
-
-|Field|Description|Required|Type|Example|
-|-----|-----------|----|--------|-------|
-|id|Name of the variable|no|`String`|"developers"|
-|ownerid|Fully qualified ID of a Conjur role that will own the new group|no|`String`|"demo:group:security_admin"|
-|gidnumber|A GID number for the new group, primarily for use with LDAP|no|`Number`|27001|
-
 **Response**
 
 |Code|Description|
@@ -27,28 +19,23 @@ This means that no one else will be able to see your group.
 |403|Permission denied|
 |409|A group with that name already exists|
 
++ Parameters
+    + id: ops (string) - Name of the group, query-escaped
+    + ownerid: conjur:group:security_admin (string) - Fully qualified ID of a Conjur role that will own the new group
+    + gidnumber: 27001 (number, optional) - A GID number for the new group, primarily for use with LDAP
+
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-    + Body
-
-        ```
-        {
-            "id": "developers",
-            "ownerid": "demo:group:security_admin",
-            "gidnumber": 27001
-        }
-        ```
-
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
     ```
     {
-        "id": "developers",
-        "userid": "demo",
-        "ownerid": "demo:group:security_admin",
+        "id": "ops",
+        "userid": "admin",
+        "ownerid": "conjur:group:security_admin",
         "gidnumber": 27001,
-        "roleid": "demo:group:developers",
-        "resource_identifier": "demo:group:developers"
+        "roleid": "conjur:group:ops",
+        "resource_identifier": "conjur:group:ops"
     }
     ```

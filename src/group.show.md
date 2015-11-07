@@ -21,20 +21,20 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |404|Group not found|
 
 + Parameters
-    + id: tech%2Fops (string) - Name of the group, query-escaped
+    + id: ops (string) - Name of the group, query-escaped
 
-+ Request (application/json)
++ Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     {
-        "id":"tech/ops",
-        "userid":"demo",
-        "ownerid":"demo:group:security_admin",
+        "id":"ops",
+        "userid":"conjur",
+        "ownerid":"conjur:group:security_admin",
         "gidnumber":null,
-        "roleid":"demo:group:tech/ops",
-        "resource_identifier":"demo:group:tech/ops"
+        "roleid":"conjur:group:ops",
+        "resource_identifier":"conjur:group:ops"
     }
     ```

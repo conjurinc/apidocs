@@ -7,11 +7,7 @@ If you don't give the variable an ID, one will be randomly generated.
 
 ---
 
-**Headers**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
 
 **Request Body**
 
@@ -32,11 +28,7 @@ If you don't give the variable an ID, one will be randomly generated.
 |409|A variable with that name already exists|
 
 + Request (application/json; ut)
-    + Headers
-    
-        ```
-        Authorization: Token token="eyJkYX...Rhb="
-        ```
+    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
     + Body
 

@@ -21,33 +21,33 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |404|Group not found|
 
 + Parameters
-    + account: demo (string) - Organization account name
-    + id: tech%2Fops (string) - Name of the group, query-escaped
+    + account: conjur (string) - Organization account name
+    + id: ops (string) - Name of the group, query-escaped
 
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     ```
     [
       {
         "admin_option": true,
-        "grantor": "demo:group:security_admin",
-        "member": "demo:user:admin",
-        "role": "demo:group:security_admin"
+        "grantor": "conjur:group:security_admin",
+        "member": "conjur:user:admin",
+        "role": "conjur:group:security_admin"
       },
       {
         "admin_option": true,
-        "grantor": "demo:user:admin",
-        "member": "demo:user:dustin",
-        "role": "demo:group:security_admin"
+        "grantor": "conjur:user:admin",
+        "member": "conjur:user:dustin",
+        "role": "conjur:group:security_admin"
       },
       {
         "admin_option": false,
-        "grantor": "demo:user:dustin",
-        "member": "demo:user:bob",
-        "role": "demo:group:security_admin"
+        "grantor": "conjur:user:dustin",
+        "member": "conjur:user:bob",
+        "role": "conjur:group:security_admin"
       }
     ]
     ```
