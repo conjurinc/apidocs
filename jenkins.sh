@@ -21,7 +21,12 @@ trap finish EXIT
 docker build -t apidocs .
 
 # Launch and configure a Conjur container
-hostname=$(docker-machine ip default)
+if [ "$USER" == "jenkins" ]; then
+    hostname="localhost"
+else
+    hostname=$(docker-machine ip default)
+fi
+
 password='password'
 orgaccount='conjur'
 
