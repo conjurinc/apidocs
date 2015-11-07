@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -eu
+#!/bin/bash -eu
 
 hercule src/api.md -o api.md
 
