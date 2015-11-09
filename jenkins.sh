@@ -46,3 +46,5 @@ CONJURRC=${RCFILE} sudo -E conjur authn login -u admin -p ${password}
 printf "test\npassword\npassword\nno\n" | CONJURRC=${RCFILE} sudo -E conjur bootstrap
 
 ./dredd.sh https://${hostname}
+
+./publish.sh
