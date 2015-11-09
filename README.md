@@ -13,6 +13,9 @@ apiary.io/email
 apiary.io/password
 ```
 
+The docs are pushed to [Apiary](http://docs.conjur.apiary.io/) when the tests pass in Jenkins.
+The API page on the devsite has an embedded iframe referencing https://jsapi.apiary.io/apis/conjur.apib.
+
 ## Development
 
 **Don't edit `./api.md` directly!**

@@ -10,6 +10,7 @@ hercule src/api.md -o api.md
 DOCKER_IMAGE="registry.tld/conjur-appliance:4.5-stable"
 PORT="61000"
 NOKILL=${NOKILL:-"0"}
+PUBLISH=${PUBLISH:-"0"}
 RCFILE=".conjurrc.testing"
 
 function finish {
@@ -27,7 +28,8 @@ cid=$(docker run -d -p "${PORT}:443" ${DOCKER_IMAGE})
 
 if [ "$USER" == "jenkins" ]; then
     # Use the IP address of the container as the hostname, port collision no more!
-    hostname=$(docker inspect $cid | jsonfield 0.NetworkSettings.IPAddress)
+    hostname=$(docker inspect ${cid} | jsonfield 0.NetworkSettings.IPAddress)
+    PUBLISH="1"
 else
     hostname=$(docker-machine ip default)
 fi
@@ -47,4 +49,7 @@ printf "test\npassword\npassword\nno\n" | CONJURRC=${RCFILE} sudo -E conjur boot
 
 ./dredd.sh https://${hostname}
 
-./publish.sh
+if [ "${PUBLISH}" == "1" ]; then
+    echo "Publishing docs to Apiary"
+    ./publish.sh
+fi
