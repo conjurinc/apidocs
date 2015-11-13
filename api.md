@@ -1392,7 +1392,7 @@ This means that no one else will be able to see your layer.
 
 + Parameters
     + id: redis (string, optional) - Name of the layer, query-escaped
-    + ownerid: conjur:group:security_admin (string, optional) - Fully qualified ID of a Conjur role that will own the new layer
+    + ownerid: conjur:group:ops (string, optional) - Fully qualified ID of a Conjur role that will own the new layer
 
 + Request (application/json)
     + Headers
@@ -1422,7 +1422,7 @@ Lists all layers the calling identity has `read` privilege on.
 
 You can switch the role to act as with the `acting_as` parameter.
 
-Run a full-text search of the hosts with the `search` parameter.
+Run a full-text search of the layers with the `search` parameter.
 
 You can also limit, offset and shorten the resulting list.
 
@@ -1707,7 +1707,7 @@ Privileges available are:
     + account: conjur (string) - organization account name
     + layer: redis (string) - Name of the layer, do not query-escape
     + privilege: use_host (string) - Privilege to permit
-    + member: group:ops (string) - Qualified role name, do not query-escape
+    + member: group:developers (string) - Qualified role name, do not query-escape
 
 + Request (application/json; charset=utf-8)
     + Headers
@@ -1749,7 +1749,7 @@ Privileges available are:
     + account: conjur (string) - organization account name
     + layer: redis (string) - Name of the layer, do not query-escape
     + privilege: use_host (string) - Privilege to permit
-    + member: group:ops (string) - Qualified role name, do not query-escape
+    + member: group:developers (string) - Qualified role name, do not query-escape
 
 + Request (application/json; charset=utf-8)
     + Headers
@@ -1759,6 +1759,395 @@ Privileges available are:
         ```
 
 + Response 204
+
+## Group Host Factory
+
+The `Host Factory` is a web service that enables code and scripts to create Hosts and add them to specific Layers, 
+without having to grant the scripts full administrative privileges on the layers. 
+
+A typical flow:
+
+1. You create a host factory and attach it to a layer through the Policy DSL.
+2. You (or an automation tool) generate an expiring host factory token.
+3. When a new host starts, it uses this token to enroll itself into the layer, assuming the layer's permissions.
+
+To use the Host Factory from the Conjur CLI, install the host-factory plugin:
+
+```
+conjur plugin install host-factory
+conjur hostfactory -h
+```
+
+[Read more](https://developer.conjur.net/reference/services/host_factory) about the Host Factory.
+
+## Create [/api/host_factories/{?id,roleid,layers%5B%5D,ownerid}]
+
+### Create a new host factory [POST]
+
+Each Host Factory *acts as* a distinct Conjur role, which is specified when the host factory is created. 
+All Hosts created by the Host Factory will be owned by this designated role.
+
+If you don't provide an `id`, one will be randomly generated.
+
+If you don't provide an `ownerid`, your user will be the owner of the Host Factory.
+This means that no one else will be able to see your Host Factory.
+
+
+**Permissions required**:
+
+* The role specified by `roleid` must have adminship on the layer(s) specified by `layer`.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|201|Host factory created successfully|
+|403|Permission denied|
+|422|A host factory with that ID already exists|
+
++ Parameters
+    + id: redis_factory (string, optional) - ID of the host factory, query-escaped
+    + roleid: conjur:group:ops (string) - Fully qualified ID of a Conjur role that the host factory will act as, query-escaped
+    + ownerid: conjur:group:security_admin (string, optional) - Fully qualified ID of a Conjur role that will own the new host factory, query-escaped
+    + layers%5B%5D: redis (string) - ID of the layer the host-factory can enroll hosts for, query-escaped. Can be specified multiple times.
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 201 (application/json; charset=utf-8)
+
+    ```
+    {
+      "id": "redis_factory",
+      "layers": [
+        "redis"
+      ],
+      "roleid": "conjur:group:ops",
+      "resourceid": "conjur:host_factory:redis_factory",
+      "tokens": [],
+      "deputy_api_key": "3g6v6h83bsk76r3cb638h2dce4kz35dsej81c304rp306wzqa1z8eqch"
+    }
+    ```
+
+## List/Search [/api/authz/{account}/resources/host_factory{?search,limit,offset,acting_as}]
+
+### List or search for host factories [GET]
+
+Lists all host factories the calling identity has `read` privilege on.
+
+You can switch the role to act as with the `acting_as` parameter.
+
+Run a full-text search of the host factories with the `search` parameter.
+
+You can also limit and offset the resulting list.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of host factories is returned|
+|403|Permission denied|
+
++ Parameters
+    + account: conjur (string) - organization account name
+    + search: redis (string, optional) - Query for search
+    + limit: 100 (number, optional) - Limit the number of records returned
+    + offset: 0 (number, optional) - Set the starting record index to return
+    + acting_as (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+    ```
+    [
+      {
+        "id": "conjur:host_factory:redis_factory",
+        "owner": "conjur:group:security_admin",
+        "permissions": [],
+        "annotations": []
+      }
+    ]
+    ```
+
+## Show [/api/host_factories/{id}]
+
+### Retrieve a host factory's record [GET]
+
+This route returns information about a host factory, including its attached hosts.
+
+This response includes the host factory's deputy API key and all valid tokens.
+
+Host factory IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
+
+**Permission required**: `read` privilege on the host factory.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Host factory record is returned|
+|403|Permission denied|
+|404|Host factory not found|
+
++ Parameters
+    + id: redis_factory (string) - ID of the host factory, query-escaped
+
++ Request (application/json)
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+    ```
+    {
+        "id":"redis_factory",
+        "layers":[],
+        "roleid":"conjur:group:ops",
+        "resourceid":"conjur:host_factory:redis_factory",
+        "tokens":[
+            {
+              "token": "30vf6aa3b6x326sdnwj93cx5rzd3dwmhva3828m8x32xsveh5qb4x5",
+              "expiration": "2015-11-13T18:42:02Z"
+            }
+        ],
+        "deputy_api_key":"3g6v6h83bsk76r3cb638h2dce4kz35dsej81c304rp306wzqa1z8eqch"
+    }
+    ```
+
+## Create Token [/api/host_factories/{id}/tokens{?expiration,count}]
+
+### Create a new host factory token [POST]
+
+By passing a host factory token to a new host, it can enroll itself into a specified layer. 
+This route creates those tokens.
+
+Host factory tokens expire after a certain amount of time. By default, this is one hour. Use the
+`expiration` parameter to set your own expiration timestamp. The timestamp is in 
+[ISO8601 format](http://ruby-doc.org/stdlib-2.1.1/libdoc/time/rdoc/Time.html#class-Time-label-Converting+to+a+String)
+and must be URL-encoded.
+
+*Example*
+
+`2015-11-16T14:36:57-05:00` -> `2015-11-16T14%3A36%3A57-05%3A00`
+
+Generate multiple tokens at once with the `count` parameter. By default, one token is created.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON list of created tokens is returned|
+|403|Permission denied|
+|404|Host factory not found|
+
++ Parameters
+    + id: redis_factory (string) - ID of the host factory, query-escaped
+    + expiration: `2017-12-16T14:36:57-05:00` (string, optional) - Expiration timestamp (ISO8601), query-escaped
+    + count: 2 (number, optional) - Number of tokens to create
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+    ```
+    [
+      {
+        "token": "3y9e0573sj436f3h12s0v1hvbfya3xfvpt22q3219717wv6fksget9v",
+        "expiration": "2015-11-13T20:17:00Z"
+      },
+      {
+        "token": "34m4qev29dm73vk4pccp2e53t7x3ffy7e81d9hn0m3b9103j1h09fjn",
+        "expiration": "2015-11-13T20:17:00Z"
+      }
+    ]
+    ```
+
+## Show Token [/api/host_factories/tokens/{id}/]
+
+### Retrieve a host factory token's metadata [GET]
+
+This route returns information about a host factory token, including its expiration timestamps
+and the layers to which it is tied.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|Token metadata returned|
+|403|Permission denied|
+|404|Host factory token not found|
+
++ Parameters
+    + id: y5c8pt2hvrpka1gq0w552xcxfy0ddp7w4gz1pgk3cdww2bsk0g8w (string) - ID of the token
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+    ```
+    {
+      "token": "y5c8pt2hvrpka1gq0w552xcxfy0ddp7w4gz1pgk3cdww2bsk0g8w",
+      "expiration": "2015-11-13T20:38:51Z",
+      "host_factory": {
+        "id": "redis_factory",
+        "layers": [
+          "redis"
+        ],
+        "roleid": "conjur:group:ops",
+        "resourceid": "conjur:host_factory:redis_factory"
+      }
+    }
+    ```
+
+## Revoke Token [/api/host_factories/tokens/{id}]
+
+### Revoke a host factory token [DELETE]
+
+Host factory tokens are not automatically revoked when they expire. Revoke a token when you want to disallow
+its use before its expiration timestamp.
+
+When you revoke a token, hosts can no longer use it to enroll in a layer.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|Token revoked|
+|403|Permission denied|
+|404|Host factory token not found|
+
++ Parameters
+    + id: y5c8pt2hvrpka1gq0w552xcxfy0ddp7w4gz1pgk3cdww2bsk0g8w (string) - ID of the token
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 204
+
+## Create Host [/api/host_factories/hosts{?id}]
+
+### Create a new host using a host factory token [POST]
+
+To create a new host with a host factory token, you pass the token in the `Authorization` header, like so:
+
+```
+Authorization: Token token="<insert host factory token here>"
+```
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Host factory token|Token token="3y9e0573sj436f3h12s0v1hvbfya3xfvpt22q3219717wv6fksget9v"|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|201|JSON record of host created returned|
+|403|Permission denied|
+|422|Host with that ID already exists or token is invalid for the layer|
+
++ Parameters
+    + id: redis002 (string) - ID of the host to create, query-escaped
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="3y9e0573sj436f3h12s0v1hvbfya3xfvpt22q3219717wv6fksget9v"
+        ```
+
++ Response 201 (application/json; charset=utf-8)
+
+    ```
+    {
+        "id":"redis002",
+        "userid":"deputy/redis_factory",
+        "created_at":"2015-11-13T22:57:14Z",
+        "ownerid":"conjur:group:ops",
+        "roleid":"conjur:host:redis002",
+        "resource_identifier":"conjur:host:redis002",
+        "api_key":"14x82x72syhnnd1h8jj24zj1kqd2j09sjy3tddwxc35cmy5nx33ph7"
+    }
+    ```
 
 ## Group Role
 

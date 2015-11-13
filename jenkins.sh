@@ -1,16 +1,10 @@
 #!/bin/bash -eu
 
-# Build the test container
-docker build -t apidocs .
-
-docker run --rm -v $PWD:/app \
-apidocs \
-hercule src/api.md -o api.md
-
 DOCKER_IMAGE="registry.tld/conjur-appliance:4.5-stable"
 PORT="61000"
 NOKILL=${NOKILL:-"0"}
 PUBLISH=${PUBLISH:-"0"}
+CMD_PREFIX=""
 RCFILE=".conjurrc.testing"
 
 function finish {
@@ -30,6 +24,7 @@ if [ "$USER" == "jenkins" ]; then
     # Use the IP address of the container as the hostname, port collision no more!
     hostname=$(docker inspect ${cid} | jsonfield 0.NetworkSettings.IPAddress)
     PUBLISH="1"
+    CMD_PREFIX="sudo -E"
 else
     hostname=$(docker-machine ip default)
 fi
@@ -44,12 +39,13 @@ if [ "$USER" != "jenkins" ]; then
 fi
 
 # Init and bootstrap the Conjur appliance
-printf "yes\nyes\nyes\n" | sudo conjur init -f ${RCFILE} -h ${hostname}
-CONJURRC=${RCFILE} sudo -E conjur authn login -u admin -p ${password}
-printf "test\npassword\npassword\nno\n" | CONJURRC=${RCFILE} sudo -E conjur bootstrap
+printf "yes\nyes\nyes\n" | ${CMD_PREFIX} conjur init -f ${RCFILE} -h ${hostname}
+CONJURRC=${RCFILE} ${CMD_PREFIX} conjur authn login -u admin -p ${password}
+printf "test\npassword\npassword\nno\n" | CONJURRC=${RCFILE} ${CMD_PREFIX} conjur bootstrap
 
 # Create this variable so variable#values route can be really tested
-CONJURRC=${RCFILE} sudo -E conjur variable create -v 8912dbp9bu1pub dev/redis/password
+CONJURRC=${RCFILE} ${CMD_PREFIX} conjur variable create -v 8912dbp9bu1pub dev/redis/password
+CONJURRC=${RCFILE} ${CMD_PREFIX} conjur group create --as-group security_admin developers
 
 ./dredd.sh https://${hostname}
 

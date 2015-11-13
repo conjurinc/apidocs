@@ -119,6 +119,40 @@ A host assumes the permissions of the layer when it is enrolled.
 
 :[layer.deny_privilege](layer.deny_privilege.md)
 
+## Group Host Factory
+
+The `Host Factory` is a web service that enables code and scripts to create Hosts and add them to specific Layers, 
+without having to grant the scripts full administrative privileges on the layers. 
+
+A typical flow:
+
+1. You create a host factory and attach it to a layer through the Policy DSL.
+2. You (or an automation tool) generate an expiring host factory token.
+3. When a new host starts, it uses this token to enroll itself into the layer, assuming the layer's permissions.
+
+To use the Host Factory from the Conjur CLI, install the host-factory plugin:
+
+```
+conjur plugin install host-factory
+conjur hostfactory -h
+```
+
+[Read more](https://developer.conjur.net/reference/services/host_factory) about the Host Factory.
+
+:[host_factory.create](host_factory.create.md)
+
+:[host_factory.list](host_factory.list.md)
+
+:[host_factory.show](host_factory.show.md)
+
+:[host_factory.tokens.create](host_factory.tokens.create.md)
+
+:[host_factory.tokens.show](host_factory.tokens.show.md)
+
+:[host_factory.tokens.revoke](host_factory.tokens.revoke.md)
+
+:[host_factory.hosts.create](host_factory.hosts.create.md)
+
 ## Group Role
 
 A `role` is an actor in the system, in the classical sense of role-based access control. 

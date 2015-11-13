@@ -28,7 +28,7 @@ This means that no one else will be able to see your layer.
 
 + Parameters
     + id: redis (string, optional) - Name of the layer, query-escaped
-    + ownerid: conjur:group:security_admin (string, optional) - Fully qualified ID of a Conjur role that will own the new layer
+    + ownerid: conjur:group:ops (string, optional) - Fully qualified ID of a Conjur role that will own the new layer
 
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)

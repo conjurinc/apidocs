@@ -25,7 +25,7 @@ Privileges available are:
     + account: conjur (string) - organization account name
     + layer: redis (string) - Name of the layer, do not query-escape
     + privilege: use_host (string) - Privilege to permit
-    + member: group:ops (string) - Qualified role name, do not query-escape
+    + member: group:developers (string) - Qualified role name, do not query-escape
 
 + Request (application/json; charset=utf-8)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)

@@ -2,6 +2,13 @@
 
 hostname=$1
 
+# Build the test container
+docker build -t apidocs .
+
+docker run --rm -v $PWD:/app \
+apidocs \
+hercule src/api.md -o api.md
+
 echo "Running tests against ${hostname}"
 
 # Run the tests through Dredd

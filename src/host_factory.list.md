@@ -1,14 +1,14 @@
-## List/Search [/api/authz/{account}/resources/layer{?search,limit,offset,acting_as}]
+## List/Search [/api/authz/{account}/resources/host_factory{?search,limit,offset,acting_as}]
 
-### List or search for layers [GET]
+### List or search for host factories [GET]
 
-Lists all layers the calling identity has `read` privilege on.
+Lists all host factories the calling identity has `read` privilege on.
 
 You can switch the role to act as with the `acting_as` parameter.
 
-Run a full-text search of the layers with the `search` parameter.
+Run a full-text search of the host factories with the `search` parameter.
 
-You can also limit, offset and shorten the resulting list.
+You can also limit and offset the resulting list.
 
 ---
 
@@ -18,7 +18,7 @@ You can also limit, offset and shorten the resulting list.
 
 |Code|Description|
 |----|-----------|
-|200|JSON list of layers is returned|
+|200|JSON list of host factories is returned|
 |403|Permission denied|
 
 + Parameters
@@ -36,17 +36,9 @@ You can also limit, offset and shorten the resulting list.
     ```
     [
       {
-        "id": "conjur:layer:redis",
-        "owner": "conjur:group:ops",
-        "permissions": [
-          {
-            "privilege": "read",
-            "grant_option": false,
-            "resource": "conjur:layer:redis",
-            "role": "conjur:@:layer/redis/observe",
-            "grantor": "conjur:user:admin"
-          }
-        ],
+        "id": "conjur:host_factory:redis_factory",
+        "owner": "conjur:group:security_admin",
+        "permissions": [],
         "annotations": []
       }
     ]
