@@ -285,7 +285,9 @@ route to retrieve variable values.
 
 Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
-**Permission required**: `read` privilege on the variable
+**Permission required**:
+
+`read` privilege on the variable.
 
 ---
 
@@ -396,6 +398,10 @@ By default this returns the latest version of a variable, but you can retrieve a
 
 Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
+**Permission Required**:
+
+`execute` privilege on the variable.
+
 ---
 
 **Headers**
@@ -427,6 +433,70 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
     ```
     np89daed89p
+    ```
+
+## Values [/api/variables/values{?vars}]
+
+### Retrieve the values of multiple variables at once [GET]
+
+If you need to retrieve the values of multiple variables at once, this route is much more
+efficient than [variable#value](/#reference/variable/value).
+
+
+Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
+
+**Permission Required**:
+
+`execute` privilege on all variables to be retrieved.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|JSON map of variables names to values is returned|
+|403|Permission denied|
+|404|One or more of the variables was not found|
+
++ Parameters
+    + vars: dev/mongo/password,dev/redis/password (string) - Comma-separated list of variable IDs to fetch, query-escaped
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (application/json; charset=utf-8)
+
+    ```
+    {
+      "dev/mongo/password": "np89daed89p",
+      "dev/redis/password": "8912dbp9bu1pub"
+    }
+    ```
+
++ Response 404 (application/json; charset=utf-8)
+
+    ```
+    {
+      "error": {
+        "kind": "RecordNotFound",
+        "message": "variable 'staging/mongo/password' not found",
+        "details": {
+          "kind": "variable",
+          "id": "staging/mongo/password"
+        }
+      }
+    }
     ```
 
 

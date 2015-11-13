@@ -43,9 +43,13 @@ if [ "$USER" != "jenkins" ]; then
     hostname="${hostname}:${PORT}"
 fi
 
+# Init and bootstrap the Conjur appliance
 printf "yes\nyes\nyes\n" | sudo conjur init -f ${RCFILE} -h ${hostname}
 CONJURRC=${RCFILE} sudo -E conjur authn login -u admin -p ${password}
 printf "test\npassword\npassword\nno\n" | CONJURRC=${RCFILE} sudo -E conjur bootstrap
+
+# Create this variable so variable#values route can be really tested
+CONJURRC=${RCFILE} sudo -E conjur variable create -v 8912dbp9bu1pub dev/redis/password
 
 ./dredd.sh https://${hostname}
 

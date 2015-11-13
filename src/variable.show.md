@@ -8,7 +8,9 @@ route to retrieve variable values.
 
 Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
-**Permission required**: `read` privilege on the variable
+**Permission required**:
+
+`read` privilege on the variable.
 
 ---
 
