@@ -15,16 +15,8 @@ For API usage, it is ordinarily passed as an HTTP Authorization "Token" header.
 Authorization: Token token="eyJkYX...Rhb="
 ```
 
-Properties of the token include:
-
-* It is JSON.
-* It carries the login name and other data in a payload.
-* It is signed by a private authentication key, and verified by a corresponding public key.
-* It carries the signature of the public key for easy lookup in a public key database.
-* It has a fixed life span of several minutes, after which it is no longer valid.
-
 Before the token can be used to make subsequent calls to the API, it must be formatted.
-Take the response from the `authenticate` call and base64-encode it, stripping out newlines.
+Take the response from the this call and base64-encode it, stripping out newlines.
 
 ```
 token=$(echo -n $response | base64 | tr -d '\r\n')
@@ -43,6 +35,14 @@ NOTE: If you have the Conjur CLI installed you can get a pre-formatted token wit
 ```
 conjur authn authenticate -H
 ```
+
+Properties of the token include:
+
+* It is JSON.
+* It carries the login name and other data in a payload.
+* It is signed by a private authentication key, and verified by a corresponding public key.
+* It carries the signature of the public key for easy lookup in a public key database.
+* It has a fixed life span of several minutes, after which it is no longer valid.
 
 ---
 

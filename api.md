@@ -5,37 +5,199 @@ HOST: https://conjur.myorg.com
 
 Welcome to the Conjur API documentation!
 
-Any manipulation of resources in Conjur can be done through this API.
+Any manipulation of roles, resources and permissions in Conjur can be done through this API.
 
-Most API calls require authentication. 
-View the [Login](/#reference/authentication/login) and [Authenticate](/#reference/authentication/authenticate) routes
-to see how to obtain an API key and auth token, respectively. Auth tokens expire after
-8 minutes.
+# Authentication
+
+Most API calls require an authentication token. To obtain a token as a user:
+
+1. Use a username and password to obtain an API key with the [Authentication > Login](/#reference/authentication/login) route.
+2. Use the API key to obtain an auth token with the [Authentication > Authenticate](/#reference/authentication/authenticate) route. 
+
+Auth tokens expire after 8 minutes. You need to obtain a new token after it expires.
+Token expiration and renewal is handled automatically by the 
+Conjur [CLI](https://developer.conjur.net/cli) and [client libraries](https://developer.conjur.net/clients).
+
+## SSL verification
 
 Use the public key you obtained when running `conjur init` for SSL verification when talking to your Conjur endpoint.
 This is a *public* key, so you can check it into source control if needed.
 
+For example, with curl:
 
-## Group Authentication
+```
+$ curl --cacert <certfile> ...
+```
+
+# Examples
+
+## Obtain an auth token
+
+Let's say your username for Conjur is `samantha`, and your password is `hfsdfp91opifouhw`.
+Your Conjur endpoint is hosted at `https://conjur.mybigco.com`.
+
+You have already obtained the public SSL cert by running `conjur init` against your endpoint; the cert was saved as
+`~/conjur-mybigco.pem`.
+
+Let's get your API key with the [Authentication > Login](/#reference/authentication/login) route:
+
+```
+$ curl --cacert ~/.conjur-mybigco.pem \
+--user samantha:hfsdfp91opifouhw \
+https://conjur.mybigco.com/api/authn/users/login
+
+14m9cf91wfsesv1kkhevdywm2wvqy6s8sk53z1ngtazp1t9tykc
+```
+
+Great, you now have your API key! Let's use that to obtain an auth token we can use for further requests.
+
+Using the [Authentication > Authenticate](/#reference/authentication/authenticate) route:
+
+```
+$ curl --cacert ~/.conjur-mybigco.pem \
+--data "14m9cf91wfsesv1kkhevdywm2wvqy6s8sk53z1ngtazp1t9tykc" \
+https://conjur.mybigco.com/api/authn/users/samantha/authenticate
+
+{
+    "data": "samantha",
+    "timestamp": "2015-10-24 20:31:50 UTC",
+    "signature": "BpR0FEb...w4397",
+    "key": "15ab2712d65e6983cf7107a5350aaac0"
+}
+```
+
+We now have our auth token in *raw* format. To be able to use it for future requests, we must encode it.
+
+`$response` in the following command is the JSON response from the last API call.
+
+```
+$ token=$(echo -n $response | base64 | tr -d '\r\n')
+```
+
+Now that you have your encoded token, you can use it to call any other API route. 
+For example, adding setting a new value for the variable `redis/password`:
+
+```
+$ curl --cacert ~/.conjur-mybigco.pem \
+-H "Authorization: Token token=\"$token\"" \
+--data "mynewsecretvalue" \
+https://conjur.mybigco.com/api/variables/redis%2Fpassword/values
+```
+
+---
+
+## Create a host-factory token
+
+Let's say we want to create a new token for an existing host factory.
+
+The host factory's name is `prod/redis_factory`. This factory generates token that allow hosts to enroll in the
+`prod/redis` layer, which has permission to access the credentials for your production redis cluster.
+
+You've already [obtained an auth token](/#introduction/examples/obtain-an-auth-token) and set it to the bash variable `token`.
+
+Let's set this token to expire in one hour. Expiration timestamps are in 
+[ISO8601 format](http://ruby-doc.org/stdlib-2.1.1/libdoc/time/rdoc/Time.html#class-Time-label-Converting+to+a+String)
+and must be URL-encoded.
+
+So, if right now is 2:01pm EST on Nov 16th 2015, one hour from now in ISO8601 is `2015-11-16T14:01:00-05:00`.
+The timestamp must be URL-encoded in the route.
+
+Create the token with the [Host Factory > Create Token](/#reference/host-factory/create-token) route:
+
+```
+$ curl --cacert ~/.conjur-mybigco.pem \
+-H "Authorization: Token token=\"$token\"" \
+https://conjur.mybigco.com/api/host_factories/prod%2Fredis_factory/tokens?expiration=2015-11-16T14%3A01%3A00-05%3A00
+
+[
+  {
+    "token": "3y9e0573sj436f3h12s0v1hvbfya3xfvpt22q32",
+    "expiration": "2015-11-16T20:01:00Z"
+  }
+]
+```
+
+The expiration timestamp in the response is in UTC time.
+
+Now you can use this token to create hosts pre-enrolled in the `prod/redis_factory` layer using
+the [Host Factory > Create Host](/#reference/host-factory/create-host) route.
+
+```
+$ hftoken="3y9e0573sj436f3h12s0v1hvbfya3xfvpt22q32"
+
+$ curl --cacert ~/.conjur-mybigco.pem \
+-H "Authorization: Token token=\"$hftoken\"" \
+https://conjur.mybigco.com/api/host_factories/hosts?id=redis002
+
+{
+  "id": "redis002",
+  "userid": "deputy/prod/redis_factory",
+  "created_at": "2015-11-16T22:57:14Z",
+  "ownerid": "conjur:group:ops",
+  "roleid": "conjur:host:redis002",
+  "resource_identifier": "conjur:host:redis002",
+  "api_key": "14x82x72syhnnd1h8jj24zj1kqd2j09sjy3tddwxc35"
+}
+```
+
+---
+
+## Permit a group to read a variable
+
+Let's say you want to allow your `mobile/developers` to read a [Firebase](https://www.firebase.com) secret token stored in Conjur.
+
+The secret token is stored in the Conjur variable `firebase.com/mobile/secret-token` and owned by the group `security_admin`.
+
+You've already [obtained an auth token](/#introduction/examples/obtain-an-auth-token) and set it to the bash variable `token`.
+
+For this example, your Conjur org is `mybigco`, this is the `orgaccount` parameter you gave to `evoke configure` when you
+set up your Conjur install. You can also view your Conjur org in the CLI with `conjur authn whoami`.
+
+Okay, so let's give those mobile developers access with the [Resource > Permit](/#reference/resource/permit) route:
+
+```
+$ curl --cacert ~/.conjur-mybigco.pem \
+-H "Authorization: Token token=\"$token\"" \
+https://conjur.mybigco.com/api/authz/account/mybigco/variable/firebase.com%2Fmobile%2Fsecret-token/?permit&privilege=execute&role=group:mobile/developers
+```
+
+You just gave the group `mobile/developers` the privilege `execute` on the variable `firebase.com/mobile/secret-token`.
+This means that everyone in that group can now fetch the value of the variable (secret).
+
+We can check that that is indeed the case with the [Resource > Check](/#reference/resource/check) route:
+
+```
+$ curl --cacert ~/.conjur-mybigco.pem \
+-H "Authorization: Token token=\"$token\"" \
+https://conjur.mybigco.com/api/authz/account/mybigco/roles/mobile%2Fdevelopers/?check&privilege=execute&resource_id=variable:firebase.com/mobile/secret-token
+```
+
+A response code of 204 means that the permission exists.
+
+# Group Authentication
 
 ## Login [/api/authn/users/login]
 
 ### Exchange a user login and password for an API key [GET]
 
-Once the API key is obtained, it may be used to rapidly obtain authentication tokens,
-which are required to use most other Conjur services.
+Sending your Conjur username and password via HTTP Basic Auth to this route returns
+an API key.
 
-Passwords are stored in the Conjur database using bcrypt with a work factor of 12.
-Therefore, login is a fairly expensive operation.
-
-If you login through the command-line interface, you can print your current
-logged-in identity with the `conjur authn whoami` CLI command.
+Once this API key is obtained, it may be used to rapidly obtain authentication tokens by calling the
+[Authenticate](http://docs.conjur.apiary.io/#reference/authentication/authenticate) route.
+An authentication token is required to use most other parts of the Conjur API.
 
 The value for the `Authorization` Basic Auth header can be obtained with:
 
 ```
 $ echo -n myusername:mypassword | base64
 ```
+
+If you log in through the command-line interface, you can print your current
+logged-in identity with the `conjur authn whoami` CLI command.
+
+Passwords are stored in the Conjur database using bcrypt with a work factor of 12.
+Therefore, login is a fairly expensive operation.
 
 ---
 
@@ -82,16 +244,8 @@ For API usage, it is ordinarily passed as an HTTP Authorization "Token" header.
 Authorization: Token token="eyJkYX...Rhb="
 ```
 
-Properties of the token include:
-
-* It is JSON.
-* It carries the login name and other data in a payload.
-* It is signed by a private authentication key, and verified by a corresponding public key.
-* It carries the signature of the public key for easy lookup in a public key database.
-* It has a fixed life span of several minutes, after which it is no longer valid.
-
 Before the token can be used to make subsequent calls to the API, it must be formatted.
-Take the response from the `authenticate` call and base64-encode it, stripping out newlines.
+Take the response from the this call and base64-encode it, stripping out newlines.
 
 ```
 token=$(echo -n $response | base64 | tr -d '\r\n')
@@ -110,6 +264,14 @@ NOTE: If you have the Conjur CLI installed you can get a pre-formatted token wit
 ```
 conjur authn authenticate -H
 ```
+
+Properties of the token include:
+
+* It is JSON.
+* It carries the login name and other data in a payload.
+* It is signed by a private authentication key, and verified by a corresponding public key.
+* It carries the signature of the public key for easy lookup in a public key database.
+* It has a fixed life span of several minutes, after which it is no longer valid.
 
 ---
 
@@ -147,7 +309,7 @@ Conjur API key|yes|`String`|"14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9
     }
     ```
 
-## Group Variable
+# Group Variable
 
 A `variable` is a 'secret' and can be any value. It is a `resource`, in RBAC terms.
 
@@ -159,6 +321,10 @@ A `variable` is a 'secret' and can be any value. It is a `resource`, in RBAC ter
 
 A variable can be created with or without an initial value.
 If you don't give the variable an ID, one will be randomly generated.
+
+Note that you can give the variable an initial value, but this is optional.
+Use the [Variable > Values Add](http://docs.conjur.apiary.io/#reference/variable/values-add) 
+route to set values for variables.
 
 ---
 
@@ -500,7 +666,7 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
     ```
 
 
-## Group User
+# Group User
 
 A `user` represents an identity for a human. It is a `role`, in RBAC terms.
 
@@ -830,7 +996,7 @@ The login parameter must be url encoded.
     }
     ```
 
-## Group Group
+# Group Group
 
 A `group` represents a collection of users or groups. It is a `role` and a collection of `roles`, in RBAC terms.
 
@@ -1129,7 +1295,7 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
     ]
     ```
 
-## Group Host
+# Group Host
 
 A `host` represents an identity for a non-human. This could be a VM, Docker container, CI job, etc.
 It is both a `role` and `resource`, in RBAC terms.
@@ -1349,7 +1515,7 @@ Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
     ]
     ```
 
-## Group Layer
+# Group Layer
 
 A `layer` is a collection of hosts. It is a `role`, in RBAC terms.
 
@@ -1760,7 +1926,7 @@ Privileges available are:
 
 + Response 204
 
-## Group Host Factory
+# Group Host Factory
 
 The `Host Factory` is a web service that enables code and scripts to create Hosts and add them to specific Layers, 
 without having to grant the scripts full administrative privileges on the layers. 
@@ -2149,7 +2315,7 @@ Authorization: Token token="<insert host factory token here>"
     }
     ```
 
-## Group Role
+# Group Role
 
 A `role` is an actor in the system, in the classical sense of role-based access control. 
 Roles are the entities which receive permission grants.
@@ -2377,7 +2543,7 @@ Inverse of `role#grant_to`.
 
 + Response 204
 
-## Group Resource
+# Group Resource
 
 A `resource` is a record on which permissions are defined. 
 They are partitioned by "kind", such as "group", "host", "file", "environment", "variable", etc.
@@ -2917,7 +3083,7 @@ You are not allowed to check permissions of arbitrary roles or resources.
 
 + Response 204
 
-## Group Audit
+# Group Audit
 
 Every privilege modification, variable retrieval and SSH action is logged to an immutable audit trail in Conjur.
 
@@ -3130,7 +3296,7 @@ Fetch audit events for a role/resource the calling identity has `read` privilege
     ]
     ```
 
-## Group Utilities
+# Group Utilities
 
 ## Health [/health]
 

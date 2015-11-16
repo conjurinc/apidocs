@@ -5,6 +5,10 @@
 A variable can be created with or without an initial value.
 If you don't give the variable an ID, one will be randomly generated.
 
+Note that you can give the variable an initial value, but this is optional.
+Use the [Variable > Values Add](http://docs.conjur.apiary.io/#reference/variable/values-add) 
+route to set values for variables.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

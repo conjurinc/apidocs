@@ -5,24 +5,39 @@ HOST: https://conjur.myorg.com
 
 Welcome to the Conjur API documentation!
 
-Any manipulation of resources in Conjur can be done through this API.
+Any manipulation of roles, resources and permissions in Conjur can be done through this API.
 
-Most API calls require authentication. 
-View the [Login](/#reference/authentication/login) and [Authenticate](/#reference/authentication/authenticate) routes
-to see how to obtain an API key and auth token, respectively. Auth tokens expire after
-8 minutes.
+# Authentication
+
+Most API calls require an authentication token. To obtain a token as a user:
+
+1. Use a username and password to obtain an API key with the [Authentication > Login](/#reference/authentication/login) route.
+2. Use the API key to obtain an auth token with the [Authentication > Authenticate](/#reference/authentication/authenticate) route. 
+
+Auth tokens expire after 8 minutes. You need to obtain a new token after it expires.
+Token expiration and renewal is handled automatically by the 
+Conjur [CLI](https://developer.conjur.net/cli) and [client libraries](https://developer.conjur.net/clients).
+
+## SSL verification
 
 Use the public key you obtained when running `conjur init` for SSL verification when talking to your Conjur endpoint.
 This is a *public* key, so you can check it into source control if needed.
 
+For example, with curl:
 
-## Group Authentication
+```
+$ curl --cacert <certfile> ...
+```
+
+:[intro.examples](intro.examples.md)
+
+# Group Authentication
 
 :[authn.users.login](authn.users.login.md)
 
 :[authn.users.authenticate](authn.users.authenticate.md)
 
-## Group Variable
+# Group Variable
 
 A `variable` is a 'secret' and can be any value. It is a `resource`, in RBAC terms.
 
@@ -41,7 +56,7 @@ A `variable` is a 'secret' and can be any value. It is a `resource`, in RBAC ter
 :[variable.values](variable.values.md)
 
 
-## Group User
+# Group User
 
 A `user` represents an identity for a human. It is a `role`, in RBAC terms.
 
@@ -59,7 +74,7 @@ A `user` represents an identity for a human. It is a `role`, in RBAC terms.
 
 :[user.show](user.show.md)
 
-## Group Group
+# Group Group
 
 A `group` represents a collection of users or groups. It is a `role` and a collection of `roles`, in RBAC terms.
 
@@ -77,7 +92,7 @@ A `group` represents a collection of users or groups. It is a `role` and a colle
 
 :[group.list_members](group.list_members.md)
 
-## Group Host
+# Group Host
 
 A `host` represents an identity for a non-human. This could be a VM, Docker container, CI job, etc.
 It is both a `role` and `resource`, in RBAC terms.
@@ -94,7 +109,7 @@ Hosts are grouped into layers.
 
 :[host.layers](host.layers.md)
 
-## Group Layer
+# Group Layer
 
 A `layer` is a collection of hosts. It is a `role`, in RBAC terms.
 
@@ -119,7 +134,7 @@ A host assumes the permissions of the layer when it is enrolled.
 
 :[layer.deny_privilege](layer.deny_privilege.md)
 
-## Group Host Factory
+# Group Host Factory
 
 The `Host Factory` is a web service that enables code and scripts to create Hosts and add them to specific Layers, 
 without having to grant the scripts full administrative privileges on the layers. 
@@ -153,7 +168,7 @@ conjur hostfactory -h
 
 :[host_factory.hosts.create](host_factory.hosts.create.md)
 
-## Group Role
+# Group Role
 
 A `role` is an actor in the system, in the classical sense of role-based access control. 
 Roles are the entities which receive permission grants.
@@ -170,7 +185,7 @@ Roles are the entities which receive permission grants.
 
 :[role.revoke_from](role.revoke_from.md)
 
-## Group Resource
+# Group Resource
 
 A `resource` is a record on which permissions are defined. 
 They are partitioned by "kind", such as "group", "host", "file", "environment", "variable", etc.
@@ -197,7 +212,7 @@ They are partitioned by "kind", such as "group", "host", "file", "environment", 
 
 :[resource.check](resource.check.md)
 
-## Group Audit
+# Group Audit
 
 Every privilege modification, variable retrieval and SSH action is logged to an immutable audit trail in Conjur.
 
@@ -208,6 +223,6 @@ Fetching all audit records can return a very large response, so it is best to th
 
 :[audit.single](audit.single.md)
 
-## Group Utilities
+# Group Utilities
 
 :[utilities.health](utilities.health.md)
