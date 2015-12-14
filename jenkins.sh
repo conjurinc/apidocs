@@ -23,20 +23,20 @@ cid=$(docker run -d -p "${PORT}:443" ${DOCKER_IMAGE})
 if [ "$USER" == "jenkins" ]; then
     # Use the IP address of the container as the hostname, port collision no more!
     hostname=$(docker inspect ${cid} | jsonfield 0.NetworkSettings.IPAddress)
-    PUBLISH="1"
     CMD_PREFIX="sudo -E"
+    
+    # Only publish from the master branch
+    if [ "$GIT_BRANCH" == "origin/master"]; then
+        PUBLISH="1"
+    fi
 else
-    hostname=$(docker-machine ip default)
+    hostname="$(docker-machine ip default):${PORT}"
 fi
 
 password='password'
 orgaccount='conjur'
 
 docker exec ${cid} evoke configure master -h ${hostname} -p ${password} ${orgaccount}
-
-if [ "$USER" != "jenkins" ]; then
-    hostname="${hostname}:${PORT}"
-fi
 
 # Init and bootstrap the Conjur appliance
 printf "yes\nyes\nyes\n" | ${CMD_PREFIX} conjur init -f ${RCFILE} -h ${hostname}
