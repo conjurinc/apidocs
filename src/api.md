@@ -9,12 +9,12 @@ Any manipulation of roles, resources and permissions in Conjur can be done throu
 
 # Authentication
 
-Most API calls require an authentication token. To obtain a token as a user:
+Most API calls require an authentication access token. To obtain an access token as a user:
 
-1. Use a username and password to obtain an API key with the [Authentication > Login](/#reference/authentication/login) route.
-2. Use the API key to obtain an auth token with the [Authentication > Authenticate](/#reference/authentication/authenticate) route. 
+1. Use a username and password to obtain an API key (refresh token) with the [Authentication > Login](/#reference/authentication/login) route.
+2. Use the API key to obtain an access token with the [Authentication > Authenticate](/#reference/authentication/authenticate) route. 
 
-Auth tokens expire after 8 minutes. You need to obtain a new token after it expires.
+Access tokens expire after 8 minutes. You need to obtain a new token after it expires.
 Token expiration and renewal is handled automatically by the 
 Conjur [CLI](https://developer.conjur.net/cli) and [client libraries](https://developer.conjur.net/clients).
 
@@ -36,6 +36,10 @@ $ curl --cacert <certfile> ...
 :[authn.users.login](authn.users.login.md)
 
 :[authn.users.authenticate](authn.users.authenticate.md)
+
+:[authn.users.update](authn.users.update.md)
+
+:[authn.users.rotate_api_key](authn.users.rotate_api_key.md)
 
 # Group Variable
 
