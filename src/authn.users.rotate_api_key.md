@@ -9,6 +9,10 @@ This request must be authenticated by Basic authentication using the existing
 API key or password of the user. A Conjur access token cannot be used to rotate
 the API key.
 
+### Supported version
+
+Conjur 4.6 or higher.
+
 ---
 
 **Headers**
