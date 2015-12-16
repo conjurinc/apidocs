@@ -34,7 +34,7 @@ Therefore, login is a fairly expensive operation.
 |Code|Description|
 |----|-----------|
 |200|The response body is the API key|
-|400|The credentials were not accepted|
+|401|The credentials were not accepted|
 
 + Request
     + Headers
