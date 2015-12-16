@@ -1,6 +1,6 @@
 # Examples
 
-## Obtain an auth token
+## Obtain an access token
 
 Let's say your username for Conjur is `samantha`, and your password is `hfsdfp91opifouhw`.
 Your Conjur endpoint is hosted at `https://conjur.mybigco.com`.
@@ -8,7 +8,7 @@ Your Conjur endpoint is hosted at `https://conjur.mybigco.com`.
 You have already obtained the public SSL cert by running `conjur init` against your endpoint; the cert was saved as
 `~/conjur-mybigco.pem`.
 
-Let's get your API key with the [Authentication > Login](/#reference/authentication/login) route:
+Let's get your API key (refresh token) with the [Authentication > Login](/#reference/authentication/login) route:
 
 ```
 $ curl --cacert ~/.conjur-mybigco.pem \
@@ -18,7 +18,7 @@ https://conjur.mybigco.com/api/authn/users/login
 14m9cf91wfsesv1kkhevdywm2wvqy6s8sk53z1ngtazp1t9tykc
 ```
 
-Great, you now have your API key! Let's use that to obtain an auth token we can use for further requests.
+Great, you now have your refresh token! Let's use that to obtain an access token we can use for further requests.
 
 Using the [Authentication > Authenticate](/#reference/authentication/authenticate) route:
 
@@ -35,7 +35,7 @@ https://conjur.mybigco.com/api/authn/users/samantha/authenticate
 }
 ```
 
-We now have our auth token in *raw* format. To be able to use it for future requests, we must encode it.
+We now have our access token in *raw* format. To be able to use it for future requests, we must encode it.
 
 `$response` in the following command is the JSON response from the last API call.
 
@@ -53,7 +53,7 @@ $ curl --cacert ~/.conjur-mybigco.pem \
 https://conjur.mybigco.com/api/variables/redis%2Fpassword/values
 ```
 
-Note that you can use the Conjur CLI to obtain a token as well, by running `conjur authn authenticate -H`.
+Note that you can use the Conjur CLI to obtain an access token as well, by running `conjur authn authenticate -H`.
 
 [Here is an example](https://github.com/conjurinc/apidocs/blob/master/get_auth_token.sh) 
 of obtaining a formatted auth token with a bash script.
@@ -67,16 +67,16 @@ Let's say we want to create a new token for an existing host factory.
 The host factory's name is `prod/redis_factory`. This factory generates token that allow hosts to enroll in the
 `prod/redis` layer, which has permission to access the credentials for your production redis cluster.
 
-You've already [obtained an auth token](/#introduction/examples/obtain-an-auth-token) and set it to the bash variable `token`.
+You've already [obtained an access token](/#introduction/examples/obtain-an-auth-token) and set it to the bash variable `token`.
 
-Let's set this token to expire in one hour. Expiration timestamps are in 
+Let's set the host factory token to expire in one hour. Expiration timestamps are in 
 [ISO8601 format](http://ruby-doc.org/stdlib-2.1.1/libdoc/time/rdoc/Time.html#class-Time-label-Converting+to+a+String)
 and must be URL-encoded.
 
 So, if right now is 2:01pm EST on Nov 16th 2015, one hour from now in ISO8601 is `2015-11-16T14:01:00-05:00`.
 The timestamp must be URL-encoded in the route.
 
-Create the token with the [Host Factory > Create Token](/#reference/host-factory/create-token) route:
+Create the host factory token with the [Host Factory > Create Token](/#reference/host-factory/create-token) route:
 
 ```
 $ curl --cacert ~/.conjur-mybigco.pem \
@@ -93,7 +93,7 @@ https://conjur.mybigco.com/api/host_factories/prod%2Fredis_factory/tokens?expira
 
 The expiration timestamp in the response is in UTC time.
 
-Now you can use this token to create hosts pre-enrolled in the `prod/redis_factory` layer using
+Now you can use this host factory token to create hosts pre-enrolled in the `prod/redis_factory` layer using
 the [Host Factory > Create Host](/#reference/host-factory/create-host) route.
 
 ```
@@ -118,11 +118,11 @@ https://conjur.mybigco.com/api/host_factories/hosts?id=redis002
 
 ## Permit a group to read a variable
 
-Let's say you want to allow your `mobile/developers` to read a [Firebase](https://www.firebase.com) secret token stored in Conjur.
+Let's say you want to allow your `mobile/developers` to read a [Firebase](https://www.firebase.com) key stored in Conjur.
 
-The secret token is stored in the Conjur variable `firebase.com/mobile/secret-token` and owned by the group `security_admin`.
+The key is stored in the Conjur variable `firebase.com/mobile/secret-token` and owned by the group `security_admin`.
 
-You've already [obtained an auth token](/#introduction/examples/obtain-an-auth-token) and set it to the bash variable `token`.
+You've already [obtained an access token](/#introduction/examples/obtain-an-auth-token) and set it to the bash variable `token`.
 
 For this example, your Conjur org is `mybigco`, this is the `orgaccount` parameter you gave to `evoke configure` when you
 set up your Conjur install. You can also view your Conjur org in the CLI with `conjur authn whoami`.
@@ -136,7 +136,7 @@ https://conjur.mybigco.com/api/authz/account/mybigco/variable/firebase.com%2Fmob
 ```
 
 You just gave the group `mobile/developers` the privilege `execute` on the variable `firebase.com/mobile/secret-token`.
-This means that everyone in that group can now fetch the value of the variable (secret).
+This means that everyone in that group can now fetch the firebase key from the variable.
 
 We can check that that is indeed the case with the [Resource > Check](/#reference/resource/check) route:
 
