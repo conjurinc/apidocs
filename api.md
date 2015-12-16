@@ -9,12 +9,12 @@ Any manipulation of roles, resources and permissions in Conjur can be done throu
 
 # Authentication
 
-Most API calls require an authentication token. To obtain a token as a user:
+Most API calls require an authentication access token. To obtain an access token as a user:
 
-1. Use a username and password to obtain an API key with the [Authentication > Login](/#reference/authentication/login) route.
-2. Use the API key to obtain an auth token with the [Authentication > Authenticate](/#reference/authentication/authenticate) route. 
+1. Use a username and password to obtain an API key (refresh token) with the [Authentication > Login](/#reference/authentication/login) route.
+2. Use the API key to obtain an access token with the [Authentication > Authenticate](/#reference/authentication/authenticate) route. 
 
-Auth tokens expire after 8 minutes. You need to obtain a new token after it expires.
+Access tokens expire after 8 minutes. You need to obtain a new token after it expires.
 Token expiration and renewal is handled automatically by the 
 Conjur [CLI](https://developer.conjur.net/cli) and [client libraries](https://developer.conjur.net/clients).
 
@@ -31,7 +31,7 @@ $ curl --cacert <certfile> ...
 
 # Examples
 
-## Obtain an auth token
+## Obtain an access token
 
 Let's say your username for Conjur is `samantha`, and your password is `hfsdfp91opifouhw`.
 Your Conjur endpoint is hosted at `https://conjur.mybigco.com`.
@@ -39,7 +39,7 @@ Your Conjur endpoint is hosted at `https://conjur.mybigco.com`.
 You have already obtained the public SSL cert by running `conjur init` against your endpoint; the cert was saved as
 `~/conjur-mybigco.pem`.
 
-Let's get your API key with the [Authentication > Login](/#reference/authentication/login) route:
+Let's get your API key (refresh token) with the [Authentication > Login](/#reference/authentication/login) route:
 
 ```
 $ curl --cacert ~/.conjur-mybigco.pem \
@@ -49,7 +49,7 @@ https://conjur.mybigco.com/api/authn/users/login
 14m9cf91wfsesv1kkhevdywm2wvqy6s8sk53z1ngtazp1t9tykc
 ```
 
-Great, you now have your API key! Let's use that to obtain an auth token we can use for further requests.
+Great, you now have your refresh token! Let's use that to obtain an access token we can use for further requests.
 
 Using the [Authentication > Authenticate](/#reference/authentication/authenticate) route:
 
@@ -66,7 +66,7 @@ https://conjur.mybigco.com/api/authn/users/samantha/authenticate
 }
 ```
 
-We now have our auth token in *raw* format. To be able to use it for future requests, we must encode it.
+We now have our access token in *raw* format. To be able to use it for future requests, we must encode it.
 
 `$response` in the following command is the JSON response from the last API call.
 
@@ -84,6 +84,11 @@ $ curl --cacert ~/.conjur-mybigco.pem \
 https://conjur.mybigco.com/api/variables/redis%2Fpassword/values
 ```
 
+Note that you can use the Conjur CLI to obtain an access token as well, by running `conjur authn authenticate -H`.
+
+[Here is an example](https://github.com/conjurinc/apidocs/blob/master/get_auth_token.sh) 
+of obtaining a formatted auth token with a bash script.
+
 ---
 
 ## Create a host-factory token
@@ -93,16 +98,16 @@ Let's say we want to create a new token for an existing host factory.
 The host factory's name is `prod/redis_factory`. This factory generates token that allow hosts to enroll in the
 `prod/redis` layer, which has permission to access the credentials for your production redis cluster.
 
-You've already [obtained an auth token](/#introduction/examples/obtain-an-auth-token) and set it to the bash variable `token`.
+You've already [obtained an access token](/#introduction/examples/obtain-an-auth-token) and set it to the bash variable `token`.
 
-Let's set this token to expire in one hour. Expiration timestamps are in 
+Let's set the host factory token to expire in one hour. Expiration timestamps are in 
 [ISO8601 format](http://ruby-doc.org/stdlib-2.1.1/libdoc/time/rdoc/Time.html#class-Time-label-Converting+to+a+String)
 and must be URL-encoded.
 
 So, if right now is 2:01pm EST on Nov 16th 2015, one hour from now in ISO8601 is `2015-11-16T14:01:00-05:00`.
 The timestamp must be URL-encoded in the route.
 
-Create the token with the [Host Factory > Create Token](/#reference/host-factory/create-token) route:
+Create the host factory token with the [Host Factory > Create Token](/#reference/host-factory/create-token) route:
 
 ```
 $ curl --cacert ~/.conjur-mybigco.pem \
@@ -119,7 +124,7 @@ https://conjur.mybigco.com/api/host_factories/prod%2Fredis_factory/tokens?expira
 
 The expiration timestamp in the response is in UTC time.
 
-Now you can use this token to create hosts pre-enrolled in the `prod/redis_factory` layer using
+Now you can use this host factory token to create hosts pre-enrolled in the `prod/redis_factory` layer using
 the [Host Factory > Create Host](/#reference/host-factory/create-host) route.
 
 ```
@@ -144,11 +149,11 @@ https://conjur.mybigco.com/api/host_factories/hosts?id=redis002
 
 ## Permit a group to read a variable
 
-Let's say you want to allow your `mobile/developers` to read a [Firebase](https://www.firebase.com) secret token stored in Conjur.
+Let's say you want to allow your `mobile/developers` to read a [Firebase](https://www.firebase.com) key stored in Conjur.
 
-The secret token is stored in the Conjur variable `firebase.com/mobile/secret-token` and owned by the group `security_admin`.
+The key is stored in the Conjur variable `firebase.com/mobile/secret-token` and owned by the group `security_admin`.
 
-You've already [obtained an auth token](/#introduction/examples/obtain-an-auth-token) and set it to the bash variable `token`.
+You've already [obtained an access token](/#introduction/examples/obtain-an-auth-token) and set it to the bash variable `token`.
 
 For this example, your Conjur org is `mybigco`, this is the `orgaccount` parameter you gave to `evoke configure` when you
 set up your Conjur install. You can also view your Conjur org in the CLI with `conjur authn whoami`.
@@ -162,7 +167,7 @@ https://conjur.mybigco.com/api/authz/account/mybigco/variable/firebase.com%2Fmob
 ```
 
 You just gave the group `mobile/developers` the privilege `execute` on the variable `firebase.com/mobile/secret-token`.
-This means that everyone in that group can now fetch the value of the variable (secret).
+This means that everyone in that group can now fetch the firebase key from the variable.
 
 We can check that that is indeed the case with the [Resource > Check](/#reference/resource/check) route:
 
@@ -212,7 +217,7 @@ Therefore, login is a fairly expensive operation.
 |Code|Description|
 |----|-----------|
 |200|The response body is the API key|
-|400|The credentials were not accepted|
+|401|The credentials were not accepted|
 
 + Request
     + Headers
@@ -229,14 +234,14 @@ Therefore, login is a fairly expensive operation.
 
 ## Authenticate [/api/authn/users/{login}/authenticate]
 
-### Exchange a user login and API key for an API token [POST]
+### Exchange a user login and API key for an access token [POST]
 
-Conjur authentication is based on auto-expiring tokens, which are issued by Conjur when presented with both:
+Conjur authentication is based on auto-expiring access tokens, which are issued by Conjur when presented with both:
 
 * A login name
-* A corresponding password or API key
+* A corresponding password or API key (aka 'refresh token')
 
-The Conjur Token provides authentication for API calls.
+The Conjur Access Token provides authentication for API calls.
 
 For API usage, it is ordinarily passed as an HTTP Authorization "Token" header.
 
@@ -244,14 +249,14 @@ For API usage, it is ordinarily passed as an HTTP Authorization "Token" header.
 Authorization: Token token="eyJkYX...Rhb="
 ```
 
-Before the token can be used to make subsequent calls to the API, it must be formatted.
+Before the access token can be used to make subsequent calls to the API, it must be formatted.
 Take the response from the this call and base64-encode it, stripping out newlines.
 
 ```
 token=$(echo -n $response | base64 | tr -d '\r\n')
 ```
 
-The token can now be used for Conjur API access.
+The access token can now be used for Conjur API access.
 
 ```
 curl --cacert <certfile> \
@@ -259,13 +264,13 @@ curl --cacert <certfile> \
 <route>
 ```
 
-NOTE: If you have the Conjur CLI installed you can get a pre-formatted token with:
+NOTE: If you have the Conjur CLI installed you can get a pre-formatted access token with:
 
 ```
 conjur authn authenticate -H
 ```
 
-Properties of the token include:
+Properties of the access token include:
 
 * It is JSON.
 * It carries the login name and other data in a payload.
@@ -285,8 +290,8 @@ Conjur API key|yes|`String`|"14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9
 
 |Code|Description|
 |----|-----------|
-|200|The response body is the raw data needed to create an auth token|
-|400|The credentials were not accepted|
+|200|The response body is the raw data needed to create an access token|
+|401|The credentials were not accepted|
 
 + Parameters
     + login: admin (string) - login name for the user/host. For hosts this is `host/<hostid>`
@@ -307,6 +312,117 @@ Conjur API key|yes|`String`|"14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9
         "signature": "BpR0FEbQL8TpvpIjJ1awYr8uklvPecmXt-EpIIPcHpdAKBjoyrBQDZv8he1z7vKtF54H3webS0imvL0-UrHOE5yp_KB0fQdeF_z-oPYmaTywTcbwgsHNGzTkomcEUO49zeCmPdJN_zy_umiLqFJMBWfyFGMGj8lcJxcKTDMaXqJq5jK4e2-u1P0pG_AVnat9xtabL2_S7eySE1_2eK0SC7FHQ-7gY2b0YN7L5pjtHrfBMatg3ofCAgAbFmngTKCrtH389g2mmYXfAMillK1ZrndJ-vTIeDg5K8AGAQ7pz8xM0Cb0rqESWpYMc8ZuaipE5UMbmOym57m0uMuMftIJ_akBQZjb4zB-3IBQE25Sb4nrbFCgH_OyaqOt90Cw4397",
         "key": "15ab2712d65e6983cf7107a5350aaac0"
     }
+    ```
+
+## Update [/api/authn/users/update{?id,cidr}]
+
+### Update user attributes [PUT]
+
+This method updates attributes of a User.
+
+The principle use of this method is to change the IP restriction (IP address(es) or CIDR(s))
+of a user. This method can be applied to any Conjur identity, but is most often used on
+hosts.
+
+**Permissions required**:
+
+Any authenticated identity can update its own record, providing it's coming from a valid IP address.
+Basic authorization (username plus password or API key) must be provided.
+
+An authenticated identity can update the record of a different user if it has `update` privilege on the
+other user's resource. In this case, access token is accepted as authentication.
+
+### Supported version
+
+Conjur 4.6 and later.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|HTTP Basic Auth|Basic YWRtaW46cGFzc3dvcmQ=|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|The response body is the JSON of the User record|
+|401|The Basic auth credentials were not accepted|
+
++ Parameters
+    + id: alice (string, optional) - Id of the user to update. If not provided, the current authenticated user is updated.
+    + cidr: 192.0.2.0 (string array, optional) - New CIDR list for the user.
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Basic YWRtaW46cGFzc3dvcmQ=
+        ```
+        
++ Response 200 (text/html; charset=utf-8)
+
+    ```
+    {
+      "cidr": [ "192.0.2.0", "192.0.3.0/24" ]
+    }
+    ```
+
+## Rotate API Key [/api/authn/users/api_key{?id}]
+
+### Rotate the API key [PUT]
+
+This method replaces the API key of an authn user with a new, securely random 
+API key. The new API key is returned as the response body.
+
+This request must be authenticated by Basic authentication using the existing 
+API key or password of the user. A Conjur access token cannot be used to rotate
+the API key.
+
+**Permissions required**:
+
+Any authenticated identity can rotate its own API key, providing it's coming from a valid IP address.
+Basic authorization (username plus password or API key) must be provided.
+
+An authenticated identity can rotate the API key of a different user if it has `update` privilege on the
+other user's resource. In this case, access token is accepted as authentication.
+
+### Supported version
+
+Conjur 4.6 or higher.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|HTTP Basic Auth|Basic YWRtaW46cGFzc3dvcmQ=|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|The response body is the API key|
+|401|The Basic auth credentials were not accepted|
+
++ Parameters
+    + id: alice (string, optional) - Id of the user to rotate. If not provided, the current authenticated user's API
+    key is rotated.
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Basic YWRtaW46cGFzc3dvcmQ=
+        ```
+        
++ Response 200 (text/html; charset=utf-8)
+
+    ```
+    14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc
     ```
 
 # Group Variable
@@ -3345,3 +3461,4 @@ The response body is JSON that can be examined for additional details.
       "ok":false
     }
     ```
+ -->

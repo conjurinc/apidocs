@@ -37,12 +37,12 @@ hooks.after("Authentication > Login > Exchange a user login and password for an 
 });
 
 // Retrieve the stashed API key and use it to obtain an API token
-hooks.before("Authentication > Authenticate > Exchange a user login and API key for an API token", function(transaction) {
+hooks.before("Authentication > Authenticate > Exchange a user login and API key for an access token", function(transaction) {
     transaction.request.body = stash['apikey'];
 });
 
 // Stash the API token for future requests
-hooks.after("Authentication > Authenticate > Exchange a user login and API key for an API token", function(transaction) {
+hooks.after("Authentication > Authenticate > Exchange a user login and API key for an access token", function(transaction) {
     stash['apitoken'] = new Buffer(trim(transaction.real.body)).toString('base64');
 });
 
