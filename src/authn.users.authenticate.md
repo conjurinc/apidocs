@@ -57,7 +57,7 @@ Conjur API key|yes|`String`|"14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9
 |Code|Description|
 |----|-----------|
 |200|The response body is the raw data needed to create an auth token|
-|400|The credentials were not accepted|
+|401|The credentials were not accepted|
 
 + Parameters
     + login: admin (string) - login name for the user/host. For hosts this is `host/<hostid>`
