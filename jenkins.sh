@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-DOCKER_IMAGE="registry.tld/conjur-appliance:4.5-stable"
+DOCKER_IMAGE="registry.tld/conjur-appliance:4.6-stable"
 PORT="61000"
 NOKILL=${NOKILL:-"0"}
 PUBLISH=${PUBLISH:-"0"}
