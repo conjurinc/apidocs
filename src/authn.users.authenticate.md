@@ -1,13 +1,13 @@
 ## Authenticate [/api/authn/users/{login}/authenticate]
 
-### Exchange a user login and API key for an API token [POST]
+### Exchange a user login and API key for an access token [POST]
 
-Conjur authentication is based on auto-expiring tokens, which are issued by Conjur when presented with both:
+Conjur authentication is based on auto-expiring access tokens, which are issued by Conjur when presented with both:
 
 * A login name
-* A corresponding password or API key
+* A corresponding password or API key (aka 'refresh token')
 
-The Conjur Token provides authentication for API calls.
+The Conjur Access Token provides authentication for API calls.
 
 For API usage, it is ordinarily passed as an HTTP Authorization "Token" header.
 
@@ -15,14 +15,14 @@ For API usage, it is ordinarily passed as an HTTP Authorization "Token" header.
 Authorization: Token token="eyJkYX...Rhb="
 ```
 
-Before the token can be used to make subsequent calls to the API, it must be formatted.
+Before the access token can be used to make subsequent calls to the API, it must be formatted.
 Take the response from the this call and base64-encode it, stripping out newlines.
 
 ```
 token=$(echo -n $response | base64 | tr -d '\r\n')
 ```
 
-The token can now be used for Conjur API access.
+The access token can now be used for Conjur API access.
 
 ```
 curl --cacert <certfile> \
@@ -30,13 +30,13 @@ curl --cacert <certfile> \
 <route>
 ```
 
-NOTE: If you have the Conjur CLI installed you can get a pre-formatted token with:
+NOTE: If you have the Conjur CLI installed you can get a pre-formatted access token with:
 
 ```
 conjur authn authenticate -H
 ```
 
-Properties of the token include:
+Properties of the access token include:
 
 * It is JSON.
 * It carries the login name and other data in a payload.
@@ -56,7 +56,7 @@ Conjur API key|yes|`String`|"14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9
 
 |Code|Description|
 |----|-----------|
-|200|The response body is the raw data needed to create an auth token|
+|200|The response body is the raw data needed to create an access token|
 |401|The credentials were not accepted|
 
 + Parameters
