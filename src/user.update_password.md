@@ -5,9 +5,8 @@
 Change a user's password with this route.
 
 In order to change a user's password, you must be able to prove that you
-are the user. You can do so by giving an `Authorization` header with
-either a Conjur authentication token or HTTP Basic Auth containing
-the user's login and old password.
+are the user. You must do so by giving an `Authorization` header with
+HTTP Basic Auth containing the user's login and current password or API key.
 Note that the user whose password is to be updated is determined by
 the value of the `Authorization` header.
 
@@ -21,8 +20,7 @@ YWxpY2U6OXA4bmZzZGFmYnA=
 ```
 
 This operation will also replace the user's API key with a securely
-generated random value. You can fetch the new API key using the
-Conjur CLI's `authn login` method.
+generated random value. You can fetch the new API key using the `login` method.
 
 ---
 
@@ -38,7 +36,6 @@ The new password, in the example "password".
 |----|-----------|
 |204|The password/UID has been updated|
 |401|Invalid or missing Authorization header|
-|403|Permission denied|
 |404|User not found|
 |422|New password not present in request body|
 
