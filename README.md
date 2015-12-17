@@ -20,19 +20,10 @@ The API page on the devsite has an embedded iframe referencing https://jsapi.api
 
 **Don't edit `./api.md` directly!**
 
-Edit the files in `src/` and then run
+Edit the files in `src/`. You can then compile the source files into `./api.md` run a local server that renders the CLI:
 
 ```
-hercule src/api.md -o api.md
-```
-
-to compile them into `./api.md`.
-
-You can then use the Apiary CLI to run a local server that renders the CLI:
-
-```
-gem install apiaryio
-apiary preview --server --port=8081 --path api.md
+$ make preview
 ```
 
 ## Testing
@@ -40,16 +31,23 @@ apiary preview --server --port=8081 --path api.md
 Tests are run with [dredd](http://dredd.readthedocs.org/en/latest/) in a Docker container against a Conjur appliance
 also running in Docker.
 
-Run them with:
+Locally, first run the Jenkins script in NOKILL mode:
 
 ```
-./jenkins.sh
+$ NOKILL=1 ./jenkins.sh
+...
+Container id:
+a147265fc9d99701f0d3836313f2c607c287a5768ed42c77fd144669dc35bb09
 ```
 
-For local development, pass the NOKILL flag. 
-Then you can run the tests without launching a new appliance each time.
+Then export the container id:
 
 ```
-NOKILL=1 ./jenkins.sh
-./dredd.sh https://$(docker-machine ip default):61000
+$ export CONJUR_CONTAINER= a147265fc9d99701f0d3836313f2c607c287a5768ed42c77fd144669dc35bb09
+```
+
+Then you can re-run the tests without re-launching Conjur:
+
+```
+$ make test
 ```

@@ -25,14 +25,14 @@ hooks.beforeEachValidation(function(transaction) {
 });
 
 // The API key is randomly generated, so only check for 200 on route
-hooks.beforeValidation("Authentication > Login > Exchange a user login and password for an API key", function(transaction) {
+hooks.beforeValidation("Authentication > Login > Exchange a user login and password for an API key (refresh token)", function(transaction) {
     if (transaction.real.statusCode == '200') {
         transaction.expected.body = transaction.real.body;
     }
 });
 
 // Stash the Conjur API key to use in following routes
-hooks.after("Authentication > Login > Exchange a user login and password for an API key", function(transaction) {
+hooks.after("Authentication > Login > Exchange a user login and password for an API key (refresh token)", function(transaction) {
     stash['apikey'] = trim(transaction.real.body);
 });
 

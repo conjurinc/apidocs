@@ -1,6 +1,6 @@
 ## Login [/api/authn/users/login]
 
-### Exchange a user login and password for an API key [GET]
+### Exchange a user login and password for an API key (refresh token) [GET]
 
 Sending your Conjur username and password via HTTP Basic Auth to this route returns
 an API key.
@@ -27,7 +27,7 @@ Therefore, login is a fairly expensive operation.
 
 |Field|Description|Example|
 |----|------------|-------|
-|Authorization|HTTP Basic Auth|Basic YWRtaW46cGFzc3dvcmQ=|
+|Authorization|HTTP Basic Auth|Basic YWRtaW46c2VjcmV0|
 
 **Response**
 
@@ -40,10 +40,10 @@ Therefore, login is a fairly expensive operation.
     + Headers
     
         ```
-        Authorization: Basic YWRtaW46cGFzc3dvcmQ=
+        Authorization: Basic YWRtaW46c2VjcmV0
         ```
         
-+ Response 200 (text/html; charset=utf-8)
++ Response 200 (text/plain)
 
     ```
     14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc

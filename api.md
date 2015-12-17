@@ -183,7 +183,7 @@ A response code of 204 means that the permission exists.
 
 ## Login [/api/authn/users/login]
 
-### Exchange a user login and password for an API key [GET]
+### Exchange a user login and password for an API key (refresh token) [GET]
 
 Sending your Conjur username and password via HTTP Basic Auth to this route returns
 an API key.
@@ -210,7 +210,7 @@ Therefore, login is a fairly expensive operation.
 
 |Field|Description|Example|
 |----|------------|-------|
-|Authorization|HTTP Basic Auth|Basic YWRtaW46cGFzc3dvcmQ=|
+|Authorization|HTTP Basic Auth|Basic YWRtaW46c2VjcmV0|
 
 **Response**
 
@@ -223,10 +223,10 @@ Therefore, login is a fairly expensive operation.
     + Headers
     
         ```
-        Authorization: Basic YWRtaW46cGFzc3dvcmQ=
+        Authorization: Basic YWRtaW46c2VjcmV0
         ```
         
-+ Response 200 (text/html; charset=utf-8)
++ Response 200 (text/plain)
 
     ```
     14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc
@@ -314,9 +314,7 @@ Conjur API key|yes|`String`|"14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9
     }
     ```
 
-## Update [/api/authn/users/update{?id,cidr}]
-
-### Update user attributes [PUT]
+## Update [/api/authn/users/update]
 
 This method updates attributes of a User.
 
@@ -324,13 +322,12 @@ The principle use of this method is to change the IP restriction (IP address(es)
 of a user. This method can be applied to any Conjur identity, but is most often used on
 hosts.
 
+### Update your own attributes [PUT /api/authn/users/update{?cidr}]
+
 **Permissions required**:
 
 Any authenticated identity can update its own record, providing it's coming from a valid IP address.
 Basic authorization (username plus password or API key) must be provided.
-
-An authenticated identity can update the record of a different user if it has `update` privilege on the
-other user's resource. In this case, access token is accepted as authentication.
 
 ### Supported version
 
@@ -342,7 +339,7 @@ Conjur 4.6 and later.
 
 |Field|Description|Example|
 |----|------------|-------|
-|Authorization|HTTP Basic Auth|Basic YWRtaW46cGFzc3dvcmQ=|
+|Authorization|HTTP Basic Auth|Basic YWRtaW46c2VjcmV0|
 
 **Response**
 
@@ -352,14 +349,13 @@ Conjur 4.6 and later.
 |401|The Basic auth credentials were not accepted|
 
 + Parameters
-    + id: alice (string, optional) - Id of the user to update. If not provided, the current authenticated user is updated.
     + cidr: 192.0.2.0 (string array, optional) - New CIDR list for the user.
 
 + Request
     + Headers
     
         ```
-        Authorization: Basic YWRtaW46cGFzc3dvcmQ=
+        Authorization: Basic YWRtaW46c2VjcmV0
         ```
         
 + Response 200 (text/html; charset=utf-8)
@@ -370,28 +366,121 @@ Conjur 4.6 and later.
     }
     ```
 
-## Rotate API Key [/api/authn/users/api_key{?id}]
+### Update another user's attributes [PUT /api/authn/users/update{?id,cidr}]
 
-### Rotate the API key [PUT]
+**Permissions required**:
 
-This method replaces the API key of an authn user with a new, securely random 
+`update` privilege on the user's resource.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
++ Parameters
+    + id: alice (string) - Id of the user to update.
+    + cidr: 192.0.2.0 (string array, optional) - New CIDR list for the user.
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++Response
+
+|Code|Description|
+|----|-----------|
+|200|The response body is the JSON of the User record|
+|401|The request was not authenticated, or the privilege is insufficient|
+
++ Response 200 (text/html; charset=utf-8)
+
+    ```
+    {
+      "cidr": [ "192.0.2.0", "192.0.3.0/24" ]
+    }
+    ```
+
+## Update Password [/api/authn/users/password]
+
+### Update a user's password [PUT]
+
+Change a user's password with this route.
+
+In order to change a user's password, you must be able to prove that you
+are the user. You must do so by giving an `Authorization` header with
+HTTP Basic Auth containing the user's login and current password or API key.
+Note that the user whose password is to be updated is determined by
+the value of the `Authorization` header.
+
+In this example, we are updating the password of the user `alice`.
+We set her password as '9p8nfsdafbp' when we created the user, so to generate
+the HTTP Basic Auth token on the command-line:
+
+```
+$ echo -n alice:9p8nfsdafbp | base64
+YWxpY2U6OXA4bmZzZGFmYnA=
+```
+
+This operation will also replace the user's API key with a securely
+generated random value. You can fetch the new API key using the `login` method.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Request Body**
+
+The new password, in the example "password".
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|204|The password/UID has been updated|
+|401|Invalid or missing Authorization header|
+|404|User not found|
+|422|New password not present in request body|
+
++ Request (text/plain)
+    + Headers
+    
+        ```
+        Authorization: Basic YWxpY2U6OXA4bmZzZGFmYnA=
+        ```
+    
+    + Body
+    
+        ```
+        password
+        ```
+
++ Response 204
+
+## Rotate API Key
+
+Replaces the API key of an authn user with a new, securely random 
 API key. The new API key is returned as the response body.
 
-This request must be authenticated by Basic authentication using the existing 
-API key or password of the user. A Conjur access token cannot be used to rotate
-the API key.
+** Supported version **
+
+Conjur 4.6 or higher.
+
+### Rotate your own API key [PUT /api/authn/users/api_key]
 
 **Permissions required**:
 
 Any authenticated identity can rotate its own API key, providing it's coming from a valid IP address.
 Basic authorization (username plus password or API key) must be provided.
-
-An authenticated identity can rotate the API key of a different user if it has `update` privilege on the
-other user's resource. In this case, access token is accepted as authentication.
-
-### Supported version
-
-Conjur 4.6 or higher.
 
 ---
 
@@ -408,10 +497,6 @@ Conjur 4.6 or higher.
 |200|The response body is the API key|
 |401|The Basic auth credentials were not accepted|
 
-+ Parameters
-    + id: alice (string, optional) - Id of the user to rotate. If not provided, the current authenticated user's API
-    key is rotated.
-
 + Request
     + Headers
     
@@ -420,6 +505,44 @@ Conjur 4.6 or higher.
         ```
         
 + Response 200 (text/html; charset=utf-8)
+
+    ```
+    14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc
+    ```
+
+### Rotate another user's API key [PUT /api/authn/users/api_key{?id}]
+
+**Permissions required**: `update` privilege on the user.
+
+---
+
+**Headers**
+
+|Field|Description|Example|
+|----|------------|-------|
+|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
+
+**Response**
+
+|Code|Description|
+|----|-----------|
+|200|The response body is the API key|
+|401|Not authenticated|
+|403|Permission denied|
+
+---
+
++ Parameters
+    + id: alice (string, optional) - Id of the user to rotate.
+
++ Request
+    + Headers
+    
+        ```
+        Authorization: Token token="eyJkYX...Rhb="
+        ```
+
++ Response 200 (text/plain)
 
     ```
     14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc
@@ -897,69 +1020,6 @@ The new password, in the example "n82p9819pb12d12dsa".
     
         ```
         Authorization: Token token="eyJkYX...Rhb="
-        ```
-
-+ Response 204
-
-## Update Password [/api/authn/users/password]
-
-### Update a user's password [PUT]
-
-Change a user's password with this route.
-
-In order to change a user's password, you must be able to prove that you
-are the user. You can do so by giving an `Authorization` header with
-either a Conjur authentication token or HTTP Basic Auth containing
-the user's login and old password.
-Note that the user whose password is to be updated is determined by
-the value of the `Authorization` header.
-
-In this example, we are updating the password of the user `alice`.
-We set her password as '9p8nfsdafbp' when we created the user, so to generate
-the HTTP Basic Auth token on the command-line:
-
-```
-$ echo -n alice:9p8nfsdafbp | base64
-YWxpY2U6OXA4bmZzZGFmYnA=
-```
-
-This operation will also replace the user's API key with a securely
-generated random value. You can fetch the new API key using the
-Conjur CLI's `authn login` method.
-
----
-
-**Headers**
-
-|Field|Description|Example|
-|----|------------|-------|
-|Authorization|Conjur auth token|Token token="eyJkYX...Rhb="|
-
-**Request Body**
-
-The new password, in the example "password".
-
-**Response**
-
-|Code|Description|
-|----|-----------|
-|204|The password/UID has been updated|
-|401|Invalid or missing Authorization header|
-|403|Permission denied|
-|404|User not found|
-|422|New password not present in request body|
-
-+ Request (text/plain)
-    + Headers
-    
-        ```
-        Authorization: Basic YWxpY2U6OXA4bmZzZGFmYnA=
-        ```
-    
-    + Body
-    
-        ```
-        password
         ```
 
 + Response 204
@@ -3461,4 +3521,3 @@ The response body is JSON that can be examined for additional details.
       "ok":false
     }
     ```
- -->

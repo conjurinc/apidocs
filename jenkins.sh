@@ -1,57 +1,47 @@
 #!/bin/bash -eu
 
-DOCKER_IMAGE="registry.tld/conjur-appliance:4.6-stable"
-PORT="61000"
+DOCKER_IMAGE="registry.tld/appliance-cuke-master:4.6-stable"
 NOKILL=${NOKILL:-"0"}
 PUBLISH=${PUBLISH:-"0"}
 CMD_PREFIX=""
-RCFILE=".conjurrc.testing"
+
+make api.md
+
+docker pull $DOCKER_IMAGE
 
 function finish {
-    # Stop and remove the Conjur container if env var NOKILL != "1"
+	# Stop and remove the Conjur container if env var NOKILL != "1"
     if [ "$NOKILL" != "1" ]; then
-        rm -f ${RCFILE}
-        rm -f *.pem
         docker rm -f ${cid}
     fi
 }
 trap finish EXIT
 
 # Launch and configure a Conjur container
-cid=$(docker run -d -p "${PORT}:443" ${DOCKER_IMAGE})
+cid=$(docker run -d -P ${DOCKER_IMAGE})
+>&2 echo "Container id:"
+>&2 echo $cid
+
+docker run --rm --link ${cid}:conjur registry.tld/wait-for-conjur
+
+ssl_certificate=$(docker exec ${cid} cat /opt/conjur/etc/ssl/conjur.pem)
 
 if [ "$USER" == "jenkins" ]; then
-    # Use the IP address of the container as the hostname, port collision no more!
-    hostname=$(docker inspect ${cid} | jsonfield 0.NetworkSettings.IPAddress)
-    CMD_PREFIX="sudo -E"
-
     # Only publish from the master branch
     if [ "$GIT_BRANCH" == "origin/master"]; then
         PUBLISH="1"
     fi
-else
-    hostname="$(docker-machine ip default)"
 fi
 
-password='password'
-orgaccount='conjur'
+docker run --rm \
+	-v $PWD:/src \
+	-e CONJUR_SSL_CERTIFICATE="${ssl_certificate}" \
+	-e CONJUR_AUTHN_LOGIN=admin \
+	-e CONJUR_AUTHN_API_KEY=secret \
+	--link ${cid}:cuke-master \
+	apidocs-conjur-cli conjur policy load /src/test/entitlements.rb
 
-docker exec ${cid} evoke configure master -h ${hostname} -p ${password} ${orgaccount}
-
-if [ "$USER" != "jenkins" ]; then
-    hostname="${hostname}:${PORT}"
-fi
-
-# Init and bootstrap the Conjur appliance
-printf "yes\nyes\nyes\n" | ${CMD_PREFIX} conjur init -f ${RCFILE} -h ${hostname}
-CONJURRC=${RCFILE} ${CMD_PREFIX} conjur authn login -u admin -p ${password}
-printf "test\npassword\npassword\nno\n" | CONJURRC=${RCFILE} ${CMD_PREFIX} conjur bootstrap
-
-# Create this variable so variable#values route can be really tested
-CONJURRC=${RCFILE} ${CMD_PREFIX} conjur variable create -v 8912dbp9bu1pub dev/redis/password
-CONJURRC=${RCFILE} ${CMD_PREFIX} conjur group create --as-group security_admin developers
-
-./dredd.sh https://${hostname}
+CONJUR_CONTAINER=${cid} make test
 
 if [ "${PUBLISH}" == "1" ]; then
     echo "Publishing docs to Apiary"
