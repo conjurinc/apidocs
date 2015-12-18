@@ -43,7 +43,7 @@ a147265fc9d99701f0d3836313f2c607c287a5768ed42c77fd144669dc35bb09
 Then export the container id:
 
 ```
-$ export CONJUR_CONTAINER= a147265fc9d99701f0d3836313f2c607c287a5768ed42c77fd144669dc35bb09
+$ export CONJUR_CONTAINER=a147265fc9d99701f0d3836313f2c607c287a5768ed42c77fd144669dc35bb09
 ```
 
 Then you can re-run the tests without re-launching Conjur:
