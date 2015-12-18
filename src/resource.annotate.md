@@ -22,7 +22,7 @@ The key and value must be query-escaped:  `/` -> `%2F`, `:` -> `%3A`.
 |404|Resource not found|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + kind: layer (string) - kind of the resource, for example 'variable' or 'host'
     + id: redis (string) - ID of the resource you're annotating
     + name: aws:account (string) - Key for the annotation, query-escaped

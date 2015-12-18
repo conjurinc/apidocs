@@ -23,7 +23,7 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 
 + Parameters
     + id: redis (string) - ID of the layer, query-escaped
-    + hostid: conjur:host:redis001 (string) - Fully qualified ID of the host to add, query-escaped
+    + hostid: cucumber:host:redis001 (string) - Fully qualified ID of the host to add, query-escaped
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
@@ -34,11 +34,11 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
     {
       "id": "redis",
       "userid": "admin",
-      "ownerid": "conjur:group:ops",
-      "roleid": "conjur:layer:redis",
-      "resource_identifier": "conjur:layer:redis",
+      "ownerid": "cucumber:group:ops",
+      "roleid": "cucumber:layer:redis",
+      "resource_identifier": "cucumber:layer:redis",
       "hosts": [
-        "conjur:host:redis001"
+        "cucumber:host:redis001"
       ]
     }
     ```

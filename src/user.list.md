@@ -37,7 +37,7 @@ You can also limit, offset and shorten the resulting list.
     [
       {
         "id": "demo:user:alice",
-        "owner": "conjur:group:admin",
+        "owner": "cucumber:group:admin",
         "permissions": [
     
         ],

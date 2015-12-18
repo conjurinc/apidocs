@@ -1,4 +1,4 @@
-## Update [/api/authn/users/update]
+## Update [/api/authn/users]
 
 This method updates attributes of a User.
 
@@ -8,7 +8,7 @@ hosts.
 
 :[conjur_auth_header_table](partials/min_version_4.6.md)
 
-### Update your own attributes [PUT /api/authn/users/update{?cidr}]
+### Update your own attributes [PUT /api/authn/users{?cidr}]
 
 **Permissions required**:
 
@@ -21,7 +21,7 @@ Basic authorization (username plus password or API key) must be provided.
 
 |Field|Description|Example|
 |----|------------|-------|
-|Authorization|HTTP Basic Auth|Basic YWRtaW46c2VjcmV0|
+|Authorization|HTTP Basic Auth|Basic Y2hhcmxlczo5cDhuZnNkYWZicA==|
 
 **Response**
 
@@ -37,18 +37,19 @@ Basic authorization (username plus password or API key) must be provided.
     + Headers
     
         ```
-        Authorization: Basic YWRtaW46c2VjcmV0
+        Authorization: Basic Y2hhcmxlczo5cDhuZnNkYWZicA==
         ```
         
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
-        ```
-        {
-          "cidr": [ "192.0.2.0", "192.0.3.0/24" ]
-        }
-        ```
+    ```
+    {
+        "login": "charles",
+        "cidr": ["192.0.2.0"]
+    }
+    ```
 
-### Update another user's attributes [PUT /api/authn/users/update{?id,cidr}]
+### Update another user's attributes [PUT /api/authn/users{?id,cidr}]
 
 **Permissions required**:
 
@@ -66,16 +67,17 @@ Basic authorization (username plus password or API key) must be provided.
 |401|The request was not authenticated, or the privilege is insufficient|
 
 + Parameters
-    + id: alice (string) - Id of the user to update.
+    + id: charles (string) - Id of the user to update.
     + cidr: 192.0.2.0 (string array, optional) - New CIDR list for the user.
 
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
-        ```
-        {
-          "cidr": [ "192.0.2.0", "192.0.3.0/24" ]
-        }
-        ```
+    ```
+    {
+        "login": "charles",
+        "cidr": ["192.0.2.0"]
+    }
+    ```

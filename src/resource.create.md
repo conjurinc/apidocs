@@ -20,10 +20,10 @@ This means that no one else will be able to see your resource.
 |409|A resource with that name already exists|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + kind: variable_group (string) - Purpose of the resource
     + id: aws_keys (string) - Name of the resource, query-escaped
-    + acting_as: conjur:group:ops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+    + acting_as: cucumber:group:ops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)

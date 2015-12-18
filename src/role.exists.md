@@ -18,7 +18,7 @@ Only roles that you have `read` permission on will be searched.
 |404|Role does not exist|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + kind: group (string) - kind of the role, for example 'group' or 'layer'
     + id: ops (string) - ID of the role, do not query-escape
 

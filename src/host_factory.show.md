@@ -23,7 +23,7 @@ Host factory IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |404|Host factory not found|
 
 + Parameters
-    + id: redis_factory (string) - ID of the host factory, query-escaped
+    + id: redis/default (string) - ID of the host factory, query-escaped
 
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
@@ -32,10 +32,10 @@ Host factory IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
     ```
     {
-        "id":"redis_factory",
+        "id":"redis/default",
         "layers":[],
-        "roleid":"conjur:group:ops",
-        "resourceid":"conjur:host_factory:redis_factory",
+        "roleid":"cucumber:group:security_admin",
+        "resourceid":"cucumber:host_factory:redis/default",
         "tokens":[
             {
               "token": "30vf6aa3b6x326sdnwj93cx5rzd3dwmhva3828m8x32xsveh5qb4x5",

@@ -21,7 +21,7 @@ Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 
 + Parameters
     + id: redis (string) - ID of the layer, query-escaped
-    + hostid: conjur:host:redis001 (string) - Fully qualified ID of the host to remove, query-escaped
+    + hostid: cucumber:host:redis001 (string) - Fully qualified ID of the host to remove, query-escaped
 
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)

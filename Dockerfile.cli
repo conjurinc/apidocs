@@ -1,5 +1,5 @@
 FROM ruby:2.0
 
-RUN gem install -N conjur-cli
+RUN gem install -N conjur-cli conjur-asset-host-factory
 
 ADD test/conjur.conf /etc/conjur.conf

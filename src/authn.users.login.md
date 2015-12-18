@@ -12,8 +12,8 @@ An authentication token is required to use most other parts of the Conjur API.
 The value for the `Authorization` Basic Auth header can be obtained with:
 
 ```
-$ echo -n admin:secret  | base64
-YWRtaW46c2VjcmV0
+$ echo -n alice:secret  | base64
+YWxpY2U6c2VjcmV0
 ```
 
 If you log in through the command-line interface, you can print your current
@@ -28,7 +28,7 @@ Therefore, login is a fairly expensive operation.
 
 |Field|Description|Example|
 |----|------------|-------|
-|Authorization|HTTP Basic Auth|Basic YWRtaW46c2VjcmV0|
+|Authorization|HTTP Basic Auth|Basic YWxpY2U6c2VjcmV0|
 
 **Response**
 
@@ -41,7 +41,7 @@ Therefore, login is a fairly expensive operation.
     + Headers
     
         ```
-        Authorization: Basic YWRtaW46c2VjcmV0
+        Authorization: Basic YWxpY2U6c2VjcmV0
         ```
         
 + Response 200 (text/plain)

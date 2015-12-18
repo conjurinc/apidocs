@@ -21,7 +21,7 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |404|Group not found|
 
 + Parameters
-    + account: conjur (string) - Organization account name
+    + account: cucumber (string) - Organization account name
     + id: ops (string) - Name of the group, query-escaped
 
 + Request (application/json)
@@ -33,21 +33,21 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
     [
       {
         "admin_option": true,
-        "grantor": "conjur:group:security_admin",
-        "member": "conjur:user:admin",
-        "role": "conjur:group:security_admin"
+        "grantor": "cucumber:group:security_admin",
+        "member": "cucumber:user:admin",
+        "role": "cucumber:group:security_admin"
       },
       {
         "admin_option": true,
-        "grantor": "conjur:user:admin",
-        "member": "conjur:user:dustin",
-        "role": "conjur:group:security_admin"
+        "grantor": "cucumber:user:admin",
+        "member": "cucumber:user:dustin",
+        "role": "cucumber:group:security_admin"
       },
       {
         "admin_option": false,
-        "grantor": "conjur:user:dustin",
-        "member": "conjur:user:bob",
-        "role": "conjur:group:security_admin"
+        "grantor": "cucumber:user:dustin",
+        "member": "cucumber:user:bob",
+        "role": "cucumber:group:security_admin"
       }
     ]
     ```

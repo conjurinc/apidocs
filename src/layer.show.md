@@ -32,11 +32,11 @@ Layer IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
     {
       "id": "redis",
       "userid": "admin",
-      "ownerid": "conjur:group:ops",
-      "roleid": "conjur:layer:redis",
-      "resource_identifier": "conjur:layer:redis",
+      "ownerid": "cucumber:group:ops",
+      "roleid": "cucumber:layer:redis",
+      "resource_identifier": "cucumber:layer:redis",
       "hosts": [
-        "conjur:host:redis001"
+        "cucumber:host:redis001"
       ]
     }
     ```

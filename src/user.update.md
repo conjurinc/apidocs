@@ -22,7 +22,7 @@ The new password, in the example "n82p9819pb12d12dsa".
 |404|User not found|
 
 + Parameters
-    + login: alice (string) - Login name of the user, query-escaped
+    + login: bob (string) - Login name of the user, query-escaped
     + uidnumber: `57000` (number, optional) - New UID number to set for the user
 
 + Request

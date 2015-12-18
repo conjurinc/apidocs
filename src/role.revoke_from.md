@@ -2,7 +2,7 @@
 
 Inverse of `role#grant_to`.
 
-**Permission Required**: Admin option on the role
+**Permission Required**: `admin_option` on the role
 
 ---
 
@@ -17,9 +17,9 @@ Inverse of `role#grant_to`.
 |404|Role does not exist|
 
 + Parameters
-    + account: conjur (string) - organization account name
-    + role_a: user/alice (string) - ID of the owner role
-    + role_b: group:ops (string) - ID of the role we're granting membership to
+    + account: cucumber (string) - organization account name
+    + role: group/ops (string) - ID of the role to grant
+    + member: user:bob (string) - ID of the member role being revoked
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)

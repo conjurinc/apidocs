@@ -21,7 +21,7 @@ Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |404|Host not found|
 
 + Parameters
-    + account: conjur (string) - Organization account name
+    + account: cucumber (string) - Organization account name
     + id: redis001 (string) - Name of the host, query-escaped
 
 + Request (application/json)

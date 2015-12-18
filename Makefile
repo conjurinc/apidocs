@@ -8,12 +8,12 @@ test: nodejs-image api.md
 		--rm \
 		--link $(CONJUR_CONTAINER):conjur \
 		-v $(PWD):/app \
-		-e "NODE_TLS_REJECT_UNAUTHORIZED=0" \
+		-e NODE_TLS_REJECT_UNAUTHORIZED=0 \
 		--env-file @SUMMONENVFILE \
 		apidocs \
 		dredd \
 		./api.md \
-		conjur \
+		https://conjur \
 		--reporter junit \
 		--output report.xml \
 		--reporter html \

@@ -21,7 +21,7 @@ Retrieves a resource's metadata, including annotations.
 |404|No record exists with the given ID|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + kind: variable_group (string) - kind of the resource, for example 'variable' or 'host'
     + id: aws_keys (string) - ID of the resource to show
 
@@ -32,8 +32,8 @@ Retrieves a resource's metadata, including annotations.
 
     ```
     {
-      "id": "conjur:variable_group:aws_keys",
-      "owner": "conjur:group:ops",
+      "id": "cucumber:variable_group:aws_keys",
+      "owner": "cucumber:group:ops",
       "permissions": [],
       "annotations": []
     }

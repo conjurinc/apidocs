@@ -1,6 +1,6 @@
 ## Rotate API Key [/api/authn/users/api_key]
 
-Replaces the API key of an authn user with a new, securely random 
+Replaces the API key of an user or host with a new, securely random 
 API key. The new API key is returned as the response body.
 
 :[conjur_auth_header_table](partials/min_version_4.6.md)
@@ -18,7 +18,7 @@ Basic authorization (username plus password or API key) must be provided.
 
 |Field|Description|Example|
 |----|------------|-------|
-|Authorization|HTTP Basic Auth|Basic YWRtaW46cGFzc3dvcmQ=|
+|Authorization|HTTP Basic Auth|Basic ZGFuaWVsOjlwOG5mc2RhZmJw|
 
 **Response**
 
@@ -31,7 +31,7 @@ Basic authorization (username plus password or API key) must be provided.
     + Headers
     
         ```
-        Authorization: Basic YWRtaW46cGFzc3dvcmQ=
+        Authorization: Basic ZGFuaWVsOjlwOG5mc2RhZmJw
         ```
         
 + Response 200 (text/html; charset=utf-8)
@@ -59,12 +59,12 @@ Basic authorization (username plus password or API key) must be provided.
 ---
 
 + Parameters
-    + id: alice (string, optional) - Id of the user to rotate.
+    + id: bob (string, optional) - Id of the user to rotate.
 
 + Request
     :[conjur_auth_header_table](partials/conjur_auth_header_code.md)
 
-+ Response 200 (text/plain)
++ Response 200 (text/html; charset=utf-8)
 
     ```
     14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc

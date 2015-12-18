@@ -41,7 +41,8 @@ route to set values for variables.
             "id": "dev/mongo/password",
             "kind": "password",
             "mime_type": "text/plain",
-            "value": "p89b12ep12puib"
+            "value": "p89b12ep12puib",
+            "ownerid": "cucumber:group:security_admin"
         }
         ```
 
@@ -50,11 +51,11 @@ route to set values for variables.
     ```
     {
         "id": "dev/mongo/password",
-        "userid": "admin",
+        "userid": "alice",
         "mime_type": "text/plain",
         "kind": "password",
-        "ownerid": "conjur:user:admin",
-        "resource_identifier": "conjur:variable:dev/mongo/password",
+        "ownerid": "cucumber:group:security_admin",
+        "resource_identifier": "cucumber:variable:dev/mongo/password",
         "version_count": 1
     }
     ```

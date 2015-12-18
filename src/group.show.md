@@ -32,9 +32,9 @@ Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
     {
         "id":"ops",
         "userid":"conjur",
-        "ownerid":"conjur:group:security_admin",
+        "ownerid":"cucumber:group:security_admin",
         "gidnumber":null,
-        "roleid":"conjur:group:ops",
-        "resource_identifier":"conjur:group:ops"
+        "roleid":"cucumber:group:ops",
+        "resource_identifier":"cucumber:group:ops"
     }
     ```

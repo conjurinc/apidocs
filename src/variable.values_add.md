@@ -45,8 +45,8 @@ Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
         "userid":"admin",
         "mime_type":"text/plain",
         "kind":"secret",
-        "ownerid":"conjur:user:admin",
-        "resource_identifier":"conjur:variable:dev/mongo/password",
+        "ownerid":"cucumber:user:admin",
+        "resource_identifier":"cucumber:variable:dev/mongo/password",
         "version_count":1
     }
     ```

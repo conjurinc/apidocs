@@ -41,9 +41,9 @@ Authorization: Token token="<insert host factory token here>"
         "id":"redis002",
         "userid":"deputy/redis_factory",
         "created_at":"2015-11-13T22:57:14Z",
-        "ownerid":"conjur:group:ops",
-        "roleid":"conjur:host:redis002",
-        "resource_identifier":"conjur:host:redis002",
+        "ownerid":"cucumber:group:ops",
+        "roleid":"cucumber:host:redis002",
+        "resource_identifier":"cucumber:host:redis002",
         "api_key":"14x82x72syhnnd1h8jj24zj1kqd2j09sjy3tddwxc35cmy5nx33ph7"
     }
     ```

@@ -22,7 +22,7 @@ Privileges available are:
 |404|Layer or privilege not found|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + layer: redis (string) - Name of the layer, do not query-escape
     + privilege: use_host (string) - Privilege to permit
     + member: group:developers (string) - Qualified role name, do not query-escape

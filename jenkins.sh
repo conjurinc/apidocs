@@ -39,7 +39,7 @@ docker run --rm \
 	-e CONJUR_AUTHN_LOGIN=admin \
 	-e CONJUR_AUTHN_API_KEY=secret \
 	--link ${cid}:cuke-master \
-	apidocs-conjur-cli conjur policy load /src/test/entitlements.rb
+	apidocs-conjur-cli conjur policy load /src/test/policy.rb
 
 CONJUR_CONTAINER=${cid} make test
 

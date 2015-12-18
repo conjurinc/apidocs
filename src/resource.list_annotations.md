@@ -20,7 +20,7 @@ lists all annotations when you retrieve it. You can then parse the JSON to get t
 |404|Resource not found|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + kind: layer (string) - kind of the resource, for example 'variable' or 'host'
     + id: redis (string) - ID of the resource to show
 
@@ -31,15 +31,15 @@ lists all annotations when you retrieve it. You can then parse the JSON to get t
 
     ```
     {
-        "id":"conjur:layer:redis",
-        "owner":"conjur:group:security_admin",
+        "id":"cucumber:layer:redis",
+        "owner":"cucumber:group:security_admin",
         "permissions":[
             {
                 "privilege":"read",
                 "grant_option":false,
-                "resource":"conjur:layer:redis",
+                "resource":"cucumber:layer:redis",
                 "role":"conjur:@:layer/redis/observe",
-                "grantor":"conjur:user:admin"
+                "grantor":"cucumber:user:admin"
             }
         ],
         "annotations":[

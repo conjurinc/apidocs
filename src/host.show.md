@@ -34,8 +34,8 @@ Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
       "id": "redis001",
       "userid": "admin",
       "created_at": "2015-11-03T21:33:17Z",
-      "ownerid": "conjur:group:ops",
-      "roleid": "conjur:host:redis001",
-      "resource_identifier": "conjur:host:redis001"
+      "ownerid": "cucumber:group:ops",
+      "roleid": "cucumber:host:redis001",
+      "resource_identifier": "cucumber:host:redis001"
     }
     ```
