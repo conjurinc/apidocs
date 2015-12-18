@@ -1,6 +1,6 @@
 .PHONY: nodejs-image cli-image
 
-default: api.md
+default: nodejs-image cli-image api.md
 
 test: nodejs-image api.md
 	echo "Running tests against container '$(CONJUR_CONTAINER)'"

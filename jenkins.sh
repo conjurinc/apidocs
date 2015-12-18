@@ -5,7 +5,7 @@ NOKILL=${NOKILL:-"0"}
 PUBLISH=${PUBLISH:-"0"}
 CMD_PREFIX=""
 
-make api.md
+make
 
 docker pull $DOCKER_IMAGE
 
@@ -28,7 +28,7 @@ ssl_certificate=$(docker exec ${cid} cat /opt/conjur/etc/ssl/conjur.pem)
 
 if [ "$USER" == "jenkins" ]; then
     # Only publish from the master branch
-    if [ "$GIT_BRANCH" == "origin/master"]; then
+    if [ "$GIT_BRANCH" == "origin/master" ]; then
         PUBLISH="1"
     fi
 fi
