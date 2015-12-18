@@ -41,13 +41,13 @@ The new password, in the example "password".
 
 + Request (text/plain)
     + Headers
-    
+
         ```
         Authorization: Basic YWxpY2U6OXA4bmZzZGFmYnA=
         ```
     
     + Body
-    
+
         ```
         password
         ```

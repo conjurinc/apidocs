@@ -50,7 +50,7 @@ hooks.after("Authentication > Authenticate > Exchange a user login and API key f
 hooks.beforeEach(function(transaction) {
     if (stash['apitoken'] != undefined) {
         // We don't want to swap the auth token when updating a user's password
-        if (transaction.name !== "User > Update Password > Update a user's password") {
+        if (transaction.name !== "Authentication > Update Password > Update a user's password") {
             transaction.request['headers']['Authorization'] = 'Token token="' + stash['apitoken'] + '"';
         }
     }
@@ -66,7 +66,7 @@ hooks.beforeEachValidation(function(transaction) {
 });
 
 // Don't actually update the user's password, set it to the same value so tests can be re-run
-hooks.before("User > Update Password > Update a user's password", function(transaction) {
+hooks.before("Authentication > Update Password > Update a user's password", function(transaction) {
     transaction.request.body = '9p8nfsdafbp';
 });
 
