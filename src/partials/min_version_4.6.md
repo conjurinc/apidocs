@@ -1,3 +1,3 @@
 **Supported version**
 
-Conjur 4.6 or higher.
+Conjur 4.6 and higher.
