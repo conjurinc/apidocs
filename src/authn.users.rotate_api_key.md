@@ -1,4 +1,4 @@
-## Rotate API Key
+## Rotate API Key [/api/authn/users/api_key]
 
 Replaces the API key of an authn user with a new, securely random 
 API key. The new API key is returned as the response body.
