@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-DOCKER_IMAGE="registry.tld/appliance-cuke-master:4.6-stable"
+DOCKER_IMAGE="registry.tld/conjur-appliance-cuke-master:4.6-stable"
 NOKILL=${NOKILL:-"0"}
 PUBLISH=${PUBLISH:-"0"}
 CMD_PREFIX=""
