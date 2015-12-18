@@ -10,7 +10,7 @@ then the members of role "A" are [ "U", "B", "C" ].
 Role members are not expanded transitively.
 Only roles which have been explicitly granted the role in question are listed.
 
-**Permission Required**: Admin option on the role
+**Permission Required**: Membership in the role
 
 ---
 
