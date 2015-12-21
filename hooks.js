@@ -61,7 +61,7 @@ hooks.beforeEachValidation(function(transaction) {
 });
 
 //The API key is randomly generated, so only check for 200 on route
-[ "Authentication > Login > Exchange a user login and password for an API key (refresh token)",
+[ "Authentication > Login > Exchange a user login and password for an API key",
   "Authentication > Rotate API Key > Rotate your own API key",
   "Authentication > Rotate API Key > Rotate another user's API key"].forEach(function(name) {
   	hooks.beforeValidation(name, function(transaction) {

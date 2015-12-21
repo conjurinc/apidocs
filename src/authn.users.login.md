@@ -1,6 +1,6 @@
 ## Login [/api/authn/users/login]
 
-### Exchange a user login and password for an API key (refresh token) [GET]
+### Exchange a user login and password for an API key [GET]
 
 Sending your Conjur username and password via HTTP Basic Auth to this route returns
 an API key.
