@@ -18,7 +18,7 @@ Only resources that you have `read` permission on will be searched.
 |404|resource does not exist|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + kind: variable_group (string) - kind of the resource, for example 'variable' or 'host'
     + id: aws_keys (string) - ID of the resource, do not query-escape
 

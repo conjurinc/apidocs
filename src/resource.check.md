@@ -39,7 +39,7 @@ You are not allowed to check permissions of arbitrary roles or resources.
 |409|You are not allowed to check permissions on this resource.|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + kind: variable (string) - kind of the resource, for example 'variable' or 'host'
     + id: dev/mongo/password (string) - ID of the resource you're checking
     + privilege: execute (string) - name of the desired privilege, for example 'execute' or 'update'
@@ -80,7 +80,7 @@ You are not allowed to check permissions of arbitrary roles or resources.
 |404|The request is allowed, but the privilege is not held by the role.|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + kind: group (string) - kind of the role, for example 'user' or 'host'. If the role is not specified, the currently authenticated role is used.
     + id: ops (string) - ID of the role. If the role is not specified, the current authenticated role is used.
     + resource_id: variable:dev/mongo/password (string) - the kind and ID of the resource, joined by a colon

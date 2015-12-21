@@ -36,8 +36,8 @@ You can also limit, offset and shorten the resulting list.
     ```
     [
       {
-        "id": "conjur:variable:dev/mongo/password",
-        "owner": "conjur:user:admin",
+        "id": "cucumber:variable:dev/mongo/password",
+        "owner": "cucumber:user:admin",
         "permissions": [
     
         ],

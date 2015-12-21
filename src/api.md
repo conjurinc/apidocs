@@ -39,6 +39,8 @@ $ curl --cacert <certfile> ...
 
 :[authn.users.update](authn.users.update.md)
 
+:[authn.users.update_password](authn.users.update_password.md)
+
 :[authn.users.rotate_api_key](authn.users.rotate_api_key.md)
 
 # Group Variable
@@ -69,8 +71,6 @@ A `user` represents an identity for a human. It is a `role`, in RBAC terms.
 :[user.create](user.create.md)
 
 :[user.update](user.update.md)
-
-:[user.update_password](user.update_password.md)
 
 :[user.list](user.list.md)
 

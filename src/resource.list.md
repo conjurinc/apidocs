@@ -38,8 +38,8 @@ In other words, resources on which you have no privilege are invisible to you.
     ```
     [
       {
-        "id": "conjur:variable_group:aws_keys",
-        "owner": "conjur:group:ops",
+        "id": "cucumber:variable_group:aws_keys",
+        "owner": "cucumber:group:ops",
         "permissions": [],
         "annotations": []
       }

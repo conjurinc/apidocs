@@ -20,10 +20,10 @@ This means that no one else will be able to see your role.
 |405|A role with that name already exists|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + kind: chatbot (string) - Purpose of the role
     + id: hubot (string) - Name of the role, query-escaped
-    + acting_as: conjur:group:ops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
+    + acting_as: cucumber:group:ops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)

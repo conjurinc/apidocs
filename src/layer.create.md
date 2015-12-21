@@ -28,7 +28,7 @@ This means that no one else will be able to see your layer.
 
 + Parameters
     + id: redis (string, optional) - Name of the layer, query-escaped
-    + ownerid: conjur:group:ops (string, optional) - Fully qualified ID of a Conjur role that will own the new layer
+    + ownerid: cucumber:group:ops (string, optional) - Fully qualified ID of a Conjur role that will own the new layer
 
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
@@ -39,9 +39,9 @@ This means that no one else will be able to see your layer.
     {
       "id": "redis",
       "userid": "admin",
-      "ownerid": "conjur:group:ops",
-      "roleid": "conjur:layer:redis",
-      "resource_identifier": "conjur:layer:redis",
+      "ownerid": "cucumber:group:ops",
+      "roleid": "cucumber:layer:redis",
+      "resource_identifier": "cucumber:layer:redis",
       "hosts": []
     }
     ```

@@ -22,7 +22,7 @@ Fetch audit events for a role/resource the calling identity has `read` privilege
 
 + Parameters
     + kind: roles (string) - Type of object, 'roles' or 'resources'
-    + id: conjur:host:redis001 (string) - Fully qualified ID of a Conjur role/resource, query-escaped
+    + id: cucumber:host:redis001 (string) - Fully qualified ID of a Conjur role/resource, query-escaped
 
 + Request (application/json)
     + Headers
@@ -39,25 +39,25 @@ Fetch audit events for a role/resource the calling identity has `read` privilege
       {
         "resources": [],
         "roles": [
-          "conjur:user:admin",
-          "conjur:group:ops",
-          "conjur:host:redis001"
+          "cucumber:user:admin",
+          "cucumber:group:ops",
+          "cucumber:host:redis001"
         ],
         "action": "create",
-        "role_id": "conjur:host:redis001",
-        "creator": "conjur:group:ops",
-        "role": "conjur:host:redis001",
+        "role_id": "cucumber:host:redis001",
+        "creator": "cucumber:group:ops",
+        "role": "cucumber:host:redis001",
         "timestamp": "2015-11-07T04:41:22.406Z",
         "event_id": "a06f5f34da97a544abdd1a38cd337829",
         "id": 57,
-        "user": "conjur:user:admin",
-        "acting_as": "conjur:group:ops",
+        "user": "cucumber:user:admin",
+        "acting_as": "cucumber:group:ops",
         "request": {
           "ip": "127.0.0.1",
-          "url": "http://localhost:5100/conjur/roles/host/redis001",
+          "url": "http://localhost:5100/cucumber/roles/host/redis001",
           "method": "PUT",
           "params": {
-            "acting_as": "conjur:group:ops",
+            "acting_as": "cucumber:group:ops",
             "controller": "roles",
             "action": "create",
             "account": "conjur",
@@ -68,8 +68,8 @@ Fetch audit events for a role/resource the calling identity has `read` privilege
         "conjur": {
           "domain": "authz",
           "env": "appliance",
-          "user": "conjur:user:admin",
-          "role": "conjur:group:ops",
+          "user": "cucumber:user:admin",
+          "role": "cucumber:group:ops",
           "account": "conjur"
         },
         "kind": "role"

@@ -1,22 +1,21 @@
 ## Update Password [/api/authn/users/password]
 
-### Update a user's password [PUT]
+### Change your password [PUT]
 
-Change a user's password with this route.
+Change your password with this route.
 
-In order to change a user's password, you must be able to prove that you
-are the user. You must do so by giving an `Authorization` header with
-HTTP Basic Auth containing the user's login and current password or API key.
+In order to change your password, you must provide an `Authorization` header with
+HTTP Basic Auth containing your login and current password or API key.
 Note that the user whose password is to be updated is determined by
 the value of the `Authorization` header.
 
-In this example, we are updating the password of the user `alice`.
-We set her password as '9p8nfsdafbp' when we created the user, so to generate
+In this example, we are updating the password of the user `bob`.
+We set his password as '9p8nfsdafbp' when we created him, so to generate
 the HTTP Basic Auth token on the command-line:
 
 ```
-$ echo -n alice:9p8nfsdafbp | base64
-YWxpY2U6OXA4bmZzZGFmYnA=
+$ echo -n bob:9p8nfsdafbp | base64
+Ym9iOjlwOG5mc2RhZmJw
 ```
 
 This operation will also replace the user's API key with a securely
@@ -28,7 +27,7 @@ generated random value. You can fetch the new API key using the `login` method.
 
 **Request Body**
 
-The new password, in the example "password".
+The new password, in the example "supersecret".
 
 **Response**
 
@@ -41,15 +40,15 @@ The new password, in the example "password".
 
 + Request (text/plain)
     + Headers
-    
+
         ```
-        Authorization: Basic YWxpY2U6OXA4bmZzZGFmYnA=
+        Authorization: Basic Ym9iOjlwOG5mc2RhZmJw
         ```
     
     + Body
-    
+
         ```
-        password
+        supersecret
         ```
 
 + Response 204

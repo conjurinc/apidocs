@@ -10,7 +10,7 @@ then the members of role "A" are [ "U", "B", "C" ].
 Role members are not expanded transitively.
 Only roles which have been explicitly granted the role in question are listed.
 
-**Permission Required**: Admin option on the role
+**Permission Required**: Membership in the role
 
 ---
 
@@ -24,7 +24,7 @@ Only roles which have been explicitly granted the role in question are listed.
 |404|Role does not exist|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + kind: group (string) - kind of the role, for example 'group' or 'layer'
     + id: ops (string) - ID of the role
 
@@ -37,9 +37,9 @@ Only roles which have been explicitly granted the role in question are listed.
     [
       {
         "admin_option": true,
-        "grantor": "conjur:group:ops",
-        "member": "conjur:group:security_admin",
-        "role": "conjur:group:ops"
+        "grantor": "cucumber:group:ops",
+        "member": "cucumber:group:security_admin",
+        "role": "cucumber:group:ops"
       }
     ]
     ```

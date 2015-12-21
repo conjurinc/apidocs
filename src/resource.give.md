@@ -18,10 +18,10 @@ In this example, we are transferring ownership of a variable to a group.
 |403|Permission denied|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + kind: variable (string) - Purpose of the resource
     + id: dev/mongo/password (string) - Name of the resource, query-escaped
-    + owner: conjur:group:ops (string) - Fully-qualified Conjur ID of the new owner role, query-escaped
+    + owner: cucumber:group:ops (string) - Fully-qualified Conjur ID of the new owner role, query-escaped
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)

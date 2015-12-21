@@ -22,7 +22,7 @@ You can also limit and offset the resulting list.
 |403|Permission denied|
 
 + Parameters
-    + account: conjur (string) - organization account name
+    + account: cucumber (string) - organization account name
     + search: redis (string, optional) - Query for search
     + limit: 100 (number, optional) - Limit the number of records returned
     + offset: 0 (number, optional) - Set the starting record index to return
@@ -36,8 +36,8 @@ You can also limit and offset the resulting list.
     ```
     [
       {
-        "id": "conjur:host_factory:redis_factory",
-        "owner": "conjur:group:security_admin",
+        "id": "cucumber:host_factory:redis_factory",
+        "owner": "cucumber:group:security_admin",
         "permissions": [],
         "annotations": []
       }

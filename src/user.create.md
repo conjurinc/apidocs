@@ -43,9 +43,9 @@ to a particular group when it is created.
 
           ```
           {
-              "login":"alice",
-              "password":"9p8nfsdafbp",
-              "ownerid":"conjur:group:security_admin",
+              "login":"bob",
+              "password":"supersecret",
+              "ownerid":"cucumber:group:security_admin",
               "uidnumber":123456
           }
           ```
@@ -53,12 +53,12 @@ to a particular group when it is created.
 + Response 201 (application/json; charset=utf-8)
     ```
     {
-        "login":"alice",
+        "login":"bob",
         "userid":"admin",
-        "ownerid":"conjur:group:security_admin",
+        "ownerid":"cucumber:group:security_admin",
         "uidnumber":123456,
-        "roleid":"conjur:user:alice",
-        "resource_identifier":"conjur:user:alice",
+        "roleid":"cucumber:user:bob",
+        "resource_identifier":"cucumber:user:bob",
         "api_key":"3c6vwnk3mdtks82k7f23sapp93t6p1nagcergrnqw91b12sxc21zkywy"
     }
     ```

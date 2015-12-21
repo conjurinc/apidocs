@@ -28,9 +28,9 @@ This means that no one else will be able to see your Host Factory.
 |422|A host factory with that ID already exists|
 
 + Parameters
-    + id: redis_factory (string, optional) - ID of the host factory, query-escaped
-    + roleid: conjur:group:ops (string) - Fully qualified ID of a Conjur role that the host factory will act as, query-escaped
-    + ownerid: conjur:group:security_admin (string, optional) - Fully qualified ID of a Conjur role that will own the new host factory, query-escaped
+    + id: redis/default (string, optional) - ID of the host factory, query-escaped
+    + roleid: cucumber:group:security_admin (string) - Fully qualified ID of a Conjur role that the host factory will act as, query-escaped
+    + ownerid: cucumber:group:security_admin (string, optional) - Fully qualified ID of a Conjur role that will own the new host factory, query-escaped
     + layers%5B%5D: redis (string) - ID of the layer the host-factory can enroll hosts for, query-escaped. Can be specified multiple times.
 
 + Request
@@ -40,12 +40,12 @@ This means that no one else will be able to see your Host Factory.
 
     ```
     {
-      "id": "redis_factory",
+      "id": "redis/default",
       "layers": [
         "redis"
       ],
-      "roleid": "conjur:group:ops",
-      "resourceid": "conjur:host_factory:redis_factory",
+      "roleid": "cucumber:group:security_admin",
+      "resourceid": "cucumber:host_factory:redis/default",
       "tokens": [],
       "deputy_api_key": "3g6v6h83bsk76r3cb638h2dce4kz35dsej81c304rp306wzqa1z8eqch"
     }

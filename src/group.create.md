@@ -20,8 +20,8 @@ This means that no one else will be able to see your group.
 |409|A group with that name already exists|
 
 + Parameters
-    + id: ops (string, optional) - Name of the group, query-escaped
-    + ownerid: conjur:group:security_admin (string, optionall) - Fully qualified ID of a Conjur role that will own the new group
+    + id: developers (string, optional) - Name of the group, query-escaped
+    + ownerid: cucumber:group:security_admin (string, optionall) - Fully qualified ID of a Conjur role that will own the new group
     + gidnumber: 27001 (number, optional) - A GID number for the new group, primarily for use with LDAP
 
 + Request (application/json)
@@ -31,11 +31,11 @@ This means that no one else will be able to see your group.
 
     ```
     {
-        "id": "ops",
+        "id": "developers",
         "userid": "admin",
-        "ownerid": "conjur:group:security_admin",
+        "ownerid": "cucumber:group:security_admin",
         "gidnumber": 27001,
-        "roleid": "conjur:group:ops",
-        "resource_identifier": "conjur:group:ops"
+        "roleid": "cucumber:group:developers",
+        "resource_identifier": "cucumber:group:developers"
     }
     ```

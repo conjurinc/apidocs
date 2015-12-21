@@ -25,7 +25,7 @@ identity on the command line.
 
 + Parameters
     + id: redis001 (string, optional) - Name of the host, query-escaped
-    + ownerid: conjur:group:ops (string, optional) - Fully qualified ID of a Conjur role that will own the new host
+    + ownerid: cucumber:group:ops (string, optional) - Fully qualified ID of a Conjur role that will own the new host
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
@@ -37,9 +37,9 @@ identity on the command line.
       "id": "redis001",
       "userid": "admin",
       "created_at": "2015-11-03T21:34:47Z",
-      "ownerid": "conjur:group:ops",
-      "roleid": "conjur:host:redis001",
-      "resource_identifier": "conjur:host:redis001",
+      "ownerid": "cucumber:group:ops",
+      "roleid": "cucumber:host:redis001",
+      "resource_identifier": "cucumber:host:redis001",
       "api_key": "3sqgnzs2yqtjgf3hx6fw6cdh8012hb6ehy1wh406eeg8ktj27jgabd"
     }
     ```

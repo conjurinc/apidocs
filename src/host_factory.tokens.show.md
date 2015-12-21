@@ -34,8 +34,8 @@ and the layers to which it is tied.
         "layers": [
           "redis"
         ],
-        "roleid": "conjur:group:ops",
-        "resourceid": "conjur:host_factory:redis_factory"
+        "roleid": "cucumber:group:ops",
+        "resourceid": "cucumber:host_factory:redis_factory"
       }
     }
     ```
