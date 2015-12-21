@@ -44,7 +44,7 @@ Therefore, login is a fairly expensive operation.
         Authorization: Basic YWxpY2U6c2VjcmV0
         ```
         
-+ Response 200 (text/plain)
++ Response 200 (text/html; charset=utf-8)
 
     ```
     14m9cf91wfsesv1kkhevg12cdywm2wvqy6s8sk53z1ngtazp1t9tykc
