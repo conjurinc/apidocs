@@ -5,6 +5,8 @@
 This route returns information about a host factory token, including its expiration timestamps
 and the layers to which it is tied.
 
+**Permission required**: `read` privilege on the host factory.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

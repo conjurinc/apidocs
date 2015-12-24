@@ -4,6 +4,8 @@
 
 Update a user's UID number with this route.
 
+**Permission Required**: `update` permission on the user resource.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

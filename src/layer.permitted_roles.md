@@ -9,6 +9,9 @@ Privileges available are:
 * `use_host` - Maps to `execute` privilege
 * `admin_host` - Maps to `update` privilege
 
+**Permission required**: You must have the role whose members you are enumerating. If you have
+the layer role, then you have the necessary permission.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

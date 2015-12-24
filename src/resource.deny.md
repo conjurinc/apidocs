@@ -16,6 +16,9 @@ Built-in privileges available are:
 
 These have special meanings in Conjur, but you can create your own as needed.
 
+**Permission required**: You must be the owner of the resource, or you must have `grant_option` on the
+permission you are denying.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

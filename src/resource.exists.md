@@ -3,7 +3,6 @@
 ### Determine whether a resource exists [HEAD]
 
 Check for the existence of a resource.
-Only resources that you have `read` permission on will be searched.
 
 ---
 
@@ -14,7 +13,8 @@ Only resources that you have `read` permission on will be searched.
 
 |Code|Description|
 |----|-----------|
-|200|resource exists|
+|200|resource exists and you have a privilege on it|
+|403|the resource exists but you have no privilege on it|
 |404|resource does not exist|
 
 + Parameters

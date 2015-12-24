@@ -8,9 +8,7 @@ efficient than [variable#value](/#reference/variable/value).
 
 Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
-**Permission Required**:
-
-`execute` privilege on all variables to be retrieved.
+**Permission Required**: `execute` privilege on all variables to be retrieved.
 
 ---
 

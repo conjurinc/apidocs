@@ -9,6 +9,8 @@ In this example, we're applying the annotation `aws/account:ci` to the `jenkins/
 
 The key and value must be query-escaped:  `/` -> `%2F`, `:` -> `%3A`.
 
+**Permission required**: `update` privilege on the resource.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

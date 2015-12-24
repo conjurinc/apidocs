@@ -13,6 +13,8 @@ Privileges available are:
 
 In this example, we're looking for roles that are allowed to update the value of a variable.
 
+**Permission required**: You must own the resource or have a permission on the resource
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

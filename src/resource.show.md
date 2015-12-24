@@ -4,9 +4,7 @@
 
 Retrieves a resource's metadata, including annotations.
 
-**Permission Required**
-
-`read` permission on the resource.
+**Permission Required**: `read` permission on the resource.
 
 ---
 

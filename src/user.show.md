@@ -7,9 +7,7 @@ but it **does not contain the user's API key**.
 
 The login parameter must be url encoded.
 
-**Permission Required**
-
-`read` permission on the user's resource.
+**Permission Required**: `read` permission on the user resource.
 
 ---
 

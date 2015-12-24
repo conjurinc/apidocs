@@ -4,6 +4,8 @@
 
 Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
 
+**Permission Required**: `update` privilege on the variable.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

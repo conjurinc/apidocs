@@ -6,6 +6,8 @@ An owner is assigned on resource creation. Use this route to transfer that owner
 
 In this example, we are transferring ownership of a variable to a group.
 
+**Permission required**: You must be the owner of the resource.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

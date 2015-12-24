@@ -6,9 +6,7 @@ By default this returns the latest version of a variable, but you can retrieve a
 
 Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
-**Permission Required**:
-
-`execute` privilege on the variable.
+**Permission Required**: `execute` privilege on the variable.
 
 ---
 

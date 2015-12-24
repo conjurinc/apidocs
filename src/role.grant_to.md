@@ -8,7 +8,7 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
 
 `admin_option` is passed in the request body.
 
-**Permission Required**: Admin option on the role
+**Permission Required**: `admin_option` on the role.
 
 ---
 

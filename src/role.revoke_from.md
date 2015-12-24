@@ -2,7 +2,7 @@
 
 Inverse of `role#grant_to`.
 
-**Permission Required**: `admin_option` on the role
+**Permission Required**: `admin_option` on the role.
 
 ---
 

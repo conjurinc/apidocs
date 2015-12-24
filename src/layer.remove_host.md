@@ -6,6 +6,9 @@ Remove a host from an existing layer. All privileges the host gained through lay
 
 Both `id` and `hostid` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 
+**Permission required**: You must have the layer role with `admin` option. This is the same
+privilege required to revoke the layer role.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

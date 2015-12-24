@@ -6,7 +6,7 @@ Lists the direct members of a group.
 
 Group IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
-**Permission required**: `read` privilege on the group.
+**Permission required**: You must be a member of the group.
 
 ---
 

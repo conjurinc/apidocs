@@ -16,6 +16,8 @@ and must be URL-encoded.
 
 Generate multiple tokens at once with the `count` parameter. By default, one token is created.
 
+**Permission required**: `execute` privilege on the host factory.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

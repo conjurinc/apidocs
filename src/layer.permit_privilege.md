@@ -9,6 +9,9 @@ Privileges available are:
 * `use_host` - Maps to `execute` privilege
 * `admin_host` - Maps to `update` privilege
 
+**Permission required**: You must have the layer role with `admin` option. This is the same
+privilege required to grant the layer role.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

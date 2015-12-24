@@ -4,6 +4,8 @@
 
 You can change a group's GID number with this route.
 
+**Permission required**: `update` privilege on the group.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)

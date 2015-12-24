@@ -6,7 +6,7 @@ A host may belong to multiple layers at once.
 
 Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 
-**Permission required**: `read` privilege on the host.
+**Permission required**: You must have the host role.
 
 ---
 

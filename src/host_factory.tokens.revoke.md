@@ -7,6 +7,8 @@ its use before its expiration timestamp.
 
 When you revoke a token, hosts can no longer use it to enroll in a layer.
 
+**Permission required**: `update` privilege on the host factory.
+
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)
