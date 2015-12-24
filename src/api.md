@@ -230,3 +230,6 @@ Fetching all audit records can return a very large response, so it is best to th
 # Group Utilities
 
 :[utilities.health](utilities.health.md)
+
+:[utilities.info](utilities.info.md)
+
