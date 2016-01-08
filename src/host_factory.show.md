@@ -34,6 +34,7 @@ Host factory IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
     {
         "id":"redis/default",
         "layers":[],
+        "cidr": [],
         "roleid":"cucumber:group:security_admin",
         "resourceid":"cucumber:host_factory:redis/default",
         "tokens":[

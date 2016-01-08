@@ -1,4 +1,4 @@
-## Create [/api/host_factories/{?id,roleid,layers%5B%5D,ownerid}]
+## Create [/api/host_factories/{?id,roleid,layers%5B%5D,cidr,ownerid}]
 
 ### Create a new host factory [POST]
 
