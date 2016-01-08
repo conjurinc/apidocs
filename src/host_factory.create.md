@@ -32,6 +32,7 @@ This means that no one else will be able to see your Host Factory.
     + roleid: cucumber:group:security_admin (string) - Fully qualified ID of a Conjur role that the host factory will act as, query-escaped
     + ownerid: cucumber:group:security_admin (string, optional) - Fully qualified ID of a Conjur role that will own the new host factory, query-escaped
     + layers%5B%5D: redis (string) - ID of the layer the host-factory can enroll hosts for, query-escaped. Can be specified multiple times.
+    + cidr: 192.0.2.0 (string array, optional) - CIDR list to restrict hosts to the addresses specified.
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
@@ -44,6 +45,7 @@ This means that no one else will be able to see your Host Factory.
       "layers": [
         "redis"
       ],
+      "cidr": ["192.0.2.0"],
       "roleid": "cucumber:group:security_admin",
       "resourceid": "cucumber:host_factory:redis/default",
       "tokens": [],
