@@ -20,7 +20,7 @@ The API page on the devsite has an embedded iframe referencing https://jsapi.api
 
 **Don't edit `./api.md` directly!**
 
-Edit the files in `src/`. You can then compile the source files into `./api.md` run a local server that renders the CLI:
+Edit the files in `src/`. You can then compile the source files into `./api.md` run a local server that renders the API docs:
 
 ```
 $ make preview
