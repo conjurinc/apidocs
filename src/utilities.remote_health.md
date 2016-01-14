@@ -1,15 +1,15 @@
-## Remote Health [/remote_health]
+## Remote Health [/remote_health/{hostname}]
 
 :[conjur_auth_header_table](partials/min_version_4.6.md)
 
-To support a High Availablity (HA) configuration, Conjur master, standby, and follower servers support 
-a Remote Health check to allow any Conjur server to check the health of another Conjur server to ensure
-servers are up and services are running properly. Specifically this is used to check the health and
-availablity of the master server from the standby and follower servers. Refer to the Health API for the
-response information returned by the remote health API.
+### Perform a health check on a remote Conjur server [GET]
 
-Request: GET https://conjur.myorg.com/remote_health/hostname
-Parameter: hostname - The hostname of the master, standby, or follower to get the health of
+To support a High Availablity (HA) configuration, Conjur master, standby, and follower servers
+support a Remote Health check to allow any Conjur server to check the health of another Conjur
+server to ensure servers are up and services are running properly.
+Specifically this is used to check the health and availablity of the master server from the
+standby and follower servers.
+The response is the same format as the [Health API route](/#reference/utilities/health).
 
 This route **does not** require authentication.
 
@@ -21,3 +21,34 @@ This route **does not** require authentication.
 |----|-----------|
 |200|Remote Server is healthy|
 |502|Remote Server is not healthy|
+
++ Parameters
+    + hostname: `follower01.conjur.myorg.com` (string) - The hostname of a master, standby, or follower to check health on
+
++ Response 200
+
+    ```
+    {
+      "services": {
+        "host-factory": "ok",
+        "authz": "ok",
+        "pubkeys": "ok",
+        "authn": "ok",
+        "audit": "ok",
+        "ldap": "ok",
+        "core": "ok",
+        "ok": true
+      },
+      "database": {
+        "ok": true,
+        "connect": {
+          "main": "ok"
+        },
+        "replication_status": {
+          "pg_current_xlog_location": "0/5174000",
+          "pg_current_xlog_location_bytes": 85409792
+        }
+      },
+      "ok": true
+    }
+    ```
