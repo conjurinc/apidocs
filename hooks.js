@@ -111,6 +111,13 @@ hooks.before("Authentication > Update Password > Update a user's password", func
     transaction.request.body = '9p8nfsdafbp';
 });
 
+// use localhost to check remote_health
+before("Utilities > Remote Health > Perform a health check on a remote Conjur server ", function (transaction) {
+  //replacing id in URL with stashed id from previous response
+  var url = transaction.fullPath;
+  transaction.fullPath = url.replace('conjur-master01.myorg.com', 'localhost');
+});
+
 // Stash the host-factory tokens on creation, so use them later
 hooks.after('Host Factory > Create Token > Create a new host factory token', function(transaction) {
 		console.log(transaction.real.body);
