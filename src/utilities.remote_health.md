@@ -23,7 +23,7 @@ This route **does not** require authentication.
 |502|Remote Server is not healthy|
 
 + Parameters
-    + hostname: `conjur-master01.myorg.com` (string) - The hostname of a master, standby, or follower to check health on
+    + hostname: `localhost` (string) - The hostname of a master, standby, or follower to check health on
 
 + Response 200
 
