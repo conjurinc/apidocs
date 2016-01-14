@@ -39,7 +39,8 @@ Host factory IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
         "tokens":[
             {
               "token": "30vf6aa3b6x326sdnwj93cx5rzd3dwmhva3828m8x32xsveh5qb4x5",
-              "expiration": "2015-11-13T18:42:02Z"
+              "expiration": "2015-11-13T18:42:02Z",
+              "cidr":["192.0.2.0"]
             }
         ],
         "deputy_api_key":"3g6v6h83bsk76r3cb638h2dce4kz35dsej81c304rp306wzqa1z8eqch"

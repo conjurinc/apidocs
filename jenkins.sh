@@ -18,7 +18,7 @@ function finish {
 trap finish EXIT
 
 # Launch and configure a Conjur container
-cid=$(docker run -d -P ${DOCKER_IMAGE})
+cid=$(docker run -d -P -v $PWD:/src ${DOCKER_IMAGE})
 >&2 echo "Container id:"
 >&2 echo $cid
 
