@@ -1,0 +1,151 @@
+docker build -t apidocs .
+Sending build context to Docker daemon 557.1 kBSending build context to Docker daemon 1.114 MBSending build context to Docker daemon 1.671 MBSending build context to Docker daemon 2.228 MBSending build context to Docker daemon 2.785 MBSending build context to Docker daemon 3.342 MBSending build context to Docker daemon 3.899 MBSending build context to Docker daemon 4.456 MBSending build context to Docker daemon 5.014 MBSending build context to Docker daemon 5.571 MBSending build context to Docker daemon 6.128 MBSending build context to Docker daemon 6.685 MBSending build context to Docker daemon 7.242 MBSending build context to Docker daemon 7.626 MB
+Sending build context to Docker daemon 
+Step 1 : FROM node:0.12.7
+ ---> 8abbdb90df52
+Step 2 : RUN mkdir -p /app
+ ---> Using cache
+ ---> e94b9174d8bb
+Step 3 : WORKDIR /app
+ ---> Using cache
+ ---> de021e8547ca
+Step 4 : RUN npm install -g dredd@1.0.1 hercule@1.2.1 async@1.5.0 conjur-api@4.5.2
+ ---> Using cache
+ ---> d586492d32d4
+Successfully built d586492d32d4
+docker run \
+		--rm \
+		-v /Users/kgilpin/source/conjur/apidocs:/app \
+		apidocs \
+		hercule src/api.md -o api.md
+echo "Running tests against container '23e52dbacdd3'"
+Running tests against container '23e52dbacdd3'
+summon docker run \
+		--rm \
+		--link 23e52dbacdd3:conjur \
+		-v /Users/kgilpin/source/conjur/apidocs:/app \
+		-e NODE_TLS_REJECT_UNAUTHORIZED=0 \
+		--env-file @SUMMONENVFILE \
+		apidocs \
+		dredd \
+		./api.md \
+		https://conjur \
+		--names \
+		--reporter junit \
+		--output report.xml \
+		--reporter html \
+		--output report.html \
+		--reporter apiary \
+		--hookfiles hooks.js \
+		--language nodejs
+info: File exists at /app/report.xml, will be overwritten...
+info: File exists at /app/report.html, will be overwritten...
+info: Using apiary reporter.
+warn: Parser warning in file './api.md': (2) the resource '/api/authz/{account}/resources/{kind}/{id}' is already defined on line 2978
+warn: Runtime compilation warning: Multiple responses, using first.
+ on Variable > Values > Retrieve the values of multiple variables at once
+warn: Runtime compilation warning: 
+Ambigous URI parameter in template: /api/authz/{account}/roles/{role}/?members&member={member}&admin_option={admin_option} 
+Parameter not defined in blueprint:'admin_option'
+ on Role > Grant to / Revoke from > Revoke a granted role
+warn: Runtime compilation warning: Multiple responses, using first.
+ on Utilities > Health > Perform a health check on the server
+info: Beginning Dredd testing...
+info: Found Hookfiles: hooks.js
+Stashed API key kkx03g3x1pygr1mabpe22kjvyfg32h42wsmkhyn7a54dfb13xqbcs
+info: Authentication > Login > Exchange a user login and password for an API key
+info: Authentication > Authenticate > Exchange a user login and API key for an access token
+info: Authentication > Update > Update your own attributes
+info: Authentication > Update > Update another user's attributes
+info: Authentication > Update Password > Change your password
+info: Authentication > Rotate API Key > Rotate your own API key
+info: Authentication > Rotate API Key > Rotate another user's API key
+info: Variable > Create > Create a new variable
+info: Variable > List/Search > List or search for variables
+info: Variable > Show > Retrieve a variable's record
+info: Variable > Values Add > Add a value to a variable
+info: Variable > Value > Retrieve the value of a variable
+info: Variable > Values > Retrieve the values of multiple variables at once
+info: User > Create > Create a new user
+info: User > Update > Update a user record
+info: User > List/Search > List or search for users
+info: User > Search by UID > Search for users by UID number
+info: User > Show > Retrieve a user's record
+info: Group > Create > Create a new group
+info: Group > Update > Update a group record
+info: Group > List/Search > List or search for groups
+info: Group > Search by GID > Search for groups by GID number
+info: Group > Show > Retrieve a group's metadata
+info: Group > List Members > List a group's members
+info: Host > Create > Create a new host
+info: Host > List/Search > List or search for hosts
+info: Host > Show > Retrieve a host's metadata
+info: Host > List Layers > List the layers to which a host belongs
+info: Layer > Create > Create a new layer
+info: Layer > List/Search > List or search for layers
+info: Layer > Show > Retrieve a layer's record
+info: Layer > Add Host > Add a host to a layer
+info: Layer > Remove Host > Remove a host from a layer
+info: Layer > Permitted Roles > List roles that have a permission on the hosts in a layer
+info: Layer > Permit on Hosts > Permit a privilege on hosts in a layer
+info: Layer > Deny on Hosts > Deny a privilege on hosts in a layer
+info: Host Factory > Create > Create a new host factory
+info: Host Factory > List/Search > List or search for host factories
+info: Host Factory > Show > Retrieve a host factory's record
+info: Host Factory > Create Token > Create a new host factory token
+info: File exists at /app/report.xml, will be overwritten...
+info: File exists at /app/report.html, will be overwritten...
+info: Using apiary reporter.
+warn: Parser warning in file './api.md': (2) the resource '/api/authz/{account}/resources/{kind}/{id}' is already defined on line 2978
+warn: Runtime compilation warning: Multiple responses, using first.
+ on Variable > Values > Retrieve the values of multiple variables at once
+warn: Runtime compilation warning: 
+Ambigous URI parameter in template: /api/authz/{account}/roles/{role}/?members&member={member}&admin_option={admin_option} 
+Parameter not defined in blueprint:'admin_option'
+ on Role > Grant to / Revoke from > Revoke a granted role
+warn: Runtime compilation warning: Multiple responses, using first.
+ on Utilities > Health > Perform a health check on the server
+info: Beginning Dredd testing...
+info: Found Hookfiles: hooks.js
+Stashed API key kkx03g3x1pygr1mabpe22kjvyfg32h42wsmkhyn7a54dfb13xqbcs
+info: Authentication > Login > Exchange a user login and password for an API key
+info: Authentication > Authenticate > Exchange a user login and API key for an access token
+info: Authentication > Update > Update your own attributes
+info: Authentication > Update > Update another user's attributes
+info: Authentication > Update Password > Change your password
+info: Authentication > Rotate API Key > Rotate your own API key
+info: Authentication > Rotate API Key > Rotate another user's API key
+info: Variable > Create > Create a new variable
+info: Variable > List/Search > List or search for variables
+info: Variable > Show > Retrieve a variable's record
+info: Variable > Values Add > Add a value to a variable
+info: Variable > Value > Retrieve the value of a variable
+info: Variable > Values > Retrieve the values of multiple variables at once
+info: User > Create > Create a new user
+info: User > Update > Update a user record
+info: User > List/Search > List or search for users
+info: User > Search by UID > Search for users by UID number
+info: User > Show > Retrieve a user's record
+info: Group > Create > Create a new group
+info: Group > Update > Update a group record
+info: Group > List/Search > List or search for groups
+info: Group > Search by GID > Search for groups by GID number
+info: Group > Show > Retrieve a group's metadata
+info: Group > List Members > List a group's members
+info: Host > Create > Create a new host
+info: Host > List/Search > List or search for hosts
+info: Host > Show > Retrieve a host's metadata
+info: Host > List Layers > List the layers to which a host belongs
+info: Layer > Create > Create a new layer
+info: Layer > List/Search > List or search for layers
+info: Layer > Show > Retrieve a layer's record
+info: Layer > Add Host > Add a host to a layer
+info: Layer > Remove Host > Remove a host from a layer
+info: Layer > Permitted Roles > List roles that have a permission on the hosts in a layer
+info: Layer > Permit on Hosts > Permit a privilege on hosts in a layer
+info: Layer > Deny on Hosts > Deny a privilege on hosts in a layer
+info: Host Factory > Create > Create a new host factory
+info: Host Factory > List/Search > List or search for host factories
+info: Host Factory > Show > Retrieve a host factory's record
+info: Host Factory > Create Token > Create a new host factory token
+: exit status 1

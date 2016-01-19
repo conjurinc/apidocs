@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby2.1
+
+command=%w(dredd ./api.md https://conjur --reporter junit --output report.xml --reporter html --output report.html --reporter apiary --hookfiles hooks.js --language nodejs)
+
+if conjur_version = ENV['CONJUR_VERSION']
+	transaction_list_file="/transactions-#{conjur_version}.txt"
+	raise "#{transaction_list_file} does not exist" unless File.exists?(transaction_list_file)
+	command += File.read(transaction_list_file).split("\n").map{|l| [ "--only", l ]}.flatten
+end
+
+$stderr.puts command.join(" ")
+
+exec *command

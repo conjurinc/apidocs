@@ -1,5 +1,7 @@
 .PHONY: nodejs-image cli-image
 
+CONJUR_VERSION ?= 4.6
+
 default: nodejs-image cli-image api.md
 
 test: nodejs-image api.md
@@ -9,18 +11,21 @@ test: nodejs-image api.md
 		--link $(CONJUR_CONTAINER):conjur \
 		-v $(PWD):/app \
 		-e NODE_TLS_REJECT_UNAUTHORIZED=0 \
+		-e CONJUR_VERSION \
 		--env-file @SUMMONENVFILE \
+		apidocs \
+		/dredd
+
+names: nodejs-image api.md
+	echo "Enumerating transaction names"
+	docker run \
+		--rm \
+		-v $(PWD):/app \
 		apidocs \
 		dredd \
 		./api.md \
 		https://conjur \
-		--reporter junit \
-		--output report.xml \
-		--reporter html \
-		--output report.html \
-		--reporter apiary \
-		--hookfiles hooks.js \
-		--language nodejs
+		--names
 
 preview: api.md
 	rvm use --create 2.0.0@apidocs
