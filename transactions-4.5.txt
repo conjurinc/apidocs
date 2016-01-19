@@ -1,10 +1,6 @@
 Authentication > Login > Exchange a user login and password for an API key
 Authentication > Authenticate > Exchange a user login and API key for an access token
-Authentication > Update > Update your own attributes
-Authentication > Update > Update another user's attributes
 Authentication > Update Password > Change your password
-Authentication > Rotate API Key > Rotate your own API key
-Authentication > Rotate API Key > Rotate another user's API key
 Variable > Create > Create a new variable
 Variable > List/Search > List or search for variables
 Variable > Show > Retrieve a variable's record
@@ -58,6 +54,3 @@ Resource > Check > Check your own permissions
 Resource > Check > Check another role's permissions
 Audit > All > Fetch all audit events
 Audit > Single > Fetch audit events for a single role/resource
-Utilities > Health > Perform a health check on the server
-Utilities > Server Info > Display information about server configuration
-Utilities > Remote Health > Perform a health check on a remote Conjur server
