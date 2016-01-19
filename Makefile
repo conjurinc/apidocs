@@ -12,8 +12,9 @@ test: nodejs-image api.md
 		-v $(PWD):/app \
 		-e NODE_TLS_REJECT_UNAUTHORIZED=0 \
 		-e CONJUR_VERSION \
+		--env-file @SUMMONENVFILE \
 		apidocs \
-		/dredd.sh
+		/dredd
 
 names: nodejs-image api.md
 	echo "Enumerating transaction names"
