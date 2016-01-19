@@ -1,0 +1,63 @@
+Authentication > Login > Exchange a user login and password for an API key
+Authentication > Authenticate > Exchange a user login and API key for an access token
+Authentication > Update > Update your own attributes
+Authentication > Update > Update another user's attributes
+Authentication > Update Password > Change your password
+Authentication > Rotate API Key > Rotate your own API key
+Authentication > Rotate API Key > Rotate another user's API key
+Variable > Create > Create a new variable
+Variable > List/Search > List or search for variables
+Variable > Show > Retrieve a variable's record
+Variable > Values Add > Add a value to a variable
+Variable > Value > Retrieve the value of a variable
+Variable > Values > Retrieve the values of multiple variables at once
+User > Create > Create a new user
+User > Update > Update a user record
+User > List/Search > List or search for users
+User > Search by UID > Search for users by UID number
+User > Show > Retrieve a user's record
+Group > Create > Create a new group
+Group > Update > Update a group record
+Group > List/Search > List or search for groups
+Group > Search by GID > Search for groups by GID number
+Group > Show > Retrieve a group's metadata
+Group > List Members > List a group's members
+Host > Create > Create a new host
+Host > List/Search > List or search for hosts
+Host > Show > Retrieve a host's metadata
+Host > List Layers > List the layers to which a host belongs
+Layer > Create > Create a new layer
+Layer > List/Search > List or search for layers
+Layer > Show > Retrieve a layer's record
+Layer > Add Host > Add a host to a layer
+Layer > Remove Host > Remove a host from a layer
+Layer > Permitted Roles > List roles that have a permission on the hosts in a layer
+Layer > Permit on Hosts > Permit a privilege on hosts in a layer
+Layer > Deny on Hosts > Deny a privilege on hosts in a layer
+Host Factory > Create > Create a new host factory
+Host Factory > List/Search > List or search for host factories
+Host Factory > Show > Retrieve a host factory's record
+Host Factory > Create Token > Create a new host factory token
+Host Factory > Show Token > Retrieve a host factory token's metadata
+Host Factory > Revoke Token > Revoke a host factory token
+Host Factory > Create Host > Create a new host using a host factory token
+Role > Create > Create a new role
+Role > Exists > Determine whether a role exists
+Role > List members > Lists the roles that have been the recipient of a role grant
+Role > Grant to / Revoke from > Grant a role to another role
+Resource > Create > Create a new resource
+Resource > Exists > Determine whether a resource exists
+Resource > Show > Retrieve a resources's record
+Resource > List/Search > List or search for resources
+Resource > Annotate > Annotate a resource with a key/value pair
+Resource > List Annotations > List the annotations on a resource
+Resource > Give > Give ownership of a resource to another role
+Resource > Permit > Permit a privilege on a resource
+Resource > Deny > Deny a privilege on a resource
+Resource > Check > Check your own permissions
+Resource > Check > Check another role's permissions
+Audit > All > Fetch all audit events
+Audit > Single > Fetch audit events for a single role/resource
+Utilities > Health > Perform a health check on the server
+Utilities > Server Info > Display information about server configuration
+Utilities > Remote Health > Perform a health check on a remote Conjur server
