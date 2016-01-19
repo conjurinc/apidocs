@@ -51,3 +51,11 @@ Then you can re-run the tests without re-launching Conjur:
 ```
 $ make test
 ```
+
+## Specifying Conjur server version
+
+To test a specific version of the Conjur server (omitting functions that are only present in later versions), use the `CONJUR_VERSION` environment variable:
+
+```
+$ CONJUR_VERSION=4.6 make test
+```
