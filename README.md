@@ -52,10 +52,8 @@ Then you can re-run the tests without re-launching Conjur:
 $ make test
 ```
 
-## Specifying Conjur server version
+## Selecting tests by Conjur server version
 
-To test a specific version of the Conjur server (omitting functions that are only present in later versions), use the `CONJUR_VERSION` environment variable:
+The `dredd` wrapper script inspects the Conjur server version using the server [/info](http://docs.conjur.apiary.io/#reference/utilities/server-info) URL. If a corresponding "transactions-[version].txt" file exists, then only the tests specified in this file will be run.
 
-```
-$ CONJUR_VERSION=4.6 make test
-```
+To print the names of all the available tests, run `make names`.

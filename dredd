@@ -1,11 +1,22 @@
 #!/usr/bin/env ruby2.1
 
+require 'json'
+
 command=%w(dredd ./api.md https://conjur --reporter junit --output report.xml --reporter html --output report.html --reporter apiary --hookfiles hooks.js --language nodejs)
 
-if conjur_version = ENV['CONJUR_VERSION']
-	transaction_list_file="/transactions-#{conjur_version}.txt"
-	raise "#{transaction_list_file} does not exist" unless File.exists?(transaction_list_file)
+conjur_info = JSON.parse(`curl -sk https://conjur/info`)
+raise "Can't get https://conjur/info" unless $?.exitstatus == 0
+appliance_version = conjur_info['services']['appliance']['version']
+major, minor, _ = appliance_version.split('.')
+conjur_version = [ major, minor ].join('.')
+$stderr.puts "Conjur version is #{conjur_version}"
+
+transaction_list_file="./transactions-#{conjur_version}.txt"
+if File.exists?(transaction_list_file)
+	$stderr.puts "Reading transaction list from #{transaction_list_file}"
 	command += File.read(transaction_list_file).split("\n").map{|l| [ "--only", l ]}.flatten
+else
+	$stderr.puts "Running all tests"
 end
 
 $stderr.puts command.join(" ")

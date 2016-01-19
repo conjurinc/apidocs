@@ -1,7 +1,5 @@
 .PHONY: nodejs-image cli-image
 
-CONJUR_VERSION ?= 4.6
-
 default: nodejs-image cli-image api.md
 
 test: nodejs-image api.md
@@ -11,7 +9,6 @@ test: nodejs-image api.md
 		--link $(CONJUR_CONTAINER):conjur \
 		-v $(PWD):/app \
 		-e NODE_TLS_REJECT_UNAUTHORIZED=0 \
-		-e CONJUR_VERSION \
 		--env-file @SUMMONENVFILE \
 		apidocs \
 		/dredd
