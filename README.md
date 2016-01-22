@@ -31,7 +31,16 @@ $ make preview
 Tests are run with [dredd](http://dredd.readthedocs.org/en/latest/) in a Docker container against a Conjur appliance
 also running in Docker.
 
-Locally, first run the Jenkins script in NOKILL mode:
+First, update `/etc/hosts` like so:
+
+```
+# On linux, running Docker natively
+localhost
+# On OSX, value should be `docker-machine ip default`
+192.168.99.102 conjur
+```
+
+Then run the Jenkins script in NOKILL mode:
 
 ```
 $ NOKILL=1 ./jenkins.sh
@@ -40,13 +49,13 @@ Container id:
 a147265fc9d99701f0d3836313f2c607c287a5768ed42c77fd144669dc35bb09
 ```
 
-Then export the container id:
+Finally, export the container id:
 
 ```
 $ export CONJUR_CONTAINER=a147265fc9d99701f0d3836313f2c607c287a5768ed42c77fd144669dc35bb09
 ```
 
-Then you can re-run the tests without re-launching Conjur:
+Now you can re-run the tests without re-launching Conjur:
 
 ```
 $ make test

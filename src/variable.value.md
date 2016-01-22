@@ -18,7 +18,7 @@ Variable IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 |----|-----------|
 |200|Variable value is returned|
 |403|Permission denied|
-|404|Variable, or requested version of the value, not found|
+|404|Variable/version not found, or variable has expired|
 
 + Parameters
     + id: dev/mongo/password (string) - Name of the variable, query-escaped

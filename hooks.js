@@ -107,7 +107,7 @@ hooks.beforeEachValidation(function(transaction) {
 });
 
 // Don't actually update the user's password, set it to the same value so tests can be re-run
-hooks.before("Authentication > Update Password > Update a user's password", function(transaction) {
+hooks.before("Authentication > Update Password > Change your password", function(transaction) {
     transaction.request.body = '9p8nfsdafbp';
 });
 
