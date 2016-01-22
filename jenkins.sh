@@ -1,7 +1,7 @@
 #!/bin/bash -eu
 
 CONJUR_VERSION=${CONJUR_VERSION:-"4.6"}
-DOCKER_IMAGE="registry.tld/conjur-appliance-cuke-master:$CONJUR_VERSION-stable"
+DOCKER_IMAGE=${DOCKER_IMAGE:-"registry.tld/conjur-appliance-cuke-master:$CONJUR_VERSION-stable"}
 NOKILL=${NOKILL:-"0"}
 PUBLISH=${PUBLISH:-"0"}
 CMD_PREFIX=""
