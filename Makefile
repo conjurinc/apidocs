@@ -1,4 +1,4 @@
-.PHONY: nodejs-image cli-image api-md
+.PHONY: nodejs-image cli-image
 
 default: nodejs-image cli-image api.md
 
