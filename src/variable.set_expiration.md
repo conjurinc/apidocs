@@ -8,8 +8,8 @@ You can set an expiration time for variables in Conjur.
 After a variable expires, attempts to retrieve its value will fail.
 Variable expiration will generate an audit event.
 
-Variables may be marked with an annotation named `expiration/timestamp`.
-The value of this annotation is the ISO8601 UTC timestamp of when the variable will expire.
+When a variable is set to expire, it will be marked with an annotation named
+`expiration/timestamp`. The value of this annotation will be an ISO8601 UTC timestamp.
 
 `duration` is specified in [ISO8601 duration format](https://en.wikipedia.org/wiki/ISO_8601#Durations).
 <br>
