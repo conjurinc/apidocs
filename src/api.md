@@ -99,10 +99,10 @@ Only members of the group `pubkeys-1.0/key-managers` can manage public keys.
 
 :[pubkeys.add](pubkeys.add.md)
 
-<!-- :[pubkeys.show](pubkeys.show.md)
+:[pubkeys.show](pubkeys.show.md)
 
 :[pubkeys.delete](pubkeys.delete.md)
- -->
+
 # Group Group
 
 A `group` represents a collection of users or groups. It is a `role` and a collection of `roles`, in RBAC terms.

@@ -12,6 +12,9 @@ User > Update > Update a user record
 User > List/Search > List or search for users
 User > Search by UID > Search for users by UID number
 User > Show > Retrieve a user's record
+Pubkeys > Add > Add a key for a user
+Pubkeys > Show > Show keys for a user
+Pubkeys > Delete > Delete a key for a user
 Group > Create > Create a new group
 Group > Update > Update a group record
 Group > List/Search > List or search for groups

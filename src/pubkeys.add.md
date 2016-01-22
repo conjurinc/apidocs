@@ -1,6 +1,6 @@
 ## Add [/api/pubkeys/{login}]
 
-### Add a public key for a user [POST]
+### Add a key for a user [POST]
 
 Adds a new public key for an existing user.
 Multiple keys can be uploaded per user.
