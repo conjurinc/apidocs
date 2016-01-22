@@ -4,11 +4,14 @@ CONJUR_VERSION=${CONJUR_VERSION:-"4.6"}
 DOCKER_IMAGE=${DOCKER_IMAGE:-"registry.tld/conjur-appliance-cuke-master:$CONJUR_VERSION-stable"}
 NOKILL=${NOKILL:-"0"}
 PUBLISH=${PUBLISH:-"0"}
+PULL=${PULL:-"1"}
 CMD_PREFIX=""
 
 make
 
-docker pull $DOCKER_IMAGE
+if [ "$PULL" == "1" ]; then
+    docker pull $DOCKER_IMAGE
+fi
 
 function finish {
 	# Stop and remove the Conjur container if env var NOKILL != "1"
@@ -27,13 +30,6 @@ docker run --rm --link ${cid}:conjur registry.tld/wait-for-conjur
 
 ssl_certificate=$(docker exec ${cid} cat /opt/conjur/etc/ssl/conjur.pem)
 
-if [ "$USER" == "jenkins" ]; then
-    # Only publish from the master branch
-    if [ "$GIT_BRANCH" == "origin/master" ]; then
-        PUBLISH="1"
-    fi
-fi
-
 docker run --rm \
 	-v $PWD:/src \
 	-e CONJUR_SSL_CERTIFICATE="${ssl_certificate}" \
@@ -45,6 +41,13 @@ docker run --rm \
 export CONJUR_VERSION
 
 CONJUR_CONTAINER=${cid} make test
+
+if [ "$USER" == "jenkins" ]; then
+    # Only publish from the master branch
+    if [ "$GIT_BRANCH" == "origin/master" ]; then
+        PUBLISH="1"
+    fi
+fi
 
 if [ "${PUBLISH}" == "1" ]; then
     echo "Publishing docs to Apiary"

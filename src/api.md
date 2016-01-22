@@ -61,6 +61,9 @@ A `variable` is a 'secret' and can be any value. It is a `resource`, in RBAC ter
 
 :[variable.values](variable.values.md)
 
+:[variable.set_expiration](variable.set_expiration.md)
+
+:[variable.expirations](variable.expirations.md)
 
 # Group User
 
