@@ -2,24 +2,18 @@
 
 ### Show keys for a user [GET]
 
-Lists all public keys uploaded for a specific user.
+Lists all public keys uploaded for a specific user. No authentication or authorization is required to show public keys.
 
----
-
-:[conjur_auth_header_table](partials/conjur_auth_header_table.md)
+If the user is unknown or has no public keys in Conjur, the response is an empty string.
 
 **Response**
 
 |Code|Description|
 |----|-----------|
-|200|Public key list returned|
-|403|Permission denied|
+|200|Public key list in authorized_keys format (one key per line)|
 
 + Parameters
     + login: alice (string) - The user's login name
-
-+ Request
-    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
 + Response 200 (text/html;charset=utf-8)
 
