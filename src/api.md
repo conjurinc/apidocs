@@ -12,10 +12,10 @@ Any manipulation of roles, resources and permissions in Conjur can be done throu
 Most API calls require an authentication access token. To obtain an access token as a user:
 
 1. Use a username and password to obtain an API key (refresh token) with the [Authentication > Login](/#reference/authentication/login) route.
-2. Use the API key to obtain an access token with the [Authentication > Authenticate](/#reference/authentication/authenticate) route. 
+2. Use the API key to obtain an access token with the [Authentication > Authenticate](/#reference/authentication/authenticate) route.
 
 Access tokens expire after 8 minutes. You need to obtain a new token after it expires.
-Token expiration and renewal is handled automatically by the 
+Token expiration and renewal is handled automatically by the
 Conjur [CLI](https://developer.conjur.net/cli) and [client libraries](https://developer.conjur.net/clients).
 
 ## SSL verification
@@ -81,6 +81,28 @@ A `user` represents an identity for a human. It is a `role`, in RBAC terms.
 
 :[user.show](user.show.md)
 
+# Group Pubkeys
+
+The Conjur pubkeys service can store public keys for all your users, and make them available
+throughout your infrastructure.
+
+Public keys can be associated with user login names, or other identifying criteria. You can
+load multiple named keys for each user, which is useful when your users have different keys on
+different machines.
+
+Public keys are most often used to facilitate SSH login solutions; but you can use the Conjur
+public keys facility in any way that you like.
+
+Only members of the group `pubkeys-1.0/key-managers` can manage public keys.
+
+[Read more](https://developer.conjur.net/tutorials/ssh/public-keys.html) about pubkeys.
+
+:[pubkeys.add](pubkeys.add.md)
+
+:[pubkeys.show](pubkeys.show.md)
+
+:[pubkeys.delete](pubkeys.delete.md)
+
 # Group Group
 
 A `group` represents a collection of users or groups. It is a `role` and a collection of `roles`, in RBAC terms.
@@ -143,8 +165,8 @@ A host assumes the permissions of the layer when it is enrolled.
 
 # Group Host Factory
 
-The `Host Factory` is a web service that enables code and scripts to create Hosts and add them to specific Layers, 
-without having to grant the scripts full administrative privileges on the layers. 
+The `Host Factory` is a web service that enables code and scripts to create Hosts and add them to specific Layers,
+without having to grant the scripts full administrative privileges on the layers.
 
 A typical flow:
 
@@ -177,7 +199,7 @@ conjur hostfactory -h
 
 # Group Role
 
-A `role` is an actor in the system, in the classical sense of role-based access control. 
+A `role` is an actor in the system, in the classical sense of role-based access control.
 Roles are the entities which receive permission grants.
 
 [Read more](https://developer.conjur.net/reference/services/authorization/role/) about roles.
@@ -194,7 +216,7 @@ Roles are the entities which receive permission grants.
 
 # Group Resource
 
-A `resource` is a record on which permissions are defined. 
+A `resource` is a record on which permissions are defined.
 They are partitioned by "kind", such as "group", "host", "file", "environment", "variable", etc.
 
 [Read more](https://developer.conjur.net/reference/services/authorization/resource/) abour resources.
