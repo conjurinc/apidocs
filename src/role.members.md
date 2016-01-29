@@ -20,7 +20,7 @@ Only roles which have been explicitly granted the role in question are listed.
 
 |Code|Description|
 |----|-----------|
-|200|Role memberships returned as JSON list|
+|200|Roles returned as JSON list|
 |404|Role does not exist|
 
 + Parameters

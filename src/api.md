@@ -210,6 +210,8 @@ Roles are the entities which receive permission grants.
 
 :[role.members](role.members.md)
 
+:[role.memberships](role.memberships.md)
+
 :[role.grant_to](role.grant_to.md)
 
 :[role.revoke_from](role.revoke_from.md)
