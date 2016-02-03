@@ -32,7 +32,7 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
     + account: cucumber (string) - organization account name
     + role: group/ops (string) - ID of the role to grant
     + member: user:charles (string) - Id of the new member role
-    + admin_option: false (boolean) - Whether the member will be allowed to add/remove members of the role
+    + admin_option: false (boolean, optional) - Whether the member will be allowed to add/remove members of the role
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)

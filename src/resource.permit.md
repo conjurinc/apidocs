@@ -20,6 +20,12 @@ permission you are giving.
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)
 
+**Request Body**
+
+|Field|Description|Required|Type|Example|
+|-----|-----------|----|--------|-------|
+|grant_option|Allow transfer of privilege to other roles|no|`Boolean`|false|
+
 **Response**
 
 |Code|Description|
