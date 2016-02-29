@@ -121,6 +121,10 @@ A `group` represents a collection of users or groups. It is a `role` and a colle
 
 :[group.list_members](group.list_members.md)
 
+:[group.add_member](group.add_member.md)
+
+:[group.remove_member](group.remove_member.md)
+
 # Group Host
 
 A `host` represents an identity for a non-human. This could be a VM, Docker container, CI job, etc.
