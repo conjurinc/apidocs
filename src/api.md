@@ -105,7 +105,13 @@ Only members of the group `pubkeys-1.0/key-managers` can manage public keys.
 
 # Group Group
 
-A `group` represents a collection of users or groups. It is a `role` and a collection of `roles`, in RBAC terms.
+A `group` represents a collection of users or groups.
+It is a `role` and a collection of `roles`, in RBAC terms.
+
+Since both users and groups are roles, the routes are used to modify group membership are:
+* [Role / Grant To](/#reference/role/grant-to-revoke-from/grant-a-role-to-another-role) - add group member
+* [Role / Revoke From](/#reference/role/grant-to-revoke-from/revoke-a-granted-role) - remove group member
+
 
 [Read more](https://developer.conjur.net/reference/services/directory/group/) about groups.
 
@@ -120,10 +126,6 @@ A `group` represents a collection of users or groups. It is a `role` and a colle
 :[group.show](group.show.md)
 
 :[group.list_members](group.list_members.md)
-
-:[group.add_member](group.add_member.md)
-
-:[group.remove_member](group.remove_member.md)
 
 # Group Host
 
