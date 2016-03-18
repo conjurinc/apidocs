@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-CONJUR_VERSION=${CONJUR_VERSION:-"4.6"}
+CONJUR_VERSION=${CONJUR_VERSION:-"5.0"}
 DOCKER_IMAGE=${DOCKER_IMAGE:-"registry.tld/conjur-appliance-cuke-master:$CONJUR_VERSION-stable"}
 NOKILL=${NOKILL:-"0"}
 PUBLISH=${PUBLISH:-"0"}
@@ -22,15 +22,17 @@ function finish {
 trap finish EXIT
 
 # Launch and configure a Conjur container
-cid=$(docker run -d -P -v $PWD:/src ${DOCKER_IMAGE})
+cid=$(docker run -d --privileged -P -v $PWD:/src ${DOCKER_IMAGE})
 >&2 echo "Container id:"
 >&2 echo $cid
 
-docker run --rm --link ${cid}:conjur registry.tld/wait-for-conjur
+docker run --rm --privileged \
+--link ${cid}:conjur \
+registry.tld/wait-for-conjur
 
 ssl_certificate=$(docker exec ${cid} cat /opt/conjur/etc/ssl/conjur.pem)
 
-docker run --rm \
+docker run --rm --privileged\
 	-v $PWD:/src \
 	-e CONJUR_SSL_CERTIFICATE="${ssl_certificate}" \
 	-e CONJUR_AUTHN_LOGIN=admin \
