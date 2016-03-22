@@ -17,7 +17,7 @@ The `name` field in the response maps to the value of the
 |----|-----------|
 |200|JSON list of active rotators|
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
     ```
     [
