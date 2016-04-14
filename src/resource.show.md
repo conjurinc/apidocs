@@ -20,8 +20,8 @@ Retrieves a resource's metadata, including annotations.
 
 + Parameters
     + account: cucumber (string) - organization account name
-    + kind: variable_group (string) - kind of the resource, for example 'variable' or 'host'
-    + id: aws_keys (string) - ID of the resource to show
+    + kind: variable (string) - kind of the resource, for example 'variable' or 'host'
+    + id: myapp/ssl_certificate (string) - ID of the resource to show
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)

@@ -38,7 +38,7 @@ docker run --rm --privileged\
 	-e CONJUR_AUTHN_LOGIN=admin \
 	-e CONJUR_AUTHN_API_KEY=secret \
 	--link ${cid}:cuke-master \
-	apidocs-conjur-cli conjur policy load /src/test/policy.rb
+	apidocs-conjur-cli conjur rubydsl load /src/test/policy.rb
 
 export CONJUR_VERSION
 
