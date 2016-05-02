@@ -1,0 +1,1 @@
+**Supported version:** Conjur 4.7 and higher.

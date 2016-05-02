@@ -1,6 +1,6 @@
 ## Active Rotators [/api/rotation/rotators]
 
-:[5.0](partials/min_version_5.0.md)
+:[min_version](partials/min_version_4.7.md)
 
 ### List active variable rotators [GET]
 
