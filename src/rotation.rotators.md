@@ -23,13 +23,11 @@ The `name` field in the response maps to the value of the
     [
         {
             "name":"pg-rotator",
-            "target_type":"Rotation::Target::Postgresql::Password",
-            "target_config":null
+            "type":"Rotation::Target::Postgresql::Password",
         },
         {
             "name":"aws-rotator",
-            "target_type":"Rotation::Target::AWS::SecretKey",
-            "target_config":null
+            "type":"Rotation::Target::AWS::SecretKey",
         }
     ]
     ```
