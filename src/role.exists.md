@@ -14,7 +14,7 @@ Only roles that you have `read` permission on will be searched.
 
 |Code|Description|
 |----|-----------|
-|204|Role exists|
+|200|Role exists|
 |404|Role does not exist|
 
 + Parameters
@@ -25,4 +25,9 @@ Only roles that you have `read` permission on will be searched.
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 204
++ Response 200 (application/json; charset=utf-8)
+
+    ```
+    {
+        "id": "cucumber:group:ops"
+    }
