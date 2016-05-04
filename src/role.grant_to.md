@@ -24,7 +24,7 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
 
 |Code|Description|
 |----|-----------|
-|200|Role granted|
+|204|Role granted|
 |403|Permission denied|
 |404|Role does not exist|
 
@@ -43,4 +43,4 @@ When granted with `admin_option`, the grantee (given-to) role can grant the gran
         {admin_option: true}
         ```
 
-+ Response 200
++ Response 204
