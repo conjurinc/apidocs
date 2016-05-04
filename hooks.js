@@ -186,6 +186,16 @@ hooks.beforeValidation('Role > Create > Create a new role', function(transaction
     });
 });
 
+// Role exists returns 200 with no body (as is expected with HEAD) but apiary fails parsing a body that doesn't exist
+// because it sees the Content-type is set to json - change it to text/plain
+['Role > Exists > Determine whether a role exists'].forEach(function(route) {
+    hooks.beforeValidation(route, function(transaction) {
+        if (transaction.real.statusCode === transaction.expected.statusCode) {
+            transaction.real.headers['Content-type'] = 'text/plain';
+        }
+    });
+});
+
 /*
     Helper functions
  */
