@@ -229,7 +229,7 @@ Roles are the entities which receive permission grants.
 A `resource` is a record on which permissions are defined.
 They are partitioned by "kind", such as "group", "host", "file", "environment", "variable", etc.
 
-[Read more](https://developer.conjur.net/reference/services/authorization/resource/) abour resources.
+[Read more](https://developer.conjur.net/reference/services/authorization/resource/) about resources.
 
 :[resource.create](resource.create.md)
 
@@ -269,3 +269,84 @@ Fetching all audit records can return a very large response, so it is best to th
 :[utilities.info](utilities.info.md)
 
 :[utilities.remote_health](utilities.remote_health.md)
+
+# Group Ldap-sync
+
+:[min_version](partials/min_version_4.7.md)
+
+Ldap-sync is used to synchronize user and group records from Active Directory/LDAP to Conjur users and groups.
+
+Ldap-sync runs as a service on the Conjur Master. To synchronize your LDAP records into Conjur, configure the Ldap-sync connection settings through the Conjur UI Ldap-sync settings page. The UI allows testing of the configuration settings to validate the users and groups retrieved by the search are as expected before creating new user and group records in Conjur.  Ldap-sync includes a configuration route `ldap-sync\config` to support getting and setting the active Ldap-sync configuration through an API even though the configuration through the UI is the preferred method.
+
+[Read more](https://developer.conjur.net/server_setup/tools/ldap_sync.html) about Ldap-sync configuration.
+
+Once the configuration has been validated and set, LDAP records can be synchronized into Conjur from the UI directly or using the route `\api\ldap-sync\sync`.
+
+## Sync
+The Sync route is **/api/ldap-sync/sync**
+
+Synchronize users and groups from Active Directory or an LDAP server into Conjur.
+
+**Permission Required**: `update` privilege on the webservice:conjur/ldap-sync
+
+### Request
+
+The Request Body is json format:
+
+    {
+      "config": "default",
+      "dry_run": false,
+      "format": "json"
+    }
+
+|Field|Description|Required|Type|Example|
+|-----|-----------|----|--------|-------|
+|config|Name of the configuration to use - 'default' should be used|yes|`String`|"default"|
+|dry_run|true means just return the planned actions without updating Conjur records, false means return the actions and apply the actual updates to Conjur|yes|`Boolean`|"false"|
+|format|Return the format of actions as json or text - default is json|yes|`String`|"json"|
+
+### Response
+
+The Response Body is JSON and has "ok", "error", "events", and "result" fields.  The result field is only present when the operation succeeded with a 200 ok. Each record indicates the action that will be taken to create or update a user or group record including the id, annotations, and owner of the record - being the ldap-sync group.
+
+    {
+      "ok": true,
+      "result": {
+        "actions": [
+          {
+            "record": {
+              "id": "joshb",
+              "annotations": {
+                "ldap-sync/upstream-dn": "CN=Josh,CN=Users,DC=mycorp,DC=local"
+              },
+              "account": "dev",
+              "owner": {
+                "kind": "group",
+                "id": "conjur/ldap-sync",
+                "account": "dev"
+              }
+            },
+            "action": "create"
+          },
+          {
+            "record": {
+              "id": "miker",
+              "annotations": {
+                "ldap-sync/upstream-dn": "CN=Mike,CN=Users,DC=mycorp,DC=local"
+              },
+              "account": "dev",
+              "owner": {
+                "kind": "group",
+                "id": "conjur/ldap-sync",
+                "account": "dev"
+              }
+            },
+            "action": "create"
+          }
+          ...
+      }
+    }
+
+:[ldap-sync.get_config](ldap-sync.get_config.md)
+
+:[ldap-sync.set_config](ldap-sync.set_config.md)
