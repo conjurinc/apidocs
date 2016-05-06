@@ -276,77 +276,70 @@ Fetching all audit records can return a very large response, so it is best to th
 
 Ldap-sync is used to synchronize user and group records from Active Directory/LDAP to Conjur users and groups.
 
-Ldap-sync runs as a service on the Conjur Master. To synchronize your LDAP records into Conjur, configure the Ldap-sync connection settings through the Conjur UI Ldap-sync settings page. The UI allows testing of the configuration settings to validate the users and groups retrieved by the search are as expected before creating new user and group records in Conjur.  Ldap-sync includes a configuration route `ldap-sync\config` to support getting and setting the active Ldap-sync configuration through an API even though the configuration through the UI is the preferred method.
+Ldap-sync runs as a service on the Conjur Master. To synchronize your LDAP records into Conjur, configure the Ldap-sync connection settings through the Conjur UI Ldap-sync settings page. The UI allows testing of the configuration settings to validate that the users and groups retrieved by the search are the ones expected before creating new user and group records in Conjur. Once the configuration has been validated, save it in the UI - it will be saved as annoations of the resource `configuration:conjur/ldap-sync/default`.
+
+The bind password is a Conjur variable `conjur/ldap-sync/bind-password/default` and must be set from the UI or using the `conjur variable value` command separately from the YAML policy file. The name after the bind-password should match the configuration name - default is the default name.
 
 [Read more](https://developer.conjur.net/server_setup/tools/ldap_sync.html) about Ldap-sync configuration.
 
-Once the configuration has been validated and set, LDAP records can be synchronized into Conjur from the UI directly or using the route `\api\ldap-sync\sync`.
+Once the configuration has been validated and set, LDAP records can be synchronized into Conjur from the UI directly or using the `sync` route.
 
-## Sync
-The Sync route is **/api/ldap-sync/sync**
+To manually update the ldap-sync configuration from a script, export a YAML version of the configuration from the UI and use the Conjur CLI command `conjur policy` to update the configuration. With this process the Conjur ldap-sync configuration can be kept in source code along with other Conjur policy files and updates do not need to be done through the UI.
 
-Synchronize users and groups from Active Directory or an LDAP server into Conjur.
+```
+  # Basic connection settings
+  host: ldap.example.com
+  connect_type: ssl # Must be one of 'ssl', 'tls', or 'none'
+  port: 636
+  # equivalent to
+  # url: ldaps://ldap.example.com
 
-**Permission Required**: `update` privilege on the webservice:conjur/ldap-sync
+  # This is required for every import
+  marker_tag: example-active-directory
 
-### Request
+  # This is required if you want to place the import in a policy
+  policy_id:  active-directory/1.0
 
-The Request Body is json format:
+  # Specify searches to fetch users, as an array of hashes
+  user_search:
+    - filter: "(objectClass=User)"
+      base_dn: "OU=User,DC=MyCompany,DC=com"
+    - filter: "(&(objectClass=InetOrgPerson)(someAttribute=xyz))"
+      base_dn: "OU=User,DC=MyCompany,DC=com"
+      scope: base
 
-    {
-      "config": "default",
-      "dry_run": false,
-      "format": "json"
-    }
+  # For a simpler case, you can specify a single hash, or even just a filter as a string.
+  group_search:
+    filter: "(objectClass=Group)"
+    base_dn: "OU=Group,DC=MyCompany,DC=com"
 
-|Field|Description|Required|Type|Example|
-|-----|-----------|----|--------|-------|
-|config|Name of the configuration to use - 'default' should be used|yes|`String`|"default"|
-|dry_run|true means just return the planned actions without updating Conjur records, false means return the actions and apply the actual updates to Conjur|yes|`Boolean`|"false"|
-|format|Return the format of actions as json or text - default is json|yes|`String`|"json"|
+  # Attribute mappings tell ldap-sync how to map attributes to Conjur fields. 
+  # For example, the Conjur user name in Conjur (name) will be based on the LDAP attribute sAMAccountName
+  # The Conjur group name will be based on the groupId as shown below
+  user_attribute_mapping:
+    name: sAMAccountName
+  group_attribute_mapping:
+    name: groupId
+    gid: posixGidNumber
 
-### Response
+  # Hashes to determine group membership.  The keys
+  # are attributes of the group, and values are the attributes
+  # they reference on users (or other groups).
+  membership_attributes:
+    memberOfTheThing: theThingAttribute
 
-The Response Body is JSON and has "ok", "error", "events", and "result" fields.  The result field is only present when the operation succeeded with a 200 ok. Each record indicates the action that will be taken to create or update a user or group record including the id, annotations, and owner of the record - being the ldap-sync group.
+  # Hashes to determine the groups of which a user is a member.
+  # Keys are attributes of users, values are the corresponding attributes
+  # of groups that they reference.
+  member_attriutes:
+    a_user_of_me: dn
 
-    {
-      "ok": true,
-      "result": {
-        "actions": [
-          {
-            "record": {
-              "id": "joshb",
-              "annotations": {
-                "ldap-sync/upstream-dn": "CN=Josh,CN=Users,DC=mycorp,DC=local"
-              },
-              "account": "dev",
-              "owner": {
-                "kind": "group",
-                "id": "conjur/ldap-sync",
-                "account": "dev"
-              }
-            },
-            "action": "create"
-          },
-          {
-            "record": {
-              "id": "miker",
-              "annotations": {
-                "ldap-sync/upstream-dn": "CN=Mike,CN=Users,DC=mycorp,DC=local"
-              },
-              "account": "dev",
-              "owner": {
-                "kind": "group",
-                "id": "conjur/ldap-sync",
-                "account": "dev"
-              }
-            },
-            "action": "create"
-          }
-          ...
-      }
-    }
+  # Other options remain the same, in underscored form.
+  import_uid_numbers: false
+  import_gid_numbers: true
 
-:[ldap-sync.get_config](ldap-sync.get_config.md)
+  # BindDN can be specified here for convenience, but bind password cannot.
+  bind_dn: "UID=Administrator,DC=MyCorp,DC=com"
+```
 
-:[ldap-sync.set_config](ldap-sync.set_config.md)
+:[ldap-sync.sync](ldap-sync.sync.md)
