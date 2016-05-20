@@ -239,10 +239,6 @@ They are partitioned by "kind", such as "group", "host", "file", "environment", 
 
 :[resource.list](resource.list.md)
 
-:[resource.annotate](resource.annotate.md)
-
-:[resource.list_annotations](resource.list_annotations.md)
-
 :[resource.give](resource.give.md)
 
 :[resource.permit](resource.permit.md)
@@ -250,6 +246,12 @@ They are partitioned by "kind", such as "group", "host", "file", "environment", 
 :[resource.deny](resource.deny.md)
 
 :[resource.check](resource.check.md)
+
+:[resource.permitted_roles](resource.permitted_roles.md)
+
+:[resource.annotate](resource.annotate.md)
+
+:[resource.list_annotations](resource.list_annotations.md)
 
 # Group Audit
 
