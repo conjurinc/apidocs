@@ -19,7 +19,7 @@ Check for the existence of a resource.
 
 + Parameters
     + account: cucumber (string) - organization account name
-    + kind: variable_group (string) - kind of the resource, for example 'variable' or 'host'
+    + kind: variable (string) - kind of the resource, for example 'variable' or 'host'
     + id: aws_keys (string) - ID of the resource, do not query-escape
 
 + Request

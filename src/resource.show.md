@@ -20,7 +20,7 @@ Retrieves a resource's metadata, including annotations.
 
 + Parameters
     + account: cucumber (string) - organization account name
-    + kind: variable_group (string) - kind of the resource, for example 'variable' or 'host'
+    + kind: variable (string) - kind of the resource, for example 'variable' or 'host'
     + id: aws_keys (string) - ID of the resource to show
 
 + Request
@@ -30,7 +30,7 @@ Retrieves a resource's metadata, including annotations.
 
     ```
     {
-      "id": "cucumber:variable_group:aws_keys",
+      "id": "cucumber:variable:aws_keys",
       "owner": "cucumber:group:ops",
       "permissions": [],
       "annotations": []

@@ -42,7 +42,6 @@ Host factory IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
               "expiration": "2015-11-13T18:42:02Z",
               "cidr":["192.0.2.0"]
             }
-        ],
-        "deputy_api_key":"3g6v6h83bsk76r3cb638h2dce4kz35dsej81c304rp306wzqa1z8eqch"
+        ]
     }
     ```
