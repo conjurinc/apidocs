@@ -51,7 +51,6 @@ This means that no one else will be able to see your Host Factory.
         {
           "cidr":["192.0.2.0"]
         }
-      ],
-      "deputy_api_key": "3g6v6h83bsk76r3cb638h2dce4kz35dsej81c304rp306wzqa1z8eqch"
+      ]
     }
     ```
