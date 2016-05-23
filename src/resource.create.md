@@ -21,7 +21,7 @@ This means that no one else will be able to see your resource.
 
 + Parameters
     + account: cucumber (string) - organization account name
-    + kind: variable_group (string) - Purpose of the resource
+    + kind: variable (string) - Purpose of the resource
     + id: aws_keys (string) - Name of the resource, query-escaped
     + acting_as: cucumber:group:ops (string, optional) - Fully-qualified Conjur ID of a role to act as, query-escaped
 

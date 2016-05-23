@@ -2,17 +2,15 @@
 
 ### List or search for resources [GET]
 
-Lists all resources that the calling identity some privilege on.
-
-This command includes some useful features for selecting specific subsets of resources. 
-
-#### Implicit visibility
+Lists resources according to visibility rules and search parameters.
 
 Only resources which are "visible" to the calling role will be returned, no matter what filter parameters are provided. A resource is visible to the calling role if:
 
 * The calling role, or some role held by the calling role, owns the resource.
 * The calling role, or some role held by the calling role, has a privilege (any privilege) on the resource.
 * The request is using the `reveal` or `elevate` [global permission](https://developer.conjur.net/reference/services/authorization/global_permissions.html). 
+
+This command includes some the following search parameters which can be used to select specific resources.
 
 #### Full-text search
 
@@ -40,16 +38,44 @@ The `owner` parameter selects only those resources which are owned by the indica
 
 :[min_version](partials/min_version_4.7.md)
  
-The `id`s of the resources form an implicit hierarchy. For example, it can be useful to treat a resource such as `dev/myapp/ssl_certificate` as a child of `dev/myapp`. Specifically, each resource id is converted to an [ltree](http://www.postgresql.org/docs/9.3/static/ltree.html) by replacing forward slashes `/` with periods `/`. 
+The `id`s of the resources form an implicit hierarchy. For example, it can be useful to treat a resource such as `dev/myapp/ssl_certificate` as a child of `dev/myapp`. The `path` and `path_text` parameters can be used to navigate over these relationships.
+
+Each resource id is normalized to a "path" string, which can then be searched over using the Postgresql
+[ltree](http://www.postgresql.org/docs/9.3/static/ltree.html) module. 
+
+The transformation from a resource id to a path occurs like this:
+
+1. If the resource id contains any forward slash `/` characters, then all period `.` characters are converted to
+underscores, and all forward slashes are converted to periods.
+
+2. "colon" `:` and "at" `@` characters are converted to periods.
+
+3. All characters aside from periods and alphanumerics are converted to underscores.
+
+4. The `account`, `kind`, and `id` are joined together using period characters.
+
+5. The entire string is converted to lower-case.
+
+*Path examples*
+
+|Resource Id|Resource Path|
+|----|-----------|
+| mycorp:variable:myapp/ssl-certificate | mycorp.variable.myapp.ssl_certificate |
+| mycorp:host:host-01.mycorp.com | mycorp.host.host_01.mycorp.com |
+| mycorp:policy:dev/myapp-1.0 | mycorp.policy.dev.myapp\_1\_0 |
 
 The `path` parameter is treated as an `lquery` and applied to the resource ids using the `~` operator.
 
 The `path_text` parameter is treated as an `ltxtquery` and applied to the resource ids using the `@` operator.
 
-**Notes** 
+*Path search examples*
 
-* Periods occurring in ids such as `myapp-1.0` are converted to underscores
-* ids which already look like period-delimited ltrees (such as host names) are left unmodified.
+* `mycorp.policy.dev.*{1,}` Find all policies in the `dev` namespace.
+* `mycorp.policy.*{1,}.mycorp.com` Find all hosts in the `mycorp.com` domain.
+
+#### Has annotation
+
+The `has_annotation` parameter selects only resources which have a specified annotation (regardless of the annotation value).
 
 **Permission Required**
 
@@ -67,8 +93,8 @@ The result only includes resources on which the current role has some privilege.
 
 + Parameters
     + account: demo (string) - organization account name
-    + kind: variable_group (string) - kind of the resource, for example 'variable' or 'host'
-    + search: aws_keys (string, optional) - full-text search string
+    + kind: variable (string) - kind of the resource, for example 'variable' or 'host'
+    + search: ssl_certificate (string, optional) - full-text search string
     + limit (string, optional) - limits the number of response records
     + offset (string, optional) - offset into the first response record
     + path (string, optional) - `lquery` search against the resource id path (Conjur 4.7 and later)
@@ -82,7 +108,7 @@ The result only includes resources on which the current role has some privilege.
     ```
     [
       {
-        "id": "cucumber:variable_group:aws_keys",
+        "id": "cucumber:variable:aws_keys",
         "owner": "cucumber:group:ops",
         "permissions": [],
         "annotations": []
