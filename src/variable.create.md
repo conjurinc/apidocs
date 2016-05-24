@@ -18,7 +18,7 @@ route to set values for variables.
 |Field|Description|Required|Type|Example|
 |-----|-----------|----|--------|-------|
 |id|Name of the variable|no|`String`|"dev/mongo/password"|
-|ownerid|Fully qualified ID of a Conjur role that will own the new variable|no|`String`|"demo:group:developers"|
+|ownerid|Fully qualified ID of a Conjur role that will own the new variable|no|`String`|"cucumber:group:developers"|
 |mime_type|Media type of the variable|yes|`String`|"text/plain"|
 |kind|Purpose of the variable|no|`String`|"password"|
 |value|Value of the variable|no|`String`|"p89b12ep12puib"|
@@ -46,7 +46,7 @@ route to set values for variables.
         }
         ```
 
-+ Response 201 (application/json; charset=utf-8)
++ Response 201 (application/json)
 
     ```
     {

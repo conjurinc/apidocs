@@ -16,7 +16,7 @@ This means that no one else will be able to see your layer.
 |Field|Description|Required|Type|Example|
 |-----|-----------|----|--------|-------|
 |id|Name of the layer|no|`String`|"jenkins/slaves"|
-|ownerid|Fully qualified ID of a Conjur role that will own the new layer|no|`String`|"demo:group:ops"|
+|ownerid|Fully qualified ID of a Conjur role that will own the new layer|no|`String`|"cucumber:group:ops"|
 
 **Response**
 
@@ -33,7 +33,7 @@ This means that no one else will be able to see your layer.
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 201 (application/json; charset=utf-8)
++ Response 201 (application/json)
 
     ```
     {

@@ -8,6 +8,12 @@ To create a new host with a host factory token, you pass the token in the `Autho
 Authorization: Token token="<insert host factory token here>"
 ```
 
+If the host does not exist, it will be created and added to the host factory layers.
+
+In Conjur 4.7 or higher, if the host already exists its API key is rotated and returned in the response.
+
+In Conjur 4.6 or earlier, the host must not already exist.
+
 ---
 
 **Headers**
@@ -20,9 +26,9 @@ Authorization: Token token="<insert host factory token here>"
 
 |Code|Description|
 |----|-----------|
-|201|JSON record of host created returned|
-|403|Permission denied|
-|422|Host with that ID already exists or token is invalid for the layer|
+|201|The response contains the host JSON|
+|401|The token was not accepted|
+|422|Invalid argument(s), details are provided in the JSON response|
 
 + Parameters
     + id: redis002 (string) - ID of the host to create, query-escaped
@@ -34,7 +40,7 @@ Authorization: Token token="<insert host factory token here>"
         Authorization: Token token="3y9e0573sj436f3h12s0v1hvbfya3xfvpt22q3219717wv6fksget9v"
         ```
 
-+ Response 201 (application/json; charset=utf-8)
++ Response 201 (application/json)
 
     ```
     {

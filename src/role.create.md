@@ -28,7 +28,7 @@ This means that no one else will be able to see your role.
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 201 (application/json; charset=utf-8)
++ Response 201 (application/json)
 
     ```
         {

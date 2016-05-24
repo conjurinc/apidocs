@@ -27,7 +27,7 @@ Host IDs must be escaped in the url, e.g., `'/' -> '%2F'`.
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
     ```
     {
