@@ -55,9 +55,14 @@ hooks.beforeEach(function(transaction) {
     }
 });
 
-// Trim response bodies, role#create returns ' ' as text/html ...wtf?
 hooks.beforeEachValidation(function(transaction) {
-   transaction.real.body = trim(transaction.real.body);
+	// Trim response bodies, role#create returns ' ' as text/html ...wtf?
+	transaction.real.body = trim(transaction.real.body);
+   
+	// utf-8 is redundant for application/json
+	if ((transaction.real.headers['content-type']||"").match('application/json; charset=utf-8') ) {
+		transaction.real.headers['content-type'] = 'application/json';
+	}
 });
 
 //The API key is randomly generated, so only check for 200 on route
