@@ -28,7 +28,7 @@ In this example, we're looking for roles that are allowed to update the value of
 |404|Resource not found|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: cucumber (string) - organization account name
     + kind: variable (string) - kind of the resource, for example 'variable' or 'host'
     + id: dev/mongo/password (string) - ID of the resource to check
     + privilege: use_host (string) - Privilege to query for
@@ -40,8 +40,8 @@ In this example, we're looking for roles that are allowed to update the value of
 
     ```
     [
-      "demo:group:security_admin",
-      "demo:user:bob",
-      "demo:user:kerry"
+      "cucumber:group:security_admin",
+      "cucumber:user:bob",
+      "cucumber:user:kerry"
     ]
     ```
