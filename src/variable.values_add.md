@@ -39,7 +39,7 @@ Variable ids must be escaped in the url, e.g., `'/' -> '%2F'`.
         }
         ```
 
-+ Response 201 (application/json; charset=utf-8)
++ Response 201 (application/json)
 
     ```
     {

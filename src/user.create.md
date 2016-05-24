@@ -24,7 +24,7 @@ to a particular group when it is created.
 |-----|-----------|----|--------|-------|
 |login|Username for the new user|yes|`String`|"alice"|
 |password|Password for the new user|no|`String`|"9p8nfsdafbp"|
-|ownerid|Fully qualified ID of a Conjur role that will own the new user|no|`String`|"demo:group:security_admin"|
+|ownerid|Fully qualified ID of a Conjur role that will own the new user|no|`String`|"cucumber:group:security_admin"|
 |uidnumber|A UID number for the new user, primarily for use with LDAP |no|`Number`|123456|
 
 **Response**
@@ -50,7 +50,7 @@ to a particular group when it is created.
           }
           ```
 
-+ Response 201 (application/json; charset=utf-8)
++ Response 201 (application/json)
     ```
     {
         "login":"bob",

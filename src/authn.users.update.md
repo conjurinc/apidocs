@@ -40,7 +40,7 @@ Basic authorization (username plus password or API key) must be provided.
         Authorization: Basic Y2hhcmxlczo5cDhuZnNkYWZicA==
         ```
         
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
     ```
     {
@@ -73,7 +73,7 @@ Basic authorization (username plus password or API key) must be provided.
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
     ```
     {

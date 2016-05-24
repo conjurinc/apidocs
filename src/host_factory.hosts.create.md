@@ -40,7 +40,7 @@ In Conjur 4.6 or earlier, the host must not already exist.
         Authorization: Token token="3y9e0573sj436f3h12s0v1hvbfya3xfvpt22q3219717wv6fksget9v"
         ```
 
-+ Response 201 (application/json; charset=utf-8)
++ Response 201 (application/json)
 
     ```
     {

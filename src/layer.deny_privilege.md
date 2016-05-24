@@ -30,7 +30,7 @@ privilege required to grant the layer role.
     + privilege: use_host (string) - Privilege to permit
     + member: group:developers (string) - Qualified role name, do not query-escape
 
-+ Request (application/json; charset=utf-8)
++ Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
 + Response 204

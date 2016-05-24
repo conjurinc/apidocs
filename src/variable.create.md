@@ -46,7 +46,7 @@ route to set values for variables.
         }
         ```
 
-+ Response 201 (application/json; charset=utf-8)
++ Response 201 (application/json)
 
     ```
     {

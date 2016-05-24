@@ -33,7 +33,7 @@ In other words, resources on which you have no privilege are invisible to you.
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
     ```
     [

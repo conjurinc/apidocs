@@ -32,7 +32,7 @@ Fetch audit events for a role/resource the calling identity has `read` privilege
         Accept: */*
         ```
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
     ```
     [

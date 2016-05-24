@@ -27,7 +27,7 @@ The example shows a single audit event returned.
         Accept: */*
         ```
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
     ```
     [

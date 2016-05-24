@@ -22,7 +22,7 @@ You can also limit, offset and shorten the resulting list.
 |403|Permission denied|
 
 + Parameters
-    + account: demo (string) - organization account name
+    + account: cucumber (string) - organization account name
     + search: kenneth (string, optional) - Query for search, query-escaped
     + limit: 100 (number, optional) - Limit the number of records returned
     + offset: 0 (number, optional) - Set the starting record index to return
@@ -31,12 +31,12 @@ You can also limit, offset and shorten the resulting list.
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
     ```
     [
       {
-        "id": "demo:user:alice",
+        "id": "cucumber:user:alice",
         "owner": "cucumber:group:admin",
         "permissions": [
     
