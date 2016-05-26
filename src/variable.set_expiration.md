@@ -43,11 +43,6 @@ when the variable will expire.
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
 + Response 200 (application/json)
-    + Headers
-
-        ```
-        Conjur-Expires-At: 2019-05-26T19:15:31+00:00
-        ```
 
     ```
     {
