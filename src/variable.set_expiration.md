@@ -32,6 +32,9 @@ the variable will expire immediately.
 |400|Specified duration is less than one second|
 |403|Authenticated user does not have `update` permission on variable|
 
+The response also contains the header `Conjur-Expires-At`, an ISO8601 UTC datetime that specifies
+when the variable will expire.
+
 + Parameters
     + id: dev/mongo/password (string) - Name of the variable, query-escaped
     + duration: P3Y (string, optional) - ISO8601 duration specifying how far in the future to set the expiration
@@ -40,6 +43,11 @@ the variable will expire immediately.
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
 
 + Response 200 (application/json)
+    + Headers
+
+        ```
+        Conjur-Expires-At: 2019-05-26T19:15:31+00:00
+        ```
 
     ```
     {
