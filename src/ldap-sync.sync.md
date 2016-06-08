@@ -42,9 +42,11 @@ The `Accept` HTTP header must be provided and contain either `application/json` 
     + Body
 
         ```
-      "config": "default",
-      "dry_run": false,
-      "format": "json"
+        {
+          "config": "default",
+          "dry_run": false,
+          "format": "json"
+        }
         ```
 
 + Response 200 (application/json)
