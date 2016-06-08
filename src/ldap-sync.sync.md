@@ -6,23 +6,26 @@
 
 Synchronize users and groups from Active Directory or an LDAP server into Conjur.
 
-This will load users and groups from the LDAP server based on the specified configuration name - `default` is the name of the default config and references the resource `configuration:conjur/ldap-sync/default`.
+Use the `config_name` parameter for the configuration profile name. The profile name tells LDAP-Sync the full identifiers for the LDAP-Sync configuration resource (`configuration:conjur/ldap-sync/:config_name`) and password variable (`conjur/ldap-sync/bind-password/:config_name`). The default name used by the UI and `conjur ldap-sync now` command is `default`.
 
-By setting the dry_run field to false, the users and groups will be loaded into Conjur and the results will be returned. If the dry_run field is true, only the result will be returned with the actions that would have taken place on a real sync.
+When `dry_run` is `true`, the result will contain a text log of the actions that would occur but no changes are made to Conjur. Set to `false` to synchronize the users and groups from LDAP to Conjur. Defaults to `false` if not provided.
+
+The `Accept` HTTP header must be provided and contain either `application/json` or `application/yaml`. The JSON response contains the event log from running the request. The YAML response contains only the generated Conjur Policy YAML useful for loading with `conjur policy load`. It is recommended to only use `application/yaml` in conjunction with a dry-run as the response lacks extended errors information.
+
 
 **Permission Required**: `update` privilege on webservice:conjur/ldap-sync
 
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)
+|Accept|Requested HTTP response content type|application/json|
 
 **Request Body**
 
 |Field|Description|Required|Type|Example|
 |-----|-----------|----|--------|-------|
-|config|Name of the configuration to use - 'default' should be used|yes|`String`|"default"|
-|dry_run|dry run true to get sync results but not update Conjur, false to update Conjur|yes|`Boolean`|"false"|
-|format|Return the format of actions as json or text - default is json|yes|`String`|"json"|
+|config_name|Name of the configuration profile|yes|`String`|"default"|
+|dry_run|Flag to enable dry-run mode (default: "true")|no|`Boolean`|"false"|
 
 **Response**
 
@@ -30,6 +33,7 @@ By setting the dry_run field to false, the users and groups will be loaded into 
 |----|-----------|
 |200|Sync ran successfully|
 |403|Authenticated user does not have `update` permission on the webservice|
+|406|Invalid Accept header value|
 |422|Config malformed or missing|
 
 + Request (application/json)

@@ -272,76 +272,25 @@ Fetching all audit records can return a very large response, so it is best to th
 
 :[utilities.remote_health](utilities.remote_health.md)
 
-# Group Ldap-sync
+# Group LDAP-Sync
 
 :[min_version](partials/min_version_4.7.md)
 
-Ldap-sync is used to synchronize user and group records from Active Directory/LDAP to Conjur users and groups.
+LDAP-Sync is used to synchronize user and group records from Active Directory/LDAP to Conjur users and groups.
 
-Ldap-sync runs as a service on the Conjur Master. To synchronize your LDAP records into Conjur, configure the Ldap-sync connection settings through the Conjur UI Ldap-sync settings page. The UI allows testing of the configuration settings to validate that the users and groups retrieved by the search are the ones expected before creating new user and group records in Conjur. Once the configuration has been validated, save it in the UI - it will be saved as annoations of the resource `configuration:conjur/ldap-sync/default`.
+LDAP-Sync runs as a service on the Conjur Master. To synchronize your LDAP records into Conjur, configure the LDAP-Sync connection settings through the Conjur UI LDAP-Sync settings page. The UI allows testing of the configuration settings to validate that the users and groups retrieved by the search are correct before creating new user and group records in Conjur.
 
-The bind password is a Conjur variable `conjur/ldap-sync/bind-password/default` and must be set from the UI or using the `conjur variable value` command separately from the YAML policy file. The name after the bind-password should match the configuration name - default is the default name.
+After validating, save your configuration profile in the UI. The UI saves the profile as annotations of the resource `configuration:conjur/ldap-sync/default` and the password in the variable `conjur/ldap-sync/bind-paassword/default`.
 
-[Read more](https://developer.conjur.net/server_setup/tools/ldap_sync.html) about Ldap-sync configuration.
+You may also download a Conjur policy file defining the configuration annotations with the *Download Profile* button. The policy file is useful for storing in source control and making updates without using the UI. Use the `conjur policy load` command to update the LDAP configuration profile. Variable values cannot be set from policy files; instead use the UI or `conjur variable value` command to set the LDAP password variable.
 
-Once the configuration has been validated and set, LDAP records can be synchronized into Conjur from the UI directly or using the `sync` route.
+[Read more](https://developer.conjur.net/server_setup/tools/ldap_sync.html) about LDAP-Sync configuration.
 
-To manually update the ldap-sync configuration from a script, export a YAML version of the configuration from the UI and use the Conjur CLI command `conjur policy` to update the configuration. With this process the Conjur ldap-sync configuration can be kept in source code along with other Conjur policy files and updates do not need to be done through the UI.
-
-```
-  # Basic connection settings
-  host: ldap.example.com
-  connect_type: ssl # Must be one of 'ssl', 'tls', or 'none'
-  port: 636
-  # equivalent to
-  # url: ldaps://ldap.example.com
-
-  # This is required for every import
-  marker_tag: example-active-directory
-
-  # This is required if you want to place the import in a policy
-  policy_id:  active-directory/1.0
-
-  # Specify searches to fetch users, as an array of hashes
-  user_search:
-    - filter: "(objectClass=User)"
-      base_dn: "OU=User,DC=MyCompany,DC=com"
-    - filter: "(&(objectClass=InetOrgPerson)(someAttribute=xyz))"
-      base_dn: "OU=User,DC=MyCompany,DC=com"
-      scope: base
-
-  # For a simpler case, you can specify a single hash, or even just a filter as a string.
-  group_search:
-    filter: "(objectClass=Group)"
-    base_dn: "OU=Group,DC=MyCompany,DC=com"
-
-  # Attribute mappings tell ldap-sync how to map attributes to Conjur fields. 
-  # For example, the Conjur user name in Conjur (name) will be based on the LDAP attribute sAMAccountName
-  # The Conjur group name will be based on the groupId as shown below
-  user_attribute_mapping:
-    name: sAMAccountName
-  group_attribute_mapping:
-    name: groupId
-    gid: posixGidNumber
-
-  # Hashes to determine group membership.  The keys
-  # are attributes of the group, and values are the attributes
-  # they reference on users (or other groups).
-  membership_attributes:
-    memberOfTheThing: theThingAttribute
-
-  # Hashes to determine the groups of which a user is a member.
-  # Keys are attributes of users, values are the corresponding attributes
-  # of groups that they reference.
-  member_attriutes:
-    a_user_of_me: dn
-
-  # Other options remain the same, in underscored form.
-  import_uid_numbers: false
-  import_gid_numbers: true
-
-  # BindDN can be specified here for convenience, but bind password cannot.
-  bind_dn: "UID=Administrator,DC=MyCorp,DC=com"
-```
+Once the configuration profile is validated and saved, run a synchronization by one of the following methods:
+<ul>
+  <li>UI: the *Sync Now* button</li>
+  <li>CLI: the `conjur ldap-sync now` command</li>
+  <li>HTTPS: the `sync` route.</li>
+</ul>
 
 :[ldap-sync.sync](ldap-sync.sync.md)
