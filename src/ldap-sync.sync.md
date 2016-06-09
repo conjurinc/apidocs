@@ -10,6 +10,8 @@ Use the `config_name` parameter for the configuration profile name. The profile 
 
 When `dry_run` is `true`, the result will contain a text log of the actions that would occur but no changes are made to Conjur. Set to `false` to synchronize the users and groups from LDAP to Conjur. Defaults to `false` if not provided.
 
+The `Content-Type` HTTP header must be provided and contain either `application/json` or `multipart/form-data`. Examples below use JSON request bodies, but form data is also accepted.
+
 The `Accept` HTTP header must be provided and contain either `application/json` or `text/yaml`. The JSON response contains the event log from running the request. The YAML response contains only the generated Conjur Policy YAML useful for loading with `conjur policy load`. It is recommended to only use `text/yaml` in conjunction with a dry-run as the response lacks extended errors information.
 
 
@@ -85,7 +87,7 @@ The `Accept` HTTP header must be provided and contain either `application/json` 
    }
     ```
 
-+ Request (text/yaml)
++ Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
     Accept: text/yaml
 
