@@ -210,12 +210,18 @@ hooks.beforeValidation('Role > Exists > Determine whether a role exists', functi
       }
 });
 
-// Test environment is not setup with openldap so this won't work. Fake success.
-hooks.beforeValidation('Ldap-sync > Sync > Synchronize users and groups from LDAP to Conjur', function(transaction) {
-      console.log('Skipping ldap-sync sync validation');
-      transaction.real.statusCode = transaction.expected.statusCode;
-      transaction.real.headers = transaction.expected.headers;
-      transaction.real.body = transaction.expected.body;
+// If we get a already-created conflict, continue on
+[
+    'Sync > Synchronize users and groups from LDAP to Conjur > Example 1',
+    'Sync > Synchronize users and groups from LDAP to Conjur > Example 2'
+].forEach(function(transactionName) {
+    hooks.beforeValidation('LDAP-Sync > ' + transactionName, function(transaction) {
+        if (transaction.real.statusCode === 400) {
+            console.log('Skipping because no LDAP server');
+            transaction.real.statusCode = transaction.expected.statusCode;
+            transaction.real.body = transaction.expected.body;
+        }
+    });
 });
 
 /*

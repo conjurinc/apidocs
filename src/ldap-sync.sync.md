@@ -6,23 +6,29 @@
 
 Synchronize users and groups from Active Directory or an LDAP server into Conjur.
 
-This will load users and groups from the LDAP server based on the specified configuration name - `default` is the name of the default config and references the resource `configuration:conjur/ldap-sync/default`.
+Use the `config_name` parameter for the configuration profile name. The profile name tells LDAP-Sync the full identifiers for the LDAP-Sync configuration resource (`configuration:conjur/ldap-sync/:config_name`) and password variable (`conjur/ldap-sync/bind-password/:config_name`). The default name used by the UI and `conjur ldap-sync now` command is `default`.
 
-By setting the dry_run field to false, the users and groups will be loaded into Conjur and the results will be returned. If the dry_run field is true, only the result will be returned with the actions that would have taken place on a real sync.
+When `dry_run` is `true`, the result will contain a text log of the actions that would occur but no changes are made to Conjur. Set to `false` to synchronize the users and groups from LDAP to Conjur. Defaults to `false` if not provided.
+
+The `Content-Type` HTTP header must be provided and contain either `application/json` or `multipart/form-data`. Examples below use JSON request bodies, but form data is also accepted.
+
+The `Accept` HTTP header must be provided and contain either `application/json` or `text/yaml`. The JSON response contains the event log from running the request. The YAML response contains only the generated Conjur Policy YAML useful for loading with `conjur policy load`. It is recommended to only use `text/yaml` in conjunction with a dry-run as the response lacks extended errors information.
+
 
 **Permission Required**: `update` privilege on webservice:conjur/ldap-sync
 
 ---
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)
+|Accept|Requested HTTP response content type|application/json|
+|Content-Type|Type of data in request body|application/json|
 
 **Request Body**
 
 |Field|Description|Required|Type|Example|
 |-----|-----------|----|--------|-------|
-|config|Name of the configuration to use - 'default' should be used|yes|`String`|"default"|
-|dry_run|dry run true to get sync results but not update Conjur, false to update Conjur|yes|`Boolean`|"false"|
-|format|Return the format of actions as json or text - default is json|yes|`String`|"json"|
+|config_name|Name of the configuration profile|yes|`String`|"default"|
+|dry_run|Flag to enable dry-run mode (default: "false")|no|`Boolean`|"false"|
 
 **Response**
 
@@ -30,17 +36,20 @@ By setting the dry_run field to false, the users and groups will be loaded into 
 |----|-----------|
 |200|Sync ran successfully|
 |403|Authenticated user does not have `update` permission on the webservice|
+|406|Invalid Accept header value|
 |422|Config malformed or missing|
 
 + Request (application/json)
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
+    Accept: application/json
 
     + Body
 
         ```
-      "config": "default",
-      "dry_run": false,
-      "format": "json"
+        {
+          "config_name": "default",
+          "dry_run": false
+        }
         ```
 
 + Response 200 (application/json)
@@ -50,37 +59,105 @@ By setting the dry_run field to false, the users and groups will be loaded into 
       "ok": true,
       "result": {
         "actions": [
-          {
-            "record": {
-              "id": "paulf",
-              "annotations": {
-                "ldap-sync/upstream-dn": "CN=Paul,CN=Users,DC=mycorp,DC=local"
-              },
-              "account": "dev",
-              "owner": {
-                "kind": "group",
-                "id": "conjur/ldap-sync",
-                "account": "dev"
-              }
-            },
-            "action": "create"
-          },
-          {
-            "record": {
-              "id": "mikeb",
-              "annotations": {
-                "ldap-sync/upstream-dn": "CN=Mike,CN=Users,DC=mycorp,DC=local"
-              },
-              "account": "dev",
-              "owner": {
-                "kind": "group",
-                "id": "conjur/ldap-sync",
-                "account": "dev"
-              }
-            },
-            "action": "create"
-          }
+          "user 'paulf'",
+          "user 'mikeb'",
+          "user 'stevef'",
+          "group 'Domain Admins'",
+          "group 'Domain Users'",
+          "Grant group 'Domain Admins' to user 'paulf', group 'conjur/ldap-sync' exclusively",
+          "Grant group 'Domain Users' to user 'mikeb', user 'stevef', group 'conjur/ldap-sync' exclusively"
         ]
-      }
-    }
+      },
+      "events": [
+        {
+            "timestamp": "2016-06-08T20:45:50.485+00:00",
+            "severity": "info",
+            "message": "Connecting to upstream LDAP..."
+        },
+        {
+            "timestamp": "2016-06-08T20:45:50.487+00:00",
+            "severity": "info",
+            "message": "Connected successfully!"
+        },
+        {
+            "timestamp": "2016-06-08T20:45:50.665+00:00",
+            "severity": "info",
+            "message": "Generating policy"
+        }
+      ]
+   }
+    ```
+
++ Request (application/json)
+    :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
+    Accept: text/yaml
+
+    + Body
+
+        ```
+        {
+          "config_name": "default",
+          "dry_run": true
+        }
+        ```
+
++ Response 200 (text/yaml;charset=utf-8)
+
+    ```
+     ---
+     - !user
+       annotations:
+         ldap-sync/source: ldap.example.com:389
+         ldap-sync/upstream-dn: cn=paulf,dc=example,dc=org
+       id: paulf
+     - !user
+       annotations:
+         ldap-sync/source: ldap.example.com:389
+         ldap-sync/upstream-dn: cn=mikeb,dc=example,dc=org
+       id: mikeb
+     - !user
+       annotations:
+         ldap-sync/source: ldap.example.com:389
+         ldap-sync/upstream-dn: cn=stevef,dc=example,dc=org
+       id: stevef
+     - !group
+       annotations:
+         ldap-sync/source: ldap.example.com:389
+         ldap-sync/upstream-dn: cn=Domain Admins,dc=example,dc=org
+       id: Domain Admins
+     - !group
+       annotations:
+         ldap-sync/source: ldap.example.com:389
+         ldap-sync/upstream-dn: cn=Domain Users,dc=example,dc=org
+       id: Domain Users
+     - !grant
+       member:
+       - !member
+         admin: false
+         role: !user
+           id: paulf
+       - !member
+         admin: true
+         role: !group
+           id: conjur/ldap-sync
+       replace: true
+       role: !group
+         id: Domain Admins
+     - !grant
+       member:
+       - !member
+         admin: false
+         role: !user
+           id: mikeb
+       - !member
+         admin: false
+         role: !user
+           id: stevef
+       - !member
+         admin: true
+         role: !group
+           id: conjur/ldap-sync
+       replace: true
+       role: !group
+         id: Domain Users
     ```
