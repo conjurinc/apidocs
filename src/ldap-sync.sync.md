@@ -21,6 +21,7 @@ The `Accept` HTTP header must be provided and contain either `application/json` 
 
 :[conjur_auth_header_table](partials/conjur_auth_header_table.md)
 |Accept|Requested HTTP response content type|application/json|
+|Content-Type|Type of data in request body|application/json|
 
 **Request Body**
 
