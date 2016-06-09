@@ -61,9 +61,9 @@ The `Accept` HTTP header must be provided and contain either `application/json` 
         "actions": [
           "user 'paulf'",
           "user 'mikeb'",
-          "user 'stevef'"
+          "user 'stevef'",
           "group 'Domain Admins'",
-          "group 'Domain Users'"
+          "group 'Domain Users'",
           "Grant group 'Domain Admins' to user 'paulf', group 'conjur/ldap-sync' exclusively",
           "Grant group 'Domain Users' to user 'mikeb', user 'stevef', group 'conjur/ldap-sync' exclusively"
         ]
@@ -101,7 +101,7 @@ The `Accept` HTTP header must be provided and contain either `application/json` 
         }
         ```
 
-+ Response 200 (text/yaml)
++ Response 200 (text/yaml;charset=utf-8)
 
     ```
      ---
