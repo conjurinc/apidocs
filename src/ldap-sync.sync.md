@@ -4,18 +4,22 @@
 
 :[min_version](partials/min_version_4.7.md)
 
-Synchronize users and groups from Active Directory or an LDAP server into Conjur.
+Synchronize users and groups from an Active Directory or POSIX LDAP server (e.g. OpenLDAP) into Conjur.
+The synchronization is one-way, from LDAP to Conjur, and does not include passwords. To delegate Conjur login
+to LDAP, use the [LDAP Authenticator](https://developer.conjur.net/server_setup/tools/authn_ldap.html).
 
-Use the `config_name` parameter for the configuration profile name. The profile name tells LDAP-Sync the full identifiers for the LDAP-Sync configuration resource (`configuration:conjur/ldap-sync/:config_name`) and password variable (`conjur/ldap-sync/bind-password/:config_name`). The default name used by the UI and `conjur ldap-sync now` command is `default`.
+LDAP-Sync configuration settings are stored in *profiles*. Use the `config_name` parameter to specify
+which profile to use for the sync. The default profile name, used by the UI and `conjur ldap-sync now` command, is `default`.
 
-When `dry_run` is `true`, the result will contain a text log of the actions that would occur but no changes are made to Conjur. Set to `false` to synchronize the users and groups from LDAP to Conjur. Defaults to `false` if not provided.
+When `dry_run` is `true`, the result will contain a listing of the actions that would be performed, but no changes are actually made to Conjur. When `dry_run` is `false`, the LDAP users and groups are synchronized from LDAP to Conjur. The
+default value of this parameter is `false` (perform the sync).
 
-The `Content-Type` HTTP header must be provided and contain either `application/json` or `multipart/form-data`. Examples below use JSON request bodies, but form data is also accepted.
+The `Content-Type` HTTP request header must be provided, and may be either `application/json` or `multipart/form-data`. Examples below use JSON request bodies, but form data is also accepted.
 
-The `Accept` HTTP header must be provided and contain either `application/json` or `text/yaml`. The JSON response contains the event log from running the request. The YAML response contains only the generated Conjur Policy YAML useful for loading with `conjur policy load`. It is recommended to only use `text/yaml` in conjunction with a dry-run as the response lacks extended errors information.
+The `Accept` HTTP request header must be provided, and may be either `application/json` or `text/yaml`. The JSON response contains the event log from running synch operation, along with a list of text strings describing the actions
+which were (or would be) performed. The YAML response contains the Conjur Policy YAML to perform the sync. This YAML is valid input for the command-line command `conjur policy load`. `text/yaml` format is useful in conjunction with the `dry_run` parameter, in order to inspect the synchronization changes before they are performed. 
 
-
-**Permission Required**: `update` privilege on webservice:conjur/ldap-sync
+**Permission Required**: `execute` privilege on resource `webservice:conjur/ldap-sync`
 
 ---
 
