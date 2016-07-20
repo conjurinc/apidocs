@@ -7,4 +7,8 @@ node('executor') {
     stage 'Collect Results'
     step([$class: 'JUnitResultArchiver', testResults: 'report.xml'])
     archive 'report.html'
+
+    if (env.BRANCH_NAME == 'master') {
+      stage 'Publish'
+    }
 }
