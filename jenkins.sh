@@ -46,7 +46,7 @@ CONJUR_CONTAINER=${cid} make test
 
 if [ "$USER" == "jenkins" ]; then
     # Only publish from the master branch
-    if [ "$GIT_BRANCH" == "origin/master" ]; then
+    if [ "$BRANCH_NAME" == "origin/master" ]; then
         PUBLISH="1"
     fi
 fi
