@@ -66,3 +66,4 @@ $ make test
 The `dredd` wrapper script inspects the Conjur server version using the server [/info](http://docs.conjur.apiary.io/#reference/utilities/server-info) URL. If a corresponding "transactions-[version].txt" file exists, then only the tests specified in this file will be run.
 
 To print the names of all the available tests, run `make names`.
+
