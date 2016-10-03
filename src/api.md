@@ -31,6 +31,8 @@ $ curl --cacert <certfile> ...
 
 :[intro.examples](intro.examples.md)
 
+:[intro.retries](intro.retries.md)
+
 # Group Authentication
 
 :[authn.users.login](authn.users.login.md)
