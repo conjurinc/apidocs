@@ -9,5 +9,9 @@ Note that handling 503 retries is required only in uncommon
 circumstances; when a service regularly issues hundreds of concurrent requests
 to Conjur.
 
+Conjur load test example results, showing 503 responses on heavy load:
+
+<img src="https://info.conjur.net/hubfs/Security-Secrets-Performance-Benchmark-2.png"/>
+
 See [our blog post](https://blog.conjur.net/scaling-security-4-million-secrets)
 on scaling and benchmarks for more detail.
