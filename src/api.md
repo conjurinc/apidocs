@@ -67,6 +67,12 @@ A `variable` is a 'secret' and can be any value. It is a `resource`, in RBAC ter
 
 :[variable.expirations](variable.expirations.md)
 
+# Group Rotation
+
+Some variables can be rotated automatically by annotating them.
+
+[Read more](https://developer.conjur.net/reference/services/rotation) about rotation.
+
 :[rotation.rotators](rotation.rotators.md)
 
 # Group User
