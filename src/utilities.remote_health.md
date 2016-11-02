@@ -30,23 +30,41 @@ This route **does not** require authentication.
     ```
     {
       "services": {
-        "host-factory": "ok",
-        "authz": "ok",
-        "pubkeys": "ok",
-        "authn": "ok",
         "audit": "ok",
-        "ldap": "ok",
+        "authz": "ok",
+        "rotation": "ok",
+        "authn": "ok",
         "core": "ok",
+        "ldap-sync": "ok",
+        "pubkeys": "ok",
+        "expiration": "ok",
+        "ldap": "ok",
+        "host-factory": "ok",
         "ok": true
       },
       "database": {
         "ok": true,
         "connect": {
-          "main": "ok"
+          "main": "ok",
+          "archive": "ok"
+        },
+        "free_space": {
+          "main": {
+            "inodes": 2437636,
+            "kbytes": 31024512
+          },
+          "archive": {
+            "inodes": 2437636,
+            "kbytes": 31024512
+          }
         },
         "replication_status": {
-          "pg_current_xlog_location": "0/5174000",
-          "pg_current_xlog_location_bytes": 85409792
+          "pg_current_xlog_location": "0/20744A0",
+          "pg_current_xlog_location_bytes": 34030752
+        },
+        "archive_replication_status": {
+          "pg_current_xlog_location": "0/1962EF8",
+          "pg_current_xlog_location_bytes": 26619640
         }
       },
       "ok": true
