@@ -59,22 +59,19 @@ This route **does not** require authentication.
 
 + Response 200
 
-    Representative health check on a master:
-
     ```
     {
       "services": {
-        "authn-tv": "ok",
         "audit": "ok",
-        "authn": "ok",
-        "ldap-sync": "ok",
         "authz": "ok",
         "rotation": "ok",
-        "expiration": "ok",
-        "host-factory": "ok",
-        "ldap": "ok",
-        "pubkeys": "ok",
+        "authn": "ok",
         "core": "ok",
+        "ldap-sync": "ok",
+        "pubkeys": "ok",
+        "expiration": "ok",
+        "ldap": "ok",
+        "host-factory": "ok",
         "ok": true
       },
       "database": {
@@ -94,60 +91,12 @@ This route **does not** require authentication.
           }
         },
         "replication_status": {
-          "pg_stat_replication": [
-            {
-              "usename": "conjur-standby.us-east-1",
-              "application_name": "standby",
-              "client_addr": "54.161.167.83",
-              "backend_start": "2016-09-15 11:01:51 +0000",
-              "state": "streaming",
-              "sent_location": "7/F59EF348",
-              "replay_location": "7/F59EF348",
-              "sync_priority": 0,
-              "sync_state": "async",
-              "sent_location_bytes": 34185605960,
-              "replay_location_bytes": 34185605960,
-              "replication_lag_bytes": 0
-            },
-            {
-              "usename": "conjur-follower.us-east-1",
-              "application_name": "follower",
-              "client_addr": "54.158.83.246",
-              "backend_start": "2016-10-01 15:42:48 +0000",
-              "state": "streaming",
-              "sent_location": "7/F59EF348",
-              "replay_location": "7/F59EF348",
-              "sync_priority": 0,
-              "sync_state": "async",
-              "sent_location_bytes": 34185605960,
-              "replay_location_bytes": 34185605960,
-              "replication_lag_bytes": 0
-            }
-          ],
-          "pg_current_xlog_location": "7/F59EF348",
-          "pg_current_xlog_location_bytes": 34185605960,
-          "pg_last_xlog_replay_location": "7/DA000000",
-          "pg_last_xlog_replay_location_bytes": 33722204160
+          "pg_current_xlog_location": "0/20744A0",
+          "pg_current_xlog_location_bytes": 34030752
         },
         "archive_replication_status": {
-          "pg_stat_replication": [
-            {
-              "usename": "conjur-standby.us-east-1",
-              "application_name": "standby",
-              "client_addr": "54.161.167.83",
-              "backend_start": "2016-10-01 12:48:29 +0000",
-              "state": "streaming",
-              "sent_location": "5B/67BA49E8",
-              "replay_location": "5B/67BA49E8",
-              "sync_priority": 0,
-              "sync_state": "async",
-              "sent_location_bytes": 392582285800,
-              "replay_location_bytes": 392582285800,
-              "replication_lag_bytes": 0
-            }
-          ],
-          "pg_current_xlog_location": "5B/67BA49E8",
-          "pg_current_xlog_location_bytes": 392582285800
+          "pg_current_xlog_location": "0/1962EF8",
+          "pg_current_xlog_location_bytes": 26619640
         }
       },
       "ok": true
