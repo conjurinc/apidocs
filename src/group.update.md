@@ -1,5 +1,7 @@
 ## Update [/api/groups/{id}{?gidnumber}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Update a group record [PUT]
 
 You can change a group's GID number with this route.

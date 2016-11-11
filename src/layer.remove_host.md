@@ -1,5 +1,7 @@
 ## Remove Host [/api/layers/{id}/hosts/{hostid}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Remove a host from a layer [DELETE]
 
 Remove a host from an existing layer. All privileges the host gained through layer enrollment are revoked.

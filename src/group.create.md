@@ -1,5 +1,7 @@
 ## Create [/api/groups{?id,ownerid,gidnumber}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Create a new group [POST]
 
 If you don't provide an `id`, one will be randomly generated.

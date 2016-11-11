@@ -1,5 +1,7 @@
 ## Deny [/api/authz/{account}/resources/{kind}/{id}/?deny{&privilege,role}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Deny a privilege on a resource [POST]
 
 Deny a privilege for a resource on a role.

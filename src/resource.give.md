@@ -1,5 +1,7 @@
 ## Give [/api/authz/{account}/resources/{kind}/{id}{?owner}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Give ownership of a resource to another role [PUT]
 
 An owner is assigned on resource creation. Use this route to transfer that ownership to a new role.

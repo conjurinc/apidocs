@@ -1,5 +1,7 @@
 ### Revoke a granted role [DELETE]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 Inverse of `role#grant_to`.
 
 **Permission Required**: `admin_option` on the role.
