@@ -1,5 +1,7 @@
 ## Add Host [/api/layers/{id}/hosts{?hostid}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Add a host to a layer [POST]
 
 Adds a new host to an existing layer. The host will assume all privileges of the layer.

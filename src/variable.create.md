@@ -1,5 +1,7 @@
 ## Create [/api/variables]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Create a new variable [POST]
 
 A variable can be created with or without an initial value.

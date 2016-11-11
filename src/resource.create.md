@@ -1,5 +1,7 @@
 ## Create [/api/authz/{account}/resources/{kind}/{id}{?acting_as}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Create a new resource [PUT]
 
 You can create resources of custom kinds to better match your infrastructure and workflows.

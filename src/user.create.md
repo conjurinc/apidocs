@@ -1,5 +1,7 @@
 ## Create [/api/users]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Create a new user [POST]
 
 Create a Conjur user.

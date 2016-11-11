@@ -1,5 +1,7 @@
 ## Create [/api/host_factories/{?id,roleid,layers%5B%5D,cidr,ownerid}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Create a new host factory [POST]
 
 Each Host Factory *acts as* a distinct Conjur role, which is specified when the host factory is created. 

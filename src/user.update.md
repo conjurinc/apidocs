@@ -1,5 +1,7 @@
 ## Update [/api/users/{login}{?uidnumber}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Update a user record [PUT]
 
 Update a user's UID number with this route.

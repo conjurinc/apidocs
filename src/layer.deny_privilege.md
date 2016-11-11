@@ -1,5 +1,7 @@
 ## Deny on Hosts [/api/authz/{account}/roles/@/layer/{layer}/{privilege}/?members{&member}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Deny a privilege on hosts in a layer [DELETE]
 
 Revoke a privilege grant for hosts in a layer to a role.

@@ -1,5 +1,7 @@
 ## Annotate [/api/authz/{account}/annotations/{kind}/{id}{?name,value}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Annotate a resource with a key/value pair [PUT]
 
 All resources can be annotated to make it easier to organize, search and perform automation on them.

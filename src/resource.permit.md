@@ -1,5 +1,7 @@
 ## Permit [/api/authz/{account}/resources/{kind}/{id}/?permit{&privilege,role}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Permit a privilege on a resource [POST]
 
 Create a privilege grant on a resource to a role.

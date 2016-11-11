@@ -1,5 +1,7 @@
 ## Grant to / Revoke from [/api/authz/{account}/roles/{role}/?members&member={member}&admin_option={admin_option}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Grant a role to another role [PUT]
 
 All of this role's privileges are thereby granted to the new role.

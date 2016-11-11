@@ -1,5 +1,7 @@
 ## Permit on Hosts [/api/authz/{account}/roles/@/layer/{layer}/{privilege}?members{&member}]
 
+:[deprecation_warning_4.8](partials/deprecation_warning_4.8.md)
+
 ### Permit a privilege on hosts in a layer [PUT]
 
 Create a privilege grant for hosts in a layer to a role.
