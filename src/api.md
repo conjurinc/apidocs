@@ -280,25 +280,22 @@ Fetching all audit records can return a very large response, so it is best to th
 
 :[utilities.remote_health](utilities.remote_health.md)
 
-# Group LDAP-Sync
+# Group LDAP Sync
 
-:[min_version](partials/min_version_4.7.md)
+:[min_version](partials/min_version_4.8.md)
 
-LDAP-Sync is used to synchronize user and group records from Active Directory/LDAP to Conjur users and groups.
+LDAP Sync is used to generate a policy to synchronize user and group records from Active Directory/LDAP to Conjur.
 
-LDAP-Sync runs as a service on the Conjur Master. To synchronize your LDAP records into Conjur, configure the LDAP-Sync connection settings through the Conjur UI LDAP-Sync settings page. The UI allows testing of the configuration settings to validate that the users and groups retrieved by the search are correct before creating new user and group records in Conjur.
+Before the policy can be generated, you must configure the LDAP Sync connection settings through the Conjur UI LDAP Sync settings page. The UI allows testing of the configuration settings to validate that the users and groups retrieved by the search are correct.
 
 After validating, save your configuration profile in the UI. The UI saves the profile as annotations of the resource `configuration:conjur/ldap-sync/default` and the password in the variable `conjur/ldap-sync/bind-paassword/default`.
 
-You may also download a Conjur policy file defining the configuration annotations with the *Download Profile* button. The policy file is useful for storing in source control and making updates without using the UI. Use the `conjur policy load` command to update the LDAP configuration profile. Variable values cannot be set from policy files; instead use the UI or `conjur variable value` command to set the LDAP password variable.
+[Read more](https://developer.conjur.net/server_setup/tools/ldap_sync.html) about LDAP Sync configuration.
 
-[Read more](https://developer.conjur.net/server_setup/tools/ldap_sync.html) about LDAP-Sync configuration.
+Once the configuration profile is validated and saved, generate the policy using one the following methods:
 
-Once the configuration profile is validated and saved, run a synchronization by one of the following methods:
-<ul>
-  <li>UI: the *Sync Now* button</li>
-  <li>CLI: the `conjur ldap-sync now` command</li>
-  <li>HTTPS: the `sync` route.</li>
-</ul>
+* CLI: the `conjur ldap-sync policy show` command
+* HTTPS: the `policy` route.
 
-:[ldap-sync.sync](ldap-sync.sync.md)
+
+:[ldap-sync.policy](ldap-sync.policy.md)
