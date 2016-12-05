@@ -1,4 +1,4 @@
-FROM ruby:2.0
+FROM ruby:2.2
 
 RUN gem install -N conjur-cli
 
