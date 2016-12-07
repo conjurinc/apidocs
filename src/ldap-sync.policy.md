@@ -36,6 +36,12 @@ Event bodies with the key `"log"` are messages produced while generating a polic
 |406|Invalid Accept header value|
 |422|Config malformed or missing|
 
++ Request
+  + Headers
+    
+      Authorization: Token token="eyJkYX...Rhb="
+      Accept: text/event-stream
+        
 + Parameters
     + config_name: default (string) - Name of the profile to use to generate the policy
 
