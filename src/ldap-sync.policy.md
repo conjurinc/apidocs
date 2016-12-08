@@ -1,14 +1,14 @@
-## Policy [/api/ldap-sync/policy]
+## Policy [/api/ldap-sync/policy{?config_name}]
 
-### Synchronize users and groups from LDAP to Conjur [GET]
+### Retrieve the policy to synchronize LDAP with Conjur [GET]
 
-:[min_version](partials/min_version_4.7.md)
+:[min_version](partials/min_version_4.8.md)
 
 Show the policy that will synchronize users and groups from an Active Directory or POSIX LDAP server (e.g. OpenLDAP) into Conjur.
 The synchronization does not include passwords. To delegate Conjur login
 to LDAP, use the [LDAP Authenticator](https://developer.conjur.net/server_setup/tools/authn_ldap.html).
 
-LDAP-Sync configuration settings are stored in *profiles*. Use the `config_name` parameter to specify
+LDAP Sync configuration settings are stored in *profiles*. Use the `config_name` parameter to specify
 which profile to use for the sync. The default profile name, used by the UI and `conjur ldap-sync policy show` command, is `default`.
 
 The `Accept` HTTP request header must be provided, and must be `text/event-stream`. 

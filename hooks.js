@@ -211,7 +211,7 @@ hooks.beforeValidation('Role > Exists > Determine whether a role exists', functi
 });
 
 // Can't fetch LDAP Sync policy without an LDAP server
-hooks.before('LDAP Sync > Policy > Synchronize users and groups from LDAP to Conjur', function(transaction) {
+hooks.before('LDAP Sync > Policy > Retrieve the policy to synchronize LDAP with Conjur', function(transaction) {
     transaction.skip = true;
 });
 
