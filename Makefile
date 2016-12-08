@@ -25,7 +25,7 @@ names: nodejs-image api.md
 		--names
 
 preview: api.md
-	rvm use --create 2.0.0@apidocs
+	rvm use --create 2.2.4@apidocs
 	bundle
 	apiary preview --server --port=8081 --path api.md
 

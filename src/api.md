@@ -279,3 +279,23 @@ Fetching all audit records can return a very large response, so it is best to th
 :[utilities.info](utilities.info.md)
 
 :[utilities.remote_health](utilities.remote_health.md)
+
+# Group LDAP Sync
+
+:[min_version](partials/min_version_4.8.md)
+
+LDAP Sync is used to generate a policy to synchronize user and group records from Active Directory/LDAP to Conjur.
+
+Before the policy can be generated, you must configure the LDAP Sync connection settings through the Conjur UI LDAP Sync settings page. The UI allows testing of the configuration settings to validate that the users and groups retrieved by the search are correct.
+
+After validating, save your configuration profile in the UI. The UI saves the profile as annotations of the resource `configuration:conjur/ldap-sync/default` and the password in the variable `conjur/ldap-sync/bind-paassword/default`.
+
+[Read more](https://developer.conjur.net/server_setup/tools/ldap_sync.html) about LDAP Sync configuration.
+
+Once the configuration profile is validated and saved, generate the policy using one the following methods:
+
+* CLI: the `conjur ldap-sync policy show` command
+* HTTPS: the `policy` route.
+
+
+:[ldap-sync.policy](ldap-sync.policy.md)

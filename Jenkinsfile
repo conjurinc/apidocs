@@ -1,5 +1,6 @@
 node('executor') {
-    git 'git@github.com:conjurinc/apidocs.git'
+    stage 'Checkout'
+    checkout scm
 
     stage 'Build'
     sh './jenkins.sh'

@@ -210,19 +210,11 @@ hooks.beforeValidation('Role > Exists > Determine whether a role exists', functi
       }
 });
 
-// If we get a already-created conflict, continue on
-[
-    'Sync > Synchronize users and groups from LDAP to Conjur > Example 1',
-    'Sync > Synchronize users and groups from LDAP to Conjur > Example 2'
-].forEach(function(transactionName) {
-    hooks.beforeValidation('LDAP-Sync > ' + transactionName, function(transaction) {
-        if (transaction.real.statusCode === 400) {
-            console.log('Skipping because no LDAP server');
-            transaction.real.statusCode = transaction.expected.statusCode;
-            transaction.real.body = transaction.expected.body;
-        }
-    });
+// Can't fetch LDAP Sync policy without an LDAP server
+hooks.before('LDAP Sync > Policy > Retrieve the policy to synchronize LDAP with Conjur', function(transaction) {
+    transaction.skip = true;
 });
+
 
 /*
     Helper functions
