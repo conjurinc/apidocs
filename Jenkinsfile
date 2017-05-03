@@ -11,5 +11,6 @@ node('executor') {
 
     if (env.BRANCH_NAME == 'master') {
       stage 'Publish'
+      sh './publish.sh'
     }
 }
