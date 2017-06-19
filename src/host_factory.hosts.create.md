@@ -27,7 +27,7 @@ In Conjur 4.6 or earlier, the host must not already exist.
 |Code|Description|
 |----|-----------|
 |201|The response contains the host JSON|
-|401|The token was not accepted|
+|401|The token was not accepted (e.g. the client's addresses failed CIDR verification)|
 |422|Invalid argument(s), details are provided in the JSON response|
 
 + Parameters
