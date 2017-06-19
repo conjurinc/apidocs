@@ -32,7 +32,7 @@ is tied, as well as any CIDR restrictions that have been placed on it.
       "token": "y5c8pt2hvrpka1gq0w552xcxfy0ddp7w4gz1pgk3cdww2bsk0g8w",
       "expiration": "2015-11-13T20:38:51Z",
       "cidr": [
-        "192.168.0.0/16"
+        "172.17.0.0/16"
       ],
       "host_factory": {
         "id": "redis_factory",
