@@ -1,4 +1,5 @@
-node('executor') {
+node('executor-v2') {
+
     stage 'Checkout'
     checkout scm
 
