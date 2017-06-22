@@ -28,12 +28,12 @@ docker exec -i $cid /opt/conjur/evoke/bin/wait_for_conjur
 ssl_certificate=$(docker exec ${cid} cat /opt/conjur/etc/ssl/conjur.pem)
 
 docker run --rm --privileged\
-	-v $PWD:/src \
+	-v $PWD:/src -w /src \
 	-e CONJUR_SSL_CERTIFICATE="${ssl_certificate}" \
 	-e CONJUR_AUTHN_LOGIN=admin \
 	-e CONJUR_AUTHN_API_KEY=secret \
 	--link ${cid}:cuke-master \
-	apidocs-conjur-cli conjur rubydsl load /src/test/policy.rb
+	apidocs-conjur-cli conjur rubydsl load ./test/policy.rb
 
 export CONJUR_VERSION
 
