@@ -26,9 +26,7 @@ cid=$(docker run -d --privileged -P -v $PWD:/src ${DOCKER_IMAGE})
 >&2 echo "Container id:"
 >&2 echo $cid
 
-docker run --rm --privileged \
---link ${cid}:conjur \
-registry.tld/wait-for-conjur
+docker exec -i $cid /opt/conjur/evoke/bin/wait_for_conjur
 
 ssl_certificate=$(docker exec ${cid} cat /opt/conjur/etc/ssl/conjur.pem)
 
