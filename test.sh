@@ -5,9 +5,6 @@ DOCKER_IMAGE=${DOCKER_IMAGE:-"registry.tld/conjur-appliance-cuke-master:$CONJUR_
 NOKILL=${NOKILL:-"0"}
 PUBLISH=${PUBLISH:-"0"}
 PULL=${PULL:-"1"}
-CMD_PREFIX=""
-
-make
 
 if [ "$PULL" == "1" ]; then
     docker pull $DOCKER_IMAGE
@@ -31,25 +28,25 @@ docker exec -i $cid /opt/conjur/evoke/bin/wait_for_conjur
 ssl_certificate=$(docker exec ${cid} cat /opt/conjur/etc/ssl/conjur.pem)
 
 docker run --rm --privileged\
-	-v $PWD:/src \
+	-v $PWD:/src -w /src \
 	-e CONJUR_SSL_CERTIFICATE="${ssl_certificate}" \
 	-e CONJUR_AUTHN_LOGIN=admin \
 	-e CONJUR_AUTHN_API_KEY=secret \
 	--link ${cid}:cuke-master \
-	apidocs-conjur-cli conjur rubydsl load /src/test/policy.rb
+	apidocs-conjur-cli conjur rubydsl load ./test/policy.rb
 
 export CONJUR_VERSION
 
 CONJUR_CONTAINER=${cid} make test
 
-if [ "$USER" == "jenkins" ]; then
-    # Only publish from the master branch
-    if [ "$BRANCH_NAME" == "master" ]; then
-        PUBLISH="1"
-    fi
-fi
-
-if [ "${PUBLISH}" == "1" ]; then
-    echo "Publishing docs to Apiary"
-    ./publish.sh
-fi
+# if [ "$USER" == "jenkins" ]; then
+#     # Only publish from the master branch
+#     if [ "$BRANCH_NAME" == "master" ]; then
+#         PUBLISH="1"
+#     fi
+# fi
+#
+# if [ "${PUBLISH}" == "1" ]; then
+#     echo "Publishing docs to Apiary"
+#     ./publish.sh
+# fi

@@ -32,7 +32,7 @@ preview: api.md
 api.md: nodejs-image src/* src/partials/*
 	docker run \
 		--rm \
-		-v $(PWD):/app \
+		-v $(PWD):/app -w /app \
 		apidocs \
 		hercule src/api.md -o api.md
 

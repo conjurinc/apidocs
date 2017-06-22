@@ -1,17 +1,53 @@
-node('executor-v2') {
+#!/usr/bin/env groovy
 
-    stage 'Checkout'
-    checkout scm
+pipeline {
+  agent { label 'executor-v2' }
 
-    stage 'Build'
-    sh './jenkins.sh'
+  options {
+    timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '30'))
+  }
 
-    stage 'Collect Results'
-    step([$class: 'JUnitResultArchiver', testResults: 'report.xml'])
-    archive 'report.html'
-
-    if (env.BRANCH_NAME == 'master') {
-      stage 'Publish'
-      sh './publish.sh'
+  stages {
+    stage('Render api.md') {
+      steps {
+        sh 'make api.md'
+        archiveArtifacts artifacts: 'api.md', fingerprint: true
+      }
     }
+    stage('Run tests') {
+      steps {
+        sh './test.sh'
+        junit 'report.xml'
+        archiveArtifacts 'report.*' // hercules outputs xml and html reports
+      }
+    }
+    stage('Publish') {
+      when {
+        branch 'master'
+      }
+      steps {
+        sh './publish.sh'
+      }
+    }
+
+    // TODO: this stage should be unnecessary, we need to fix Docker file perms
+    stage('Fix file perms') {
+      steps {
+        sh 'sudo chown -R jenkins:jenkins .'
+      }
+    }
+  }
+
+  post {
+    always {
+      deleteDir()  // clear workspace, for next run
+    }
+    failure {
+      slackSend(color: 'danger', message: "${env.JOB_NAME} #${env.BUILD_NUMBER} FAILURE (<${env.BUILD_URL}|Open>)")
+    }
+    unstable {
+      slackSend(color: 'warning', message: "${env.JOB_NAME} #${env.BUILD_NUMBER} UNSTABLE (<${env.BUILD_URL}|Open>)")
+    }
+  }
 }
