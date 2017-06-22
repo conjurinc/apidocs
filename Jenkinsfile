@@ -19,10 +19,20 @@ pipeline {
       steps {
         sh './test.sh'
         junit 'report.xml'
-        archiveArtifacts 'report.xml'
+        archiveArtifacts 'report.*' // hercules outputs xml and html reports
       }
     }
-    stage('Fix file perms') {  // TODO: this stage should be unnecessary
+    stage('Publish') {
+      when {
+        branch 'master'
+      }
+      steps {
+        sh './publish.sh'
+      }
+    }
+
+    // TODO: this stage should be unnecessary, we need to fix Docker file perms
+    stage('Fix file perms') {
       steps {
         sh 'sudo chown -R jenkins:jenkins .'
       }
@@ -35,21 +45,3 @@ pipeline {
     }
   }
 }
-
-// node('executor-v2') {
-//
-//     stage 'Checkout'
-//     checkout scm
-//
-//     stage 'Build'
-//     sh './jenkins.sh'
-//
-//     stage 'Collect Results'
-//     step([$class: 'JUnitResultArchiver', testResults: 'report.xml'])
-//     archive 'report.html'
-//
-//     if (env.BRANCH_NAME == 'master') {
-//       stage 'Publish'
-//       sh './publish.sh'
-//     }
-// }
