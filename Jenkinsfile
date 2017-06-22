@@ -43,5 +43,11 @@ pipeline {
     always {
       deleteDir()  // clear workspace, for next run
     }
+    failure {
+      slackSend(color: 'danger', message: "${env.JOB_NAME} #${env.BUILD_NUMBER} FAILURE (<${env.BUILD_URL}|Open>)")
+    }
+    unstable {
+      slackSend(color: 'warning', message: "${env.JOB_NAME} #${env.BUILD_NUMBER} UNSTABLE (<${env.BUILD_URL}|Open>)")
+    }
   }
 }
