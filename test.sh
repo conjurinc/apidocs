@@ -5,9 +5,6 @@ DOCKER_IMAGE=${DOCKER_IMAGE:-"registry.tld/conjur-appliance-cuke-master:$CONJUR_
 NOKILL=${NOKILL:-"0"}
 PUBLISH=${PUBLISH:-"0"}
 PULL=${PULL:-"1"}
-CMD_PREFIX=""
-
-make
 
 if [ "$PULL" == "1" ]; then
     docker pull $DOCKER_IMAGE
@@ -42,14 +39,14 @@ export CONJUR_VERSION
 
 CONJUR_CONTAINER=${cid} make test
 
-if [ "$USER" == "jenkins" ]; then
-    # Only publish from the master branch
-    if [ "$BRANCH_NAME" == "master" ]; then
-        PUBLISH="1"
-    fi
-fi
-
-if [ "${PUBLISH}" == "1" ]; then
-    echo "Publishing docs to Apiary"
-    ./publish.sh
-fi
+# if [ "$USER" == "jenkins" ]; then
+#     # Only publish from the master branch
+#     if [ "$BRANCH_NAME" == "master" ]; then
+#         PUBLISH="1"
+#     fi
+# fi
+#
+# if [ "${PUBLISH}" == "1" ]; then
+#     echo "Publishing docs to Apiary"
+#     ./publish.sh
+# fi

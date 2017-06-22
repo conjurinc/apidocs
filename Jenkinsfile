@@ -15,11 +15,16 @@ pipeline {
         archive 'api.md'
       }
     }
+    stage('Run tests') {
+      steps {
+        sh './test.sh'
+      }
+    }
   }
 
   post {
     always {
-      deleteDir()  // clear workspace
+      deleteDir()  // clear workspace, for next run
     }
   }
 }
