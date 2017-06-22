@@ -12,13 +12,14 @@ pipeline {
     stage('Render api.md') {
       steps {
         sh 'make api.md'
-        archive artifacts: 'api.md', fingerprint: true
+        archiveArtifacts artifacts: 'api.md', fingerprint: true
       }
     }
     stage('Run tests') {
       steps {
         sh './test.sh'
         junit 'report.xml'
+        archiveArtifacts 'report.xml'
       }
     }
     stage('Fix file perms') {  // TODO: this stage should be unnecessary
