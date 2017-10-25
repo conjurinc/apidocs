@@ -1,5 +1,5 @@
 FROM ruby:2.2
 
-RUN gem install -N conjur-cli
+RUN gem install -N conjur-cli -v '~> 5'
 
 ADD test/conjur.conf /etc/conjur.conf

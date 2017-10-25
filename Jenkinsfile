@@ -30,17 +30,11 @@ pipeline {
         sh './publish.sh'
       }
     }
-
-    // TODO: this stage should be unnecessary, we need to fix Docker file perms
-    stage('Fix file perms') {
-      steps {
-        sh 'sudo chown -R jenkins:jenkins .'
-      }
-    }
   }
 
   post {
     always {
+      sh 'docker run -i --rm -v $PWD:/src -w /src alpine/git clean -fxd'
       deleteDir()  // clear workspace, for next run
     }
     failure {
