@@ -3,7 +3,6 @@
 CONJUR_VERSION=${CONJUR_VERSION:-"4.9"}
 DOCKER_IMAGE=${DOCKER_IMAGE:-"registry.tld/conjur-appliance-cuke-master:$CONJUR_VERSION-stable"}
 NOKILL=${NOKILL:-"0"}
-PUBLISH=${PUBLISH:-"0"}
 PULL=${PULL:-"1"}
 
 if [ "$PULL" == "1" ]; then
@@ -27,6 +26,8 @@ docker exec -i $cid /opt/conjur/evoke/bin/wait_for_conjur
 
 ssl_certificate=$(docker exec ${cid} cat /opt/conjur/etc/ssl/conjur.pem)
 
+make cli-image
+
 docker run --rm --privileged\
 	-v $PWD:/src -w /src \
 	-e CONJUR_SSL_CERTIFICATE="${ssl_certificate}" \
@@ -38,15 +39,3 @@ docker run --rm --privileged\
 export CONJUR_VERSION
 
 CONJUR_CONTAINER=${cid} make test
-
-# if [ "$USER" == "jenkins" ]; then
-#     # Only publish from the master branch
-#     if [ "$BRANCH_NAME" == "master" ]; then
-#         PUBLISH="1"
-#     fi
-# fi
-#
-# if [ "${PUBLISH}" == "1" ]; then
-#     echo "Publishing docs to Apiary"
-#     ./publish.sh
-# fi

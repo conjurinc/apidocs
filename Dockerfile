@@ -1,11 +1,12 @@
-FROM node:0.12.7
+FROM node:8
+
+RUN apt-get update && apt-get install -y ruby-full
 
 RUN mkdir -p /app
 
 WORKDIR /app
 
-RUN npm install -g dredd@1.0.1 hercule@1.2.1 async@1.5.0 conjur-api@4.5.2
+RUN npm -g config set user root && npm install -g \
+      dredd@4.6.0 hercule@4.1.0 async@2.5.0 conjur-api@4.5.2
 
-RUN apt-get update && apt-get install -y ruby-full
-
-ADD dredd /
+COPY dredd /
