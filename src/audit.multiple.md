@@ -1,10 +1,14 @@
-## Single Role or Resource [/api/audit/{kind}/{id}{?limit,till,since}]
+## Multiple Roles or Resources [/api/audit/events{?role[]*,resource[]*,event_action,kind,limit,till,since}]
 
-### Fetch audit events for a single role or resource [GET]
+### Fetch audit events matching any subset of roles or resources [GET]
 
-Fetch audit events for a role/resource the calling identity has `read` privilege on.
+Fetch audit events matching any of a set of roles and/or resources the calling identity has `read` privilege on.
 
-`id` must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
+If the calling identity does not have `read` privilege on *all* roles and resources
+sent with the request, the API will return a `404 Not Found` response.
+
+
+The `role` and `resource` ID-values must be query-escaped: `/` -> `%2F`, `:` -> `%3A`.
 
 ---
 
@@ -22,8 +26,10 @@ Fetch audit events for a role/resource the calling identity has `read` privilege
 |404|Role/resource not found / request refused|
 
 + Parameters
-    + kind: `roles` (string) - Type of object, 'roles' or 'resources'
-    + id: `cucumber:host:redis001` (string) - Fully qualified ID of a Conjur role/resource, query-escaped
+    + role: `cucumber:host:redis001` (string, optional) - One or more fully qualified IDs of a Conjur role, query-escaped
+    + resource: `cucumber:group:sys_admins` (string, optional) - One or more fully qualified IDs of a Conjur resource, query escaped
+    + event_action: `create` (string, optional) - Event action
+    + kind: `role` (string, optional) - Object class impacted by event
     + limit: `10` (number, optional) - Maximum number of results to return
     + till: `2017-11-03T17:00:00.000Z` (string, optional) - Upper time bound for returned events (non-inclusive, in UTC)
     + since: `2017-11-03T17:00:00.000Z` (string, optional) - Lower time bound for returned events (inclusive, in UTC)

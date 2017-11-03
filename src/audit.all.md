@@ -1,4 +1,4 @@
-## All [/api/audit]
+## All [/api/audit{?limit,till,since}]
 
 ### Fetch all audit events [GET]
 
@@ -17,11 +17,17 @@ The example shows a single audit event returned.
 |Code|Description|
 |----|-----------|
 |200|JSON list of audit events is returned|
+|401|Unauthorized|
 |403|Permission denied|
+
++ Parameters
+    + limit: `10` (number, optional) - Maximum number of results to return
+    + till: `2017-11-03T17:00:00.000Z` (string, optional) - Upper time bound for returned events (non-inclusive, in UTC)
+    + since: `2017-11-03T17:00:00.000Z` (string, optional) - Lower time bound for returned events (inclusive, in UTC)
 
 + Request (application/json)
     + Headers
-    
+
         ```
         Authorization: Token token="eyJkYX...Rhb="
         Accept: */*
@@ -33,7 +39,7 @@ The example shows a single audit event returned.
     [
       {
         "resources":[
-    
+
         ],
         "roles":[
           "cucumber:user:admin"
