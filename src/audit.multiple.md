@@ -23,7 +23,7 @@ The `role` and `resource` ID-values must be query-escaped: `/` -> `%2F`, `:` -> 
 |200|JSON list of audit events is returned|
 |401|Unauthorized|
 |403|Permission denied|
-|404|Role/resource not found / request refused|
+|404|Role/resource not found / permission denied|
 
 + Parameters
     + role: `cucumber:host:redis001` (string, optional) - One or more fully qualified IDs of a Conjur role, query-escaped
