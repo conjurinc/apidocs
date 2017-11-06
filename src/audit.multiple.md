@@ -27,7 +27,7 @@ The `role` and `resource` ID-values must be query-escaped: `/` -> `%2F`, `:` -> 
 
 + Parameters
     + role%5B%5D: `cucumber:host:redis001` (string, optional) - The fully qualified IDs of a Conjur role, query-escaped. Can be used multiple times.
-    + resource%5B%5D: `cucumber:group:sys_admins` (string, optional) - The fully qualified IDs of a Conjur resource, query escaped. Can be used multiple times.
+    + resource%5B%5D: `cucumber:group:security_admin` (string, optional) - The fully qualified IDs of a Conjur resource, query escaped. Can be used multiple times.
     + event_action: `create` (string, optional) - Event action
     + kind: `role` (string, optional) - Object class impacted by event
     + limit: `10` (number, optional) - Maximum number of results to return
