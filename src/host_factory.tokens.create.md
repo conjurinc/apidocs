@@ -2,11 +2,11 @@
 
 ### Create a new host factory token [POST]
 
-By passing a host factory token to a new host, it can enroll itself into a specified layer. 
+By passing a host factory token to a new host, it can enroll itself into a specified layer.
 This route creates those tokens.
 
 Host factory tokens expire after a certain amount of time. By default, this is one hour. Use the
-`expiration` parameter to set your own expiration timestamp. The timestamp is in 
+`expiration` parameter to set your own expiration timestamp. The timestamp is in
 [ISO8601 format](http://ruby-doc.org/stdlib-2.1.1/libdoc/time/rdoc/Time.html#class-Time-label-Converting+to+a+String)
 and must be URL-encoded.
 
@@ -33,10 +33,10 @@ Generate multiple tokens at once with the `count` parameter. By default, one tok
 |404|Host factory not found|
 
 + Parameters
-    + id: redis/default (string) - ID of the host factory, query-escaped
-    + expiration: `2017-12-16T14:36:57-05:00` (string, optional) - Expiration timestamp (ISO8601), query-escaped
+    + id: redis (string) - ID of the host factory, query-escaped
+    + expiration: `2017-12-16T14:36:57-05:00` (string) - Expiration timestamp (ISO8601), query-escaped
     + count: 2 (number, optional) - Number of tokens to create
-    + cidr%5B%5D: 172.17.0.0/16 (string) - addresses to restrict tokens to
+    + cidr%5B%5D: 172.17.0.0/16 (string, optional) - addresses to restrict tokens to
 
 + Request
     :[conjur_auth_header_code](partials/conjur_auth_header_code.md)
