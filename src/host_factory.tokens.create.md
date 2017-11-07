@@ -33,7 +33,7 @@ Generate multiple tokens at once with the `count` parameter. By default, one tok
 |404|Host factory not found|
 
 + Parameters
-    + id: redis/default (string) - ID of the host factory, query-escaped
+    + id: redis (string) - ID of the host factory, query-escaped
     + expiration: `2017-12-16T14:36:57-05:00` (string) - Expiration timestamp (ISO8601), query-escaped
     + count: 2 (number, optional) - Number of tokens to create
     + cidr%5B%5D: 172.17.0.0/16 (string, optional) - addresses to restrict tokens to

@@ -4,7 +4,7 @@
 
 ### Create a new host factory [POST]
 
-Each Host Factory *acts as* a distinct Conjur role, which is specified when the host factory is created. 
+Each Host Factory *acts as* a distinct Conjur role, which is specified when the host factory is created.
 All Hosts created by the Host Factory will be owned by this designated role.
 
 If you don't provide an `id`, one will be randomly generated.
@@ -30,7 +30,7 @@ This means that no one else will be able to see your Host Factory.
 |422|A host factory with that ID already exists|
 
 + Parameters
-    + id: redis/default (string, optional) - ID of the host factory, query-escaped
+    + id: redis (string, optional) - ID of the host factory, query-escaped
     + roleid: cucumber:group:security_admin (string) - Fully qualified ID of a Conjur role that the host factory will act as, query-escaped
     + ownerid: cucumber:group:security_admin (string, optional) - Fully qualified ID of a Conjur role that will own the new host factory, query-escaped
     + layers%5B%5D: redis (string) - ID of the layer the host-factory can enroll hosts for, query-escaped. Can be specified multiple times.
@@ -42,12 +42,12 @@ This means that no one else will be able to see your Host Factory.
 
     ```
     {
-      "id": "redis/default",
+      "id": "redis",
       "layers": [
         "redis"
       ],
       "roleid": "cucumber:group:security_admin",
-      "resourceid": "cucumber:host_factory:redis/default",
+      "resourceid": "cucumber:host_factory:redis",
       "tokens": [
       ]
     }
