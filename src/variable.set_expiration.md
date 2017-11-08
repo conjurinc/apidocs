@@ -18,7 +18,7 @@ For example, "P3Y6M4DT12H30M5S" represents a duration of "three years, six month
 If `duration` is not provided, or if the length of `duration` is zero (`P0Y`),
 the variable will expire immediately.
 
-[read more on expiration](https://developer.conjur.net/tutorials/secrets/expiring-secrets.html)
+[read more on expiration](https://developer.conjur.net/cli#variable-expiration)
 
 ---
 
