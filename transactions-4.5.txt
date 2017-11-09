@@ -56,4 +56,5 @@ Resource > Deny > Deny a privilege on a resource
 Resource > Check > Check your own permissions
 Resource > Check > Check another role's permissions
 Audit > All > Fetch all audit events
-Audit > Single > Fetch audit events for a single role/resource
+Audit > Single Role or Resource > Fetch audit events for a single role or resource
+Audit > Multiple Roles or Resources > Fetch audit events matching any subset of roles or resources

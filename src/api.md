@@ -265,12 +265,17 @@ They are partitioned by "kind", such as "group", "host", "file", "environment", 
 
 Every privilege modification, variable retrieval and SSH action is logged to an immutable audit trail in Conjur.
 
-Audit records can be retrieved via the API for everything or a single role/resource.
-Fetching all audit records can return a very large response, so it is best to the the `limit` parameter.
+You can use the API to retrieve all audit records, to retrieve audit records for a single role or resource, or to retrieve audit records for a set of roles and/or resources.
+
+By default, the number of audit records returned is limited to 100, but this can be adjusted using the `limit` parameter. The maximum number of audit records returned is limited to 10,000.
+
+The number of audit records returned may also be limited using the `till` or `since` parameters, which filter the results returned based on timestamp.
 
 :[audit.all](audit.all.md)
 
 :[audit.single](audit.single.md)
+
+:[audit.multiple](audit.multiple.md)
 
 # Group Utilities
 

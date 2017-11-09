@@ -28,6 +28,10 @@ $ make preview
 
 ## Testing
 
+To run these tests you will need to be sure to have [Summon](https://github.com/cyberark/summon) installed, as well as a summon provider. A convenient provider to use for these tests is the [Conjur](https://github.com/cyberark/summon-conjur) provider.
+
+In addition to installing Summon and a valid provider, you'll need to set the `SUMMON_PROVIDER` environment variable (e.g. to `summon-conjur` if you select that as your summon provider) and you may need to run `export CONJUR_MAJOR_VERSION=4`.
+
 Tests are run with [dredd](http://dredd.readthedocs.org/en/latest/) in a Docker container against a Conjur appliance
 also running in Docker.
 
