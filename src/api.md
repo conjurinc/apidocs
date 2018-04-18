@@ -1,11 +1,13 @@
 FORMAT: 1A
 HOST: https://conjur.myorg.com
 
-# Conjur API
+# Conjur Enterprise (V4) API
 
-Welcome to the Conjur API documentation!
+Welcome to the Conjur Enterprise (V4) API documentation!
 
 Any manipulation of roles, resources and permissions in Conjur can be done through this API.
+
+Looking for the Conjur V5 API? https://www.conjur.org/api.html
 
 # Authentication
 
