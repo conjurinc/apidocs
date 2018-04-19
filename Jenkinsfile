@@ -18,9 +18,11 @@ pipeline {
     stage('Run tests') {
       steps {
         sh './test.sh'
+      }
+      post { always {
         junit 'report.xml'
         archiveArtifacts 'report.*' // hercules outputs xml and html reports
-      }
+      }}
     }
     stage('Publish') {
       when {
